@@ -2,7 +2,8 @@ const userModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const SECRET_KEY = process.env.JWT_SECRET_KEY;
-
+const validator = require('validator');
+const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*()]).{6,}$/;
 function generateToken(user) {
     return jwt.sign({ id: user._id, email: user.email }, SECRET_KEY, { expiresIn: '1h' });
 }
@@ -16,6 +17,22 @@ module.exports.register = async function(req, res) {
             return res.status(400).send("Please provide all details, including role.");
         }
 
+        // Checks if email is valid or not
+        if(!validator.isEmail(email)){
+            return res.status(400).send("Please provide a valid email address.");
+        }
+
+        // Checks if password is valid or not
+        if(!passwordRegex.test(password)){
+            return res.status(400).send(`
+      Password must meet the following criteria:
+      • At least 6 characters long
+      • At least one uppercase letter
+      • At least one lowercase letter
+      • At least one number
+      • At least one special character (!@#$%^&*())
+    `);
+        }
         // Check if user already exists
         let user = await userModel.findOne({ email: email });
         if (user) return res.status(400).send("You already have an account. Please login.");
