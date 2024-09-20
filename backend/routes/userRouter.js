@@ -16,12 +16,16 @@
 // module.exports = router;
 
 
-
+// const address = require("../models/address");
+// const { Address_Update } = require("../controllers/userController");
 
 const express = require("express");
 const router = express.Router();
 
-
+router.get("/dashboard", function(req, res) {
+    res.send("Welcome to User Dashboard");
+})
+// router.post("/address_update", Address_Update);
 
 
 module.exports = router;
