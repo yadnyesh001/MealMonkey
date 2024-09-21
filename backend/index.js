@@ -10,7 +10,7 @@ require("./config/mongoose_config.js");
 dotenv.config();
 
 // Middleware
-app.use(cors());
+// app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

@@ -1,7 +1,7 @@
 // models/Restaurant.js
 
 const mongoose = require('mongoose');
-const baseUser = require('../baseUserModel'); // Ensure the casing matches exactly
+const baseUser = require('./baseUserModel'); // Ensure the casing matches exactly
 
 // Define Restaurant Schema
 const restaurantSchema = new mongoose.Schema({
@@ -104,7 +104,7 @@ const restaurantSchema = new mongoose.Schema({
     // Boolean to indicate if the restaurant is open
     isOpen: {
         type: Boolean,
-        default: false
+        default: true
     }
 }, {
     timestamps: true
