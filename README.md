@@ -1,3 +1,3 @@
-# Welcome to Food Delievery App
+# Welcome to Food Delivery App
 
 ### Under Progress
