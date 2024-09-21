@@ -60,15 +60,15 @@ module.exports.register = async function(req, res) {
                 // res.cookie("email", email);
 
                 if (isAdmin === true) {
-                    return res.redirect("/admin/dashboard");
+                    res.redirect(303,"/admin/dashboard");
                 }
                 // Redirect based on selected role
                 else if (role === "customer") {
-                    return res.redirect("/customer/profileDetails");
+                    res.redirect(303, "/customer/profileDetails");
                 } else if (role === "restaurant") {
-                    return res.redirect("/restaurant/profileDetails");
+                    res.redirect(303, "/restaurant/profileDetails");
                 } else if (role === "deliveryPartner") {
-                    return res.redirect("/deliveryPartner/profileDetails");
+                    res.redirect(303, "/deliveryPartner/profileDetails");
                 }
             });
         });

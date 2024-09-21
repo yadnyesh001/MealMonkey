@@ -8,7 +8,8 @@ module.exports.profileDetailsCustomer = async function(req, res) {
         }
 
         // Render the profile details form and pass user data
-        res.render("profileDetailsCustomer", { user }); // Adjust the template name as needed
+        // res.render("profileDetailsCustomer", { user }); // Adjust the template name as needed
+        res.send("into the Profile Details Page");
     } catch (err) {
         console.log(err);
         res.status(500).send("Error retrieving user details");
