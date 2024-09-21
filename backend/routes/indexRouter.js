@@ -1,31 +1,27 @@
 const express = require("express");
 const router = express.Router();
-const { register, login, logout,
-    profileDetailsUser, profileDetailsManager, profileDetailsDelivery,
-    updateDetailsUser, updateDetailsManager, updateDetailsDelivery
- } = require("../controllers/indexController");
+const indexController = require("../controllers/indexController");
 const isLoggedIn = require("../middlewares/isLoggedIn");
 
-router.get("/", function(req, res) {
+router.get("/", (req, res) => {
     res.send("Welcome to MealMonkey");
-})
+});
 
 // Register Route
-router.post("/register", register);
+router.post("/register", indexController.register);
 
 // Login & Logout Routes
-router.post("/login", isLoggedIn, login);
-router.get("/logout", logout);
-
+router.post("/login", isLoggedIn, indexController.login);
+router.get("/logout", indexController.logout);
 
 // GET routes for profile details
-router.get("/user/profileDetails", isLoggedIn, profileDetailsUser);
-router.get("/manager/profileDetails", isLoggedIn, profileDetailsManager);
-router.get("/delivery/profileDetails", isLoggedIn, profileDetailsDelivery);
+router.get("/customer/profileDetails", isLoggedIn, indexController.profileDetailsCustomer);
+router.get("/restaurant/profileDetails", isLoggedIn, indexController.profileDetailsRestaurant);
+router.get("/deliveryPartner/profileDetails", isLoggedIn, indexController.profileDetailsDeliveryPartner);
 
 // POST routes for updating profile details
-router.post("/user/profileDetails", updateDetailsUser);
-router.post("/manager/profileDetails", updateDetailsManager);
-router.post("/delivery/profileDetails", updateDetailsDelivery);
+router.post("/customer/profileDetails", indexController.updateDetailsCustomer);
+router.post("/restaurant/profileDetails", indexController.updateDetailsRestaurant);
+router.post("/deliveryPartner/profileDetails", indexController.updateDetailsDeliveryPartner);
 
 module.exports = router;

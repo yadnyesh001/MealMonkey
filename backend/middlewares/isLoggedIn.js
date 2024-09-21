@@ -1,4 +1,4 @@
-const UserModel = require ("../models/userModel");
+const UserModel = require ("../models/baseUserModel");
 const jwt = require("jsonwebtoken");
 const SECRET_KEY = process.env.JWT_SECRET_KEY;
 module.exports = async function (req, res, next){

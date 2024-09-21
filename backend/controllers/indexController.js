@@ -1,38 +1,40 @@
-const userModel = require("../models/userModel");
+const userModel = require("../models/baseUserModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const SECRET_KEY = process.env.JWT_SECRET_KEY;
 const validator = require('validator');
 const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*()]).{6,}$/;
+
 function generateToken(user) {
     return jwt.sign({ id: user._id, email: user.email }, SECRET_KEY, { expiresIn: '1h' });
 }
 
 module.exports.register = async function(req, res) {
     try {
-        let { username, email, password, role, isAdmin} = req.body;
+        let { username, email, password, role, isAdmin } = req.body;
 
         // Validate input
         if (!username || !email || !password || !role) {
             return res.status(400).send("Please provide all details, including role.");
         }
 
-        // Checks if email is valid or not
-        if(!validator.isEmail(email)){
+        // Checks if email is valid
+        if (!validator.isEmail(email)) {
             return res.status(400).send("Please provide a valid email address.");
         }
 
-        // Checks if password is valid or not
-        if(!passwordRegex.test(password)){
+        // Checks if password is valid
+        if (!passwordRegex.test(password)) {
             return res.status(400).send(`
-      Password must meet the following criteria:
-      • At least 6 characters long
-      • At least one uppercase letter
-      • At least one lowercase letter
-      • At least one number
-      • At least one special character (!@#$%^&*())
-    `);
+              Password must meet the following criteria:
+              • At least 6 characters long
+              • At least one uppercase letter
+              • At least one lowercase letter
+              • At least one number
+              • At least one special character (!@#$%^&*())
+            `);
         }
+
         // Check if user already exists
         let user = await userModel.findOne({ email: email });
         if (user) return res.status(400).send("You already have an account. Please login.");
@@ -58,16 +60,16 @@ module.exports.register = async function(req, res) {
                 res.cookie("token", token);
                 res.cookie("email", email);
 
-                if(isAdmin === true){
+                if (isAdmin === true) {
                     res.redirect("/admin/dashboard");
                 }
                 // Redirect based on selected role
-                if (role === "user") {
-                    res.redirect("/user/profileDetails");
-                } else if (role === "manager") {
-                    res.redirect("/manager/profileDetails");
-                } else if (role === "delivery") {
-                    res.redirect("/delivery/profileDetails");
+                if (role === "customer") {
+                    res.redirect("/customer/profileDetails");
+                } else if (role === "restaurant") {
+                    res.redirect("/restaurant/profileDetails");
+                } else if (role === "deliveryPartner") {
+                    res.redirect("/deliveryPartner/profileDetails");
                 }
             });
         });
@@ -92,23 +94,23 @@ module.exports.login = async function(req, res) {
                 res.cookie("token", token);
 
                 // Check if the user has filled in the "Name" field
-                if (!user.name || user.Name.trim() === "") {
+                if (!user.name || user.name.trim() === "") {
                     // Redirect to the profile details page based on role if name is missing
-                    if (user.role === "user") {
-                        res.redirect("/user/profileDetails");
-                    } else if (user.role === "manager") {
-                        res.redirect("/manager/profileDetails");
-                    } else if (user.role === "delivery") {
-                        res.redirect("/delivery/profileDetails");
+                    if (user.role === "customer") {
+                        res.redirect("/customer/profileDetails");
+                    } else if (user.role === "restaurant") {
+                        res.redirect("/restaurant/profileDetails");
+                    } else if (user.role === "deliveryPartner") {
+                        res.redirect("/deliveryPartner/profileDetails");
                     }
                 } else {
                     // Redirect to the dashboard based on role if name is filled
-                    if (user.role === "user") {
-                        res.redirect("/user/dashboard");
-                    } else if (user.role === "manager") {
-                        res.redirect("/manager/dashboard");
-                    } else if (user.role === "delivery") {
-                        res.redirect("/delivery/dashboard");
+                    if (user.role === "customer") {
+                        res.redirect("/customer/dashboard");
+                    } else if (user.role === "restaurant") {
+                        res.redirect("/restaurant/dashboard");
+                    } else if (user.role === "deliveryPartner") {
+                        res.redirect("/deliveryPartner/dashboard");
                     }
                 }
             } else {
@@ -121,15 +123,11 @@ module.exports.login = async function(req, res) {
     }
 };
 
-
 module.exports.logout = function(req, res) {
     res.clearCookie("token");
     res.clearCookie("email");
     res.redirect("/");
 };
-
-
-
 
 // Render profile form for User (Customer) - GET
 module.exports.profileDetailsUser = async function(req, res) {
@@ -138,17 +136,17 @@ module.exports.profileDetailsUser = async function(req, res) {
     if (!user) return res.redirect("/");
 
     // Render the profile details form for the user
-    res.render("profileDetailsUser", { user });
+    res.render("profileDetailsCustomer", { user });
 };
 
-// Render profile form for Manager - GET
-module.exports.profileDetailsManager = async function(req, res) {
+// Render profile form for Restaurant - GET
+module.exports.profileDetailsRestaurant = async function(req, res) {
     let email = req.cookies.email;
     let user = await userModel.findOne({ email: email });
     if (!user) return res.redirect("/");
 
-    // Render the profile details form for the manager
-    res.render("profileDetailsManager", { user });
+    // Render the profile details form for the restaurant
+    res.render("profileDetailsRestaurant", { user });
 };
 
 // Render profile form for Delivery - GET
@@ -158,78 +156,77 @@ module.exports.profileDetailsDelivery = async function(req, res) {
     if (!user) return res.redirect("/");
 
     // Render the profile details form for the delivery person
-    res.render("profileDetailsDelivery", { user });
+    res.render("profileDetailsDeliveryPartner", { user });
 };
 
 // Update profile details for User (Customer) - POST
-module.exports.updateDetailsUser = async function(req, res) {
+module.exports.updateDetailsCustomer = async function(req, res) {
     try {
         let email = req.cookies.email;
-        let { Name, address, contact } = req.body;
+        let { name, address, contact } = req.body;
         
-        if(!Name || !address || !contact ){
+        if (!name || !address || !contact) {
             return res.status(400).send("Please fill in all the fields.");
         }
         // Find the user and update their profile details
         let user = await userModel.findOneAndUpdate(
             { email: email },
-            { Name: Name, address: address, contact: contact },
+            { name: name, address: address, contact: contact },
             { new: true }
         );
 
         // Redirect to the user (customer) dashboard
-        res.redirect("/user/dashboard");
+        res.redirect("/customer/dashboard");
     } catch (err) {
         console.log(err);
         res.status(500).send("Error updating user profile");
     }
 };
 
-// Update profile details for Manager - POST
-module.exports.updateDetailsManager = async function(req, res) {
+// Update profile details for Restaurant - POST
+module.exports.updateDetailsRestaurant = async function(req, res) {
     try {
         let email = req.cookies.email;
-        let { Name, address, contact, HotelName } = req.body;
+        let { name, address, contact, hotelName } = req.body;
         
-        if(!Name || !address || !contact || !HotelName){
+        if (!name || !address || !contact || !hotelName) {
             return res.status(400).send("Please fill in all the fields.");
         }
-        // Find the manager and update their profile details
+        // Find the restaurant and update their profile details
         let user = await userModel.findOneAndUpdate(
             { email: email },
-            { Name: Name, address: address, contact: contact, HotelName: HotelName },
+            { name: name, address: address, contact: contact, hotelName: hotelName },
             { new: true }
         );
 
-        // Redirect to the manager dashboard
-        res.redirect("/manager/dashboard");
+        // Redirect to the restaurant dashboard
+        res.redirect("/restaurant/dashboard");
     } catch (err) {
         console.log(err);
-        res.status(500).send("Error updating manager profile");
+        res.status(500).send("Error updating restaurant profile");
     }
 };
 
 // Update profile details for Delivery - POST
-module.exports.updateDetailsDelivery = async function(req, res) {
+module.exports.updateDetailsDeliveryPartner = async function(req, res) {
     try {
         let email = req.cookies.email;
-        let { Name, address, contact, license, vehicleNumber } = req.body;
+        let { name, address, contact, license, vehicleNumber } = req.body;
 
-        if(!Name || !address || !contact || !license || !vehicleNumber){
+        if (!name || !address || !contact || !license || !vehicleNumber) {
             return res.status(400).send("Please fill in all the fields.");
         }
-        // Find the delivery person and update their profile details
+        // Find the delivery partner and update their profile details
         let user = await userModel.findOneAndUpdate(
             { email: email },
-            { Name: Name, address: address, contact: contact, license: license, vehicleNumber: vehicleNumber},
+            { name: name, address: address, contact: contact, license: license, vehicleNumber: vehicleNumber },
             { new: true }
         );
 
         // Redirect to the delivery dashboard
-        res.redirect("/delivery/dashboard");
+        res.redirect("/deliveryPartner/dashboard");
     } catch (err) {
         console.log(err);
         res.status(500).send("Error updating delivery profile");
     }
 };
-
