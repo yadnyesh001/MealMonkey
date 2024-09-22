@@ -1,11 +1,36 @@
-/* App.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+* {
+  font-family: 'Poppins', sans-serif;
+}
+
+
 .App {
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Ensures the app takes the full height of the viewport */
+  min-height: 100vh;
+  background-color: #f0f0f0; /* Adjust the background color if needed */
+  
 }
 
 .content {
-  flex: 1; /* Makes sure content takes up available space, pushing the footer to the bottom */
+  flex: 1;
+  padding: 120px 30px;
+  padding-bottom: 40px; /* Adjusted padding to provide space for the fixed header */
+  width: 100%; /* Limiting max width of the content */
+  margin: 0 auto; /* Centering content with automatic horizontal margins */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional: Adds shadow to make the content pop out */
 }
 
+/* Ensure other components don't interfere with layout */
+.header {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+}
+
+.footer {
+  width: 100%;
+  position: relative; /* Change if your footer should also be fixed or adjusted in any manner */
+}
