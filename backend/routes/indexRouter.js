@@ -3,12 +3,14 @@ const router = express.Router();
 const indexController = require("../controllers/indexController");
 const isLoggedIn = require("../middlewares/isLoggedIn");
 
-
+router.get("/", function(req, res){
+    res.send("Home Page");
+});
 // Register Route
 router.post("/register", indexController.register);
 
 // Login & Logout Routes
-router.post("/login", isLoggedIn, indexController.login);
+router.post("/login", indexController.login);
 router.get("/logout", indexController.logout);
 
 // GET routes for profile details

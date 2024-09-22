@@ -14,7 +14,7 @@ module.exports.profileDetailsCustomer = async function(req, res) {
         console.log(err);
         res.status(500).send("Error retrieving user details");
     }
-};
+};  
 
 
 module.exports.updateDetailsCustomer = async function(req, res) {
@@ -25,7 +25,9 @@ module.exports.updateDetailsCustomer = async function(req, res) {
         if (!address || !contact) {
             return res.status(400).send("Please fill in all the fields.");
         }
-
+        console.log("into customer contorler")
+        console.log(req.userId);
+        
         // Find the user and update their profile details
         const updatedUser = await userModel.findByIdAndUpdate(
             req.userId,
@@ -38,9 +40,10 @@ module.exports.updateDetailsCustomer = async function(req, res) {
         }
 
         // Redirect to the customer dashboard after updating
-        res.redirect("/customer/dashboard");
+        res.redirect(303,"/customer/dashboard");
     } catch (err) {
         console.log(err);
         res.status(500).send("Error updating user profile");
     }
 };
+
