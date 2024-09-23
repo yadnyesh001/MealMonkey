@@ -44,5 +44,10 @@ router.get("/reviews", isLoggedIn, restaurantController.getAllReviews);
 
 // Get daily analytics
 router.get("/analytics/daily", isLoggedIn, restaurantController.getDailyAnalytics);
+//Get all transactions of the restaurant
+router.get("/transactions", isLoggedIn, restaurantController.getTransactions);
+
+// Route to write a review
+router.post("/writeReview", isLoggedIn, restaurantController.writeReview);
 
 module.exports = router;

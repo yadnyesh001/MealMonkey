@@ -452,3 +452,71 @@ module.exports.getDailyAnalytics = async function(req, res) {
 };
 
 
+// Controller to get transactions related to the restaurant
+module.exports.getTransactions = async function(req, res) {
+    try {
+        const restaurantId = req.userId; // Assuming req.userId is the restaurant's ID
+
+        // Fetch transactions related to the restaurant
+        const transactions = await Transaction.find({
+            $or: [
+                { 'from.id': restaurantId },
+                { 'to.id': restaurantId }
+            ]
+        });
+
+        res.status(200).json(transactions);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error fetching transactions.");
+    }
+};
+
+
+module.exports.writeReview = async function(req, res) {
+    try {
+        const { targetType, targetId, reviewType, rating, comment } = req.body;
+
+        // Validate input
+        if (!targetType || !targetId || !reviewType || rating === undefined || !comment) {
+            return res.status(400).send("Please provide all necessary fields.");
+        }
+
+        // Ensure targetType is valid
+        const validTargetTypes = [ 'DeliveryPartner', 'Admin'];
+        if (!validTargetTypes.includes(targetType)) {
+            return res.status(400).send("Invalid target type.");
+        }
+
+        // Check if the target exists
+        let target;
+        if (targetType === 'DeliveryPartner') {
+            target = await DeliveryPartner.findById(targetId);
+        } else if (targetType === 'Admin') {
+            target = await Admin.findById(targetId);
+        }
+
+        if (!target) {
+            return res.status(404).send(`${targetType} not found.`);
+        }
+
+        // Create the review
+        const newReview = new Review({
+            source: {
+                restaurnat: req.userId, // Assuming req.userId is the ID of the user writing the review
+            },
+            target: {
+                [targetType.toLowerCase()]: targetId, // Dynamically set the target type
+            },
+            reviewType,
+            rating,
+            comment
+        });
+
+        await newReview.save();
+        res.status(201).json(newReview);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error writing review.");
+    }
+};
