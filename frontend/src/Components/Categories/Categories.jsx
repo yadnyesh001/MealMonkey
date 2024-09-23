@@ -1,12 +1,13 @@
 import React, { useRef, useState, useEffect } from 'react';
 import './Categories.css';
+import deliveryBoy from "../../assets/images/delivery-boy.png";
 
 const Categories = () => {
   const scrollRef = useRef(null);
-  const [scrollPosition, setScrollPosition] = useState(0); // Track scroll position
-  const cardWidth = window.innerWidth / 5; // Calculate card width to fit 5 cards in full width
-  const visibleCount = 5; // Number of visible cards at a time
-  const duplicateCount = 3; // Number of duplicates at each end for smooth scrolling
+  const [scrollPosition, setScrollPosition] = useState(0); 
+  const cardWidth = window.innerWidth / 5; 
+  const visibleCount = 5;
+  const duplicateCount = 3;
 
   const categories = [
     { name: 'Coffee', img: 'path_to_image' },
@@ -22,9 +23,9 @@ const Categories = () => {
   ];
 
   const extendedCategories = [
-    ...categories.slice(-duplicateCount), // Add duplicates of last items at the start
+    ...categories.slice(-duplicateCount), 
     ...categories,
-    ...categories.slice(0, duplicateCount), // Add duplicates of first items at the end
+    ...categories.slice(0, duplicateCount), 
   ];
 
   const maxScrollPosition = (categories.length + duplicateCount * 2 - visibleCount) * cardWidth;
@@ -33,7 +34,7 @@ const Categories = () => {
     setScrollPosition((prevPos) => {
       let newPos = prevPos - cardWidth;
       if (newPos < 0) {
-        newPos = maxScrollPosition - (visibleCount * cardWidth); // Jump to the "end"
+        newPos = maxScrollPosition - (visibleCount * cardWidth); 
       }
       return newPos;
     });
@@ -43,14 +44,13 @@ const Categories = () => {
     setScrollPosition((prevPos) => {
       let newPos = prevPos + cardWidth;
       if (newPos > maxScrollPosition) {
-        newPos = 0; // Jump to the "start"
+        newPos = 0; 
       }
       return newPos;
     });
   };
 
   useEffect(() => {
-    // Set scroll position based on updated state
     scrollRef.current.scrollTo({
       left: scrollPosition,
       behavior: 'smooth',
@@ -82,6 +82,7 @@ const Categories = () => {
             </div>
           ))}
         </div>
+        <img src={deliveryBoy} alt="Delivery Boy" className="scooter-img" />
       </div>
     </div>
   );
