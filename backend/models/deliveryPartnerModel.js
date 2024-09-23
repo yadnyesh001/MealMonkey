@@ -21,10 +21,7 @@ const deliveryPartnerSchema = new mongoose.Schema({
             ref: 'Order' 
         }
     ],
-    currentOrder: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Order'
-    },
+
     deliveryHistory: [
         {
             type: mongoose.Schema.Types.ObjectId,
@@ -42,10 +39,18 @@ const deliveryPartnerSchema = new mongoose.Schema({
         default: 0,
         min: 0,
         max: 5
+    },
+    wallet: {
+        balance: {
+            type: Number,
+            default: 0,
+            min: 0
+        }
     }
 }, {
     timestamps: true
 });
+
 
 // Create DeliveryPartner model using Discriminator(oop)
 const DeliveryPartner = BaseUser.discriminator('DeliveryPartner', deliveryPartnerSchema);
