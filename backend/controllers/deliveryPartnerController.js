@@ -363,13 +363,6 @@ module.exports.getDailyAnalytics = async function(req, res) {
     }
 };
 
-
-// controllers/reviewController.js
-const Review = require('../models/Review');
-const Restaurant = require('../models/Restaurant');
-const DeliveryPartner = require('../models/DeliveryPartner');
-const Admin = require('../models/adminModel'); // Assuming you have an Admin model
-
 module.exports.writeReview = async function(req, res) {
     try {
         const { targetType, targetId, reviewType, rating, comment } = req.body;
