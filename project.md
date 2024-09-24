@@ -39,6 +39,6 @@ Analytics & Reporting: Access detailed reports on platform activity, sales, deli
 ### OOPS concept use
 * used for authorization, whose object can be created to use the methods
 * discriminator used in models, to show inheritance
-  #### WORKING
-  Discriminators are particularly useful when you have a base schema (for shared fields) and additional fields that differ between types. For example, if you have    a User model that is shared between different user roles like Customer, Manager, and Delivery Partner, you can use discriminators to extend the User model and      add role-specific fields.
+##### WORKING
+Discriminators are particularly useful when you have a base schema (for shared fields) and additional fields that differ between types. For example, if you have    a User model that is shared between different user roles like Customer, Manager, and Delivery Partner, you can use discriminators to extend the User model and      add role-specific fields.
 * get, update methods are created in a single class, whose object can be instantiated to access the methods, for ex for admin routes
