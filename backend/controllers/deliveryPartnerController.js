@@ -1,12 +1,12 @@
 // controllers/restaurantController.js
 const ADMIN_ID = 'yourAdminIdHere';
 const BaseUser = require('../models/baseUserModel');
-const Restaurant = require('../models/Restaurant');
+const Restaurant = require('../models/restaurantModel');
 const Transaction=require('../models/transactionModel')
 const Order=require('../models/orderModel')
 const Admin=require('../models/adminModel')
 const Customer=require('../models/customerModel')
-const Review = require('../models/Review');
+const Review = require('../models/reviewModel');
 const DeliveryPartner=require('../models/deliveryPartnerModel')
 module.exports.updateProfile = async function(req, res) {
     try {
@@ -363,12 +363,6 @@ module.exports.getDailyAnalytics = async function(req, res) {
     }
 };
 
-
-// controllers/reviewController.js
-const Review = require('../models/Review');
-const Restaurant = require('../models/Restaurant');
-const DeliveryPartner = require('../models/DeliveryPartner');
-const Admin = require('../models/adminModel'); // Assuming you have an Admin model
 
 module.exports.writeReview = async function(req, res) {
     try {
