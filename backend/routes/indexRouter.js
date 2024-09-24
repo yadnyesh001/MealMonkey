@@ -7,7 +7,7 @@ router.get("/", function(req, res){
     res.send("Home Page");
 });
 // Register Route
-router.post("/register", indexController.register);
+
 
 // Login & Logout Routes
 router.post("/login", indexController.login);

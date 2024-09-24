@@ -11,10 +11,10 @@ function generateToken(user) {
 
 module.exports.register = async function(req, res) {
     try {
-        let { name, email, password, role, isAdmin = false } = req.body;
+        let { name, email, password, role, isAdmin = false, contact, fullAddress, pincode } = req.body;
         
         // Validate input
-        if (!name || !email || !password || !role) {
+        if (!name || !email || !password || !role || !contact || !fullAddress || !pincode) {
             return res.status(400).send("Please provide all details.");
         }
         // Checks if email is valid
@@ -49,26 +49,19 @@ module.exports.register = async function(req, res) {
                 password: hash,
                 role: role,
                 isAdmin: isAdmin,
+                contact: contact,
+                address: {
+                    fullAddress: fullAddress,
+                    pincode: pincode
+                }
                 });
 
-                await newUser.save();
-                res.send(201, "User Registered Successfully, please LogIn");
-                // // Generate token and set cookies
-                // let token = generateToken(newUser);
-                // res.cookie("token", token);
-                // // res.cookie("email", email);
-
-                // if (isAdmin === true) {
-                //     res.redirect(303,"/admin/dashboard");
-                // }
-                // // Redirect based on selected role
-                // else if (role === "customer") {
-                //     res.redirect(303, "/customer/profileDetails");
-                // } else if (role === "restaurant") {
-                //     res.redirect(303, "/restaurant/profileDetails");
-                // } else if (role === "deliveryPartner") {
-                //     res.redirect(303, "/deliveryPartner/profileDetails");
-                // }
+                const savedUser =await newUser.save();
+                res.status(201).json({
+                    success: true,
+                    message: "User registered successfully",
+                    user: savedUser
+                });
             });
         });
     } catch (err) {
@@ -90,31 +83,10 @@ module.exports.login = async function(req, res) {
             if (result) {
                 let token = generateToken(user);
                 res.cookie("token", token);
-                
-                //if isAdmin is true, redirect to admin dashboard
-                if (user.isAdmin === true) {
-                    res.redirect(303,"/admin/dashboard");
-                }
-                // Check if the user has filled in the "Contact" field
-                else if (!user.contact || user.contact === "") {
-                    // Redirect to the profile details page based on role if name is missing
-                    if (user.role === "customer") {
-                        res.redirect(303,"/customer/profileDetails");
-                    } else if (user.role === "restaurant") {
-                        res.redirect(303,"/restaurant/profileDetails");
-                    } else if (user.role === "deliveryPartner") {
-                        res.redirect(303,"/deliveryPartner/profileDetails");
-                    }
-                } else {
-                    // Redirect to the dashboard based on role if name is filled
-                    if (user.role === "customer") {
-                        res.redirect(303,"/customer/dashboard");
-                    } else if (user.role === "restaurant") {
-                        res.redirect(303, "/restaurant/dashboard");
-                    } else if (user.role === "deliveryPartner") {
-                        res.redirect(303, "/deliveryPartner/dashboard");
-                    }
-                }
+                res.status(200).json({
+                    message: "Login successful",
+                    role: user.role
+                })
             } else {
                 res.send("Incorrect Password.");
             }

@@ -1,5 +1,4 @@
 // models/Restaurant.js
-
 const mongoose = require('mongoose');
 const baseUser = require('./baseUserModel'); // Ensure the casing matches exactly
 

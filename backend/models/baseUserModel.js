@@ -9,7 +9,7 @@ const baseUserSchema = new Schema({
     },
     profilePhoto: {
         type: String,
-        required: false
+        default: ""
     },
     email: {
         type: String,
@@ -42,10 +42,6 @@ const baseUserSchema = new Schema({
         type: String,
         enum: ['customer', 'restaurant', 'deliveryPartner', 'admin'], // Defining roles
         required: true
-    },
-    isDeleted: {
-        type: Boolean,
-        default: false 
     }
 }, { 
     timestamps: true, 
