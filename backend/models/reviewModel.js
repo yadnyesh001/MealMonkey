@@ -5,13 +5,12 @@ const Schema = mongoose.Schema;
 const reviewSchema = new Schema({
     // Source: who gives the review (User, Restaurant, or Delivery Partner)
     source: {
-        user: { type: mongoose.Schema.Types.ObjectId, ref: 'Customer', required: false },
+       customer: { type: mongoose.Schema.Types.ObjectId, ref: 'Customer', required: false },
         restaurant: { type: mongoose.Schema.Types.ObjectId, ref: 'Restaurant', required: false },
         deliveryPartner: { type: mongoose.Schema.Types.ObjectId, ref: 'DeliveryPartner', required: false }
     },
     // Target: the entity being reviewed (User, Restaurant, Delivery Partner, or Admin)
     target: {
-        user: { type: mongoose.Schema.Types.ObjectId, ref: 'Customer', required: false },
         restaurant: { type: mongoose.Schema.Types.ObjectId, ref: 'Restaurant', required: false },
         deliveryPartner: { type: mongoose.Schema.Types.ObjectId, ref: 'DeliveryPartner', required: false },
         admin: { type: mongoose.Schema.Types.ObjectId, ref: 'Admin', required: false }

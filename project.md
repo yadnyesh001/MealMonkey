@@ -22,12 +22,12 @@ In settings page
 
 
 ### Delivery partner methods
-*Profile Management: Set up and manage their delivery profile, including availability, location, and vehicle details.
-*View available delivery requests and accept or decline orders based on their current load 
-*Delivery Performance: Access reports on performance metrics like delivery times, customer ratings, and completed orders.
-Delivery Partner Ratings: Receive ratings and feedback from users and restaurants after each delivery.
-Earnings & Payment Tracking: View completed deliveries, tips, and total earnings. Request withdrawals or view payout history.
-Review restaurant and mealmonkey
+* Profile Management: Set up and manage their delivery profile, including availability, location, and vehicle details.
+* View available delivery requests and accept or decline orders based on their current load 
+* Delivery Performance: Access reports on performance metrics like delivery times, customer ratings, and completed orders.
+* Delivery Partner Ratings: Receive ratings and feedback from users and restaurants after each delivery.
+* Earnings & Payment Tracking: View completed deliveries, tips, and total earnings. Request withdrawals or view payout history.
+* Review restaurant and mealmonkey
 
 ## Admin
 User Management: Manage users (customers, restaurants, delivery partners) including profile suspensions, and access control.

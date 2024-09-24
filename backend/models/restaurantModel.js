@@ -1,4 +1,3 @@
-// models/Restaurant.js
 const mongoose = require('mongoose');
 const baseUser = require('./baseUserModel'); // Ensure the casing matches exactly
 
@@ -69,13 +68,6 @@ const restaurantSchema = new mongoose.Schema({
             trim: true
         }
     ],
-    // Reference to the Review schema
-    reviews: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Review'
-        }
-    ],
     // Restaurant rating (out of 5)
     rating: {
         type: Number,
@@ -104,12 +96,38 @@ const restaurantSchema = new mongoose.Schema({
     isOpen: {
         type: Boolean,
         default: true
-    }
+    },
+    // Wallet Information
+    wallet: {
+        balance: {
+            type: Number,
+            default: 0,
+            min: 0
+        }
+    },
+
+    orderHistory: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Order'
+        }
+    ],
+
+    orderQueue: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Order'
+        }
+    ],
 }, {
     timestamps: true
 });
 
-// Create Restaurant Model using Discriminator(oop)
+// Create Restaurant Model using Discriminator
 const Restaurant = baseUser.discriminator('Restaurant', restaurantSchema);
 
 module.exports = Restaurant;
+
+
+
+

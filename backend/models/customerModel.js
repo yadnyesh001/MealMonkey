@@ -32,6 +32,15 @@ const customerSchema = new mongoose.Schema({
             ref: 'Order'
         }
     ],
+    wallet: {
+        balance: {
+            type: Number,
+            default: 0,
+            min: 0
+        }
+    },
+
+    
 
 }, {
     timestamps: true
