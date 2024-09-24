@@ -42,3 +42,12 @@ Analytics & Reporting: Access detailed reports on platform activity, sales, deli
 ##### WORKING
 Discriminators are particularly useful when you have a base schema (for shared fields) and additional fields that differ between types. For example, if you have    a User model that is shared between different user roles like Customer, Manager, and Delivery Partner, you can use discriminators to extend the User model and      add role-specific fields.
 * get, update methods are created in a single class, whose object can be instantiated to access the methods, for ex for admin routes
+
+
+Requirements
+* regex
+* oops
+* comments
+* ajax
+* es6
+* dhtml (not req)

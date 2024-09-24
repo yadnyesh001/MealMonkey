@@ -8,13 +8,6 @@ const restaurantSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    cuisines: [
-        {
-            type: String,
-            required: true,
-            trim: true
-        }
-    ],
     averageCost: {
         type: Number, // Changed to Number for better numerical operations
         required: true,

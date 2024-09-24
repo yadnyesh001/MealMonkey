@@ -7,7 +7,6 @@ const Order=require('../models/orderModel')
 const Admin=require('../models/adminModel')
 const Customer=require('../models/customerModel')
 const Review = require('../models/reviewModel');
-
 // Update and transform baseUser to Restaurant
 module.exports.updateProfile = async function(req, res) {
     try {
