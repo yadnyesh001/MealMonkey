@@ -64,6 +64,10 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
     flex-shrink: 0; /* Prevent shrinking */
+    cursor: pointer;
+    display: flex; /* Add flex display */
+    flex-direction: column; /* Stack children vertically */
+    align-items: center; /* Center children horizontally */
 }
 
 .category-card:hover {
@@ -71,11 +75,14 @@
 }
 
 .category-img {
-    width: 150px; /* Increase image size */
-    height: 120px;
+    width: 130px; /* Reduced image size */
+    height: 100px; /* Adjusted height accordingly */
     object-fit: cover;
     border-radius: 50%;
     margin-bottom: 10px;
+    transition: transform 0.3s ease; /* Added smooth transition */
+    display: block; /* Ensure the image is treated as a block element */
+    align-self: center; /* Center the image */
 }
 
 .category-name {

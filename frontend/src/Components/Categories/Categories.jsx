@@ -1,40 +1,38 @@
 import React, { useRef, useState, useEffect } from 'react';
 import './Categories.css';
 import deliveryBoy from "../../assets/images/delivery-boy.png";
+import burger from '../../assets/images/burger.png';
+import coffee from '../../assets/images/coffee.png';
+import fries from '../../assets/images/fries.png';
+import chicken from '../../assets/images/chicken.png';
+import pizza from '../../assets/images/pizza.png';
+import paneer from '../../assets/images/paneer.png';
+import noodles from '../../assets/images/noodles.png';
+import donuts from '../../assets/images/donuts.png';
 
 const Categories = () => {
   const scrollRef = useRef(null);
-  const [scrollPosition, setScrollPosition] = useState(0); 
+  const [scrollPosition, setScrollPosition] = useState(0);
   const cardWidth = window.innerWidth / 5; 
   const visibleCount = 5;
-  const duplicateCount = 3;
-
   const categories = [
-    { name: 'Coffee', img: 'path_to_image' },
-    { name: 'Sandwich', img: 'path_to_image' },
-    { name: 'Noodles', img: 'path_to_image' },
-    { name: 'Pasta', img: 'path_to_image' },
-    { name: 'Biryani', img: 'path_to_image' },
-    { name: 'Burger', img: 'path_to_image' },
-    { name: 'Pizza', img: 'path_to_image' },
-    { name: 'Sushi', img: 'path_to_image' },
-    { name: 'Salad', img: 'path_to_image' },
-    { name: 'Ice Cream', img: 'path_to_image' },
+    { name: 'Coffee', img: coffee },
+    { name: 'Fries', img: fries },
+    { name: 'Chicken', img: chicken },
+    { name: 'Pizza', img: pizza },
+    { name: 'Paneer', img: paneer },
+    { name: 'Burger', img: burger },
+    { name: 'Noodles', img: noodles },
+    { name: 'Donuts', img: donuts },
   ];
 
-  const extendedCategories = [
-    ...categories.slice(-duplicateCount), 
-    ...categories,
-    ...categories.slice(0, duplicateCount), 
-  ];
-
-  const maxScrollPosition = (categories.length + duplicateCount * 2 - visibleCount) * cardWidth;
+  const maxScrollPosition = (categories.length - visibleCount) * cardWidth;
 
   const scrollLeft = () => {
     setScrollPosition((prevPos) => {
       let newPos = prevPos - cardWidth;
       if (newPos < 0) {
-        newPos = maxScrollPosition - (visibleCount * cardWidth); 
+        newPos = 0; // Reset to the start if already at the beginning
       }
       return newPos;
     });
@@ -44,7 +42,7 @@ const Categories = () => {
     setScrollPosition((prevPos) => {
       let newPos = prevPos + cardWidth;
       if (newPos > maxScrollPosition) {
-        newPos = 0; 
+        newPos = maxScrollPosition; // Keep within the max scroll position
       }
       return newPos;
     });
@@ -75,7 +73,7 @@ const Categories = () => {
       </p>
       <div className="categories-container">
         <div className="categories-list" ref={scrollRef}>
-          {extendedCategories.map((category, index) => (
+          {categories.map((category, index) => (
             <div className="category-card" key={index}>
               <img src={category.img} alt={category.name} className="category-img" />
               <p className="category-name">{category.name}</p>

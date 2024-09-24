@@ -1,9 +1,9 @@
-import  { useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axiosInstance from '../../utils/axiosInstance';
 
 const SignUp = () => {
-  const [formData, setFormData] = useState({name: '', email: '', password: '', role: '', contact: '', fullAddress: '', pincode: ''});
+  const [formData, setFormData] = useState({ name: '', email: '', password: '', role: '', contact: '', fullAddress: '', pincode: '' });
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -24,96 +24,99 @@ const SignUp = () => {
     }
   };
 
-  return (                                                                                                                          
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-semibold text-center text-gray-800">Sign Up</h2>
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-orange-100 to-white relative -mt-5">
+      <div className="absolute inset-0 bg-cover bg-center opacity-10" style={{ backgroundImage: "url('https://your-image-url.com/bg.jpg')" }}></div>
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md z-10 relative">
+        <h2 className="text-3xl font-bold text-center text-gray-800">Sign Up to MealMonkey</h2>
+        <p className="text-center text-gray-500 mb-6">Join the best food delivery platform</p>
         {error && <div className="text-red-500 text-center mb-4">{error}</div>}
-        <form onSubmit={handleSubmit} className="mt-6">
-          <div className="mb-4">
+        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+          <div>
             <input
-              type="name"
+              type="text"
               name="name"
-              placeholder="Enter your name"
+              placeholder="Full Name"
               value={formData.name}
               onChange={onChange}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
+              className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
               required
             />
           </div>
-          <div className="mb-4">
+          <div>
             <input
               type="email"
               name="email"
-              placeholder="Enter your email"
+              placeholder="Email Address"
               value={formData.email}
               onChange={onChange}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
+              className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
               required
             />
           </div>
-          <div className="mb-4">
+          <div>
             <input
               type="password"
               name="password"
-              placeholder="Enter your password"
+              placeholder="Password"
               value={formData.password}
               onChange={onChange}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
+              className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
               required
             />
           </div>
-          <div className="mb-4">
+          <div>
             <select
               name="role"
               value={formData.role}
               onChange={onChange}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
+              className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
               required
             >
-              <option value="" disabled>Select your role</option>
+              <option value="" disabled>Select Your Role</option>
               <option value="customer">Customer</option>
               <option value="manager">Manager</option>
               <option value="deliveryPartner">Delivery Partner</option>
             </select>
           </div>
-          <div className="mb-4">
+          <div>
             <input
-              type="Number"
+              type="number"
               name="contact"
-              placeholder="Enter your contact number"
+              placeholder="Contact Number"
               value={formData.contact}
               onChange={onChange}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
+              className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
               required
             />
           </div>
-          <div className="mb-4">
+          <div>
             <input
               type="text"
               name="fullAddress"
-              placeholder="Enter your address"
-              value={formData.fulladdress}
+              placeholder="Full Address"
+              value={formData.fullAddress}
               onChange={onChange}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
+              className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
               required
             />
           </div>
-          <div className="mb-4">
+          <div>
             <input
-              type="Number"
+              type="number"
               name="pincode"
-              placeholder="Enter your pincode"
+              placeholder="Pincode"
               value={formData.pincode}
               onChange={onChange}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
+              className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
               required
             />
           </div>
           <button
             type="submit"
-            className="w-full py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg text-lg font-semibold transition duration-300"
-          >Sign Up
+            className="w-full py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg text-lg font-semibold transition duration-300 transform hover:scale-105"
+          >
+            Create Account
           </button>
         </form>
         <p className="mt-4 text-center text-gray-600">
