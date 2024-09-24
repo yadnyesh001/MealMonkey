@@ -39,3 +39,60 @@ module.exports.deleteUser = async function(req, res){
     }
 }
 
+class CRUD{
+    getAllUsers = async function(model, role){
+        try{
+            const users = await model.find({role: role})
+
+            if(users.length === 0){
+                return {message: "No Users Found for this role"}
+            }
+            return users
+        }catch(err){
+            throw new Error(err)
+        }
+    }
+
+    getUser = async function(model, id){
+        try{
+            const user = await model.findOne({_id: id})
+            if(!user) return {message: "User not Found"}
+            return user
+        }catch(err){
+            throw new Error(err)
+        }
+    }
+
+    deleteUser = async function(model, id){
+        try{
+            const user = await model.findByIdAndDelete(id)
+            if(!user) return {message: "User not Found"}
+        }catch(err){
+            throw new Error(err)
+        }
+
+    }
+
+    accessControl = async function(model, id, role){
+        try{
+            const user = await model.findOne({id: id})
+            if(!user) return {message: "User not Found"}
+            user.role = role
+            await user.save()
+            return user
+        }catch(err){
+            throw new Error(err)
+        }
+    }
+    
+    getAllOrders = async function(model){
+        try{
+            
+        }catch(err){
+            throw new Error(err)
+        }
+    }
+}
+
+
+module.exports = new CRUD()
