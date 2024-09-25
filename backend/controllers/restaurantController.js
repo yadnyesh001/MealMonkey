@@ -1,10 +1,10 @@
 // controllers/restaurantController.js
 const ADMIN_ID = 'yourAdminIdHere';
-const BaseUser = require('../models/baseUserModel');
+
 const Restaurant = require('../models/restaurantModel');
 const Transaction=require('../models/transactionModel')
 const Order=require('../models/orderModel')
-const Admin=require('../models/adminModel')
+
 const Customer=require('../models/customerModel')
 const Review = require('../models/reviewModel');
 const Product = require('../models/productModel');
@@ -57,15 +57,15 @@ module.exports.updateProfile = async function(req, res) {
         }
 
         // Find the baseUser
-        let user = await BaseUser.findById(req.userId);
+        let user = await Restauarant.findById(req.userId);
 
         if (!user) {
             return res.status(404).send("User not found.");
         }
 
         // Check if the user is already a Restaurant
-        if (user.role !== 'Restaurant') {
-            user.role = 'Restaurant';
+        if (user.role !== 'restaurant') {
+            user.role = 'restaurant';
         }
 
         // Add Restaurant-specific fields
@@ -388,7 +388,7 @@ module.exports.rejectOrder = async function(req, res) {
         customer.wallet.balance += customerCredit;
         await customer.save();
         
-        const admin=await Admin.findById(ADMIN_ID);
+        const admin=await Customer.findById(ADMIN_ID);
         // Create transactions
         await Transaction.create([
             {
@@ -399,7 +399,7 @@ module.exports.rejectOrder = async function(req, res) {
             },
             {
                 amount: adminDeduction,
-                from: { type: 'Admin', id: admin._Id },
+                from: { type: 'Customer', id: admin._Id },
                 to: { type: 'Customer', id: customer._id },
                 isRefund: true
             }
@@ -541,7 +541,7 @@ module.exports.writeReview = async function(req, res) {
         }
 
         // Ensure targetType is valid
-        const validTargetTypes = [ 'DeliveryPartner', 'Admin'];
+        const validTargetTypes = [ 'DeliveryPartner', ' Customer'];
         if (!validTargetTypes.includes(targetType)) {
             return res.status(400).send("Invalid target type.");
         }
@@ -550,7 +550,7 @@ module.exports.writeReview = async function(req, res) {
         let target;
         if (targetType === 'DeliveryPartner') {
             target = await DeliveryPartner.findById(targetId);
-        } else if (targetType === 'Admin') {
+        } else if (targetType === 'Customer') {
             target = await Admin.findById(targetId);
         }
 

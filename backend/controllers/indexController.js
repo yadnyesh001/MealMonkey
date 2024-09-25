@@ -13,10 +13,10 @@ function generateToken(user) {
 
 module.exports.register = async function(req, res) {
     try {
-        let { name, email, password, role, isAdmin = false, contact, fullAddress, pincode } = req.body;
+        let { username, email, password, role, isAdmin = false, contact, fullAddress, pincode } = req.body;
         
         // Validate input
-        if (!name || !email || !password || !role || !contact || !fullAddress || !pincode) {
+        if (!username || !email || !password || !role || !contact || !fullAddress || !pincode) {
             return res.status(400).send("Please provide all details.");
         }
         // Checks if email is valid
@@ -48,7 +48,7 @@ module.exports.register = async function(req, res) {
     
                     // Create new user
                     let newUser = new customer({
-                    name: name,
+                    username: username,
                     email: email,
                     password: hash,
                     role: role,
@@ -77,7 +77,7 @@ module.exports.register = async function(req, res) {
     
                     // Create new user
                     let newUser = new restaurant({
-                    name: name,
+                    username: username,
                     email: email,
                     password: hash,
                     role: role,
@@ -106,7 +106,7 @@ module.exports.register = async function(req, res) {
     
                     // Create new user
                     let newUser = new deliveryPartner({
-                    name: name,
+                    username: username,
                     email: email,
                     password: hash,
                     role: role,

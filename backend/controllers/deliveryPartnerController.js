@@ -1,6 +1,5 @@
 // controllers/restaurantController.js
 const ADMIN_ID = 'yourAdminIdHere';
-const BaseUser = require('../models/baseUserModel');
 const Restaurant = require('../models/restaurantModel');
 const Transaction=require('../models/transactionModel')
 const Order=require('../models/orderModel')
@@ -18,15 +17,15 @@ module.exports.updateProfile = async function(req, res) {
         }
 
         // Find the baseUser
-        let user = await BaseUser.findById(req.userId);
+        let user = await DeliveryPartner.findById(req.userId);
 
         if (!user) {
             return res.status(404).send("User not found.");
         }
 
         // Check if the user is already a Delivery Partner
-        if (user.role !== 'DeliveryPartner') {
-            user.role = 'DeliveryPartner';
+        if (user.role !== 'deliveryPartner') {
+            user.role = 'deliveryPartner';
         }
 
         // Add Delivery Partner-specific fields
@@ -104,7 +103,7 @@ module.exports.getAllReviews = async function(req, res) {
         // Get all reviews targeting this delivery partner
         const reviews = await Review.find({
             'target.deliveryPartner': deliveryPartnerId
-        }).populate('source.user', 'name') // Optionally populate the user details
+        }).populate('source.user', 'username') // Optionally populate the user details
           .select('reviewType rating comment createdAt likes dislikes');
 
         res.status(200).json(reviews);
@@ -373,7 +372,7 @@ module.exports.writeReview = async function(req, res) {
         }
 
         // Ensure targetType is valid
-        const validTargetTypes = ['Restaurant', 'Admin'];
+        const validTargetTypes = ['Restaurant', 'Customer'];
         if (!validTargetTypes.includes(targetType)) {
             return res.status(400).send("Invalid target type.");
         }
@@ -382,8 +381,8 @@ module.exports.writeReview = async function(req, res) {
         let target;
         if (targetType === 'Restaurant') {
             target = await Restaurant.findById(targetId);
-        } else if (targetType === 'Admin') {
-            target = await Admin.findById(targetId);
+        } else if (targetType === 'Customer') {
+            target = await Customer.findById(targetId);
         }
 
         if (!target) {
