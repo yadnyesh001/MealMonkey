@@ -5,6 +5,9 @@ const isLoggedIn = require("../middlewares/isLoggedIn");
 const upload = require('../middlewares/multerConfig'); // Import multer config
 const Auth = require("../middlewares/Auth")
 
+
+//Restaurant dashboard
+router.get("/dashboard",isLoggedIn,restaurantController.getRestaurantDetails)
 // Update restaurant profile
 router.post("/profile", isLoggedIn, Auth.authorizeManager, restaurantController.updateProfile);
 
