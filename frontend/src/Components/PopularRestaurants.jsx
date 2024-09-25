@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import RestaurantCard from './RestaurantCard';
+import axiosInstance from '../utils/axiosInstance';
 
-const popularRestaurants = () => {
+const PopularRestaurants = () => {
     const [restaurants, setRestaurants] = useState([]);
-
+    console.log("Hello")
     useEffect(() => {
         const fetchRestaurants = async () => {
             try {
-                const response = await axios.get('/customer/popularRestaurants');
+                const response = await axiosInstance.get('/customer/popularRestaurants');
                 setRestaurants(response.data);
             } catch (error) {
                 console.error("Error fetching restaurants:", error);
@@ -27,4 +27,4 @@ const popularRestaurants = () => {
     );
 };
 
-export default popularRestaurants;
+export default PopularRestaurants;

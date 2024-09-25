@@ -1,8 +1,9 @@
-import React from 'react';
 import {Link} from 'react-router-dom';
 import './Header.css'; 
 
 const Header = () => {
+
+
   return (
     <header className='header'>
         <Link to='/' className='logo'>Logo</Link>
@@ -10,13 +11,16 @@ const Header = () => {
         <nav className='navbar'>
             <Link to='/'>Home</Link>
             <Link to='/'>Order</Link>
-            <Link to='/'>Blog</Link>
-            <Link to='/'>Contact</Link>
+            <Link to='/about'>About</Link>
+            <Link to='/contact'>Contact</Link>
         </nav>
 
-        <div className='profile'>
-            <img src='https://imgv3.fotor.com/images/blog-cover-image/10-profile-picture-ideas-to-make-you-stand-out.jpg' alt='Profile' className='profile-img' />
-            <span className='profile-name'>John Doe</span>
+        <div className='text-xl text-black '>
+            <Link className='relative text-white font-medium ml-[70px] text-[21px] transition-colors duration-300 hover:text-orange-500 before:absolute before:top-full before:left-0 before:h-[2px] before:w-0 before:bg-white hover:before:w-full before:transition-all before:duration-300' 
+            to='/login'>Login</Link>
+            
+            <Link className='relative text-white font-medium ml-[20px] text-[21px] transition-colors duration-300 hover:text-orange-500 before:absolute before:top-full before:left-0 before:h-[2px] before:w-0 before:bg-white hover:before:w-full before:transition-all before:duration-300'  
+            to='/register'>Register</Link>
         </div>
     </header>
   );    

@@ -76,7 +76,7 @@ module.exports.login = async function(req, res) {
 
         let user = await userModel.findOne({ email: email });
         if (!user) {
-            return res.status(400).send("Incorrect Username or Password.");
+            return res.status(400).send("Incorrect email or Password.");
         }
 
         bcrypt.compare(password, user.password, function(err, result) {
@@ -88,7 +88,7 @@ module.exports.login = async function(req, res) {
                     role: user.role
                 })
             } else {
-                res.send("Incorrect Password.");
+                res.status(400).send("Incorrect Password.");
             }
         });
     } catch (err) {

@@ -52,10 +52,11 @@ module.exports.getTopRestaurant = async function(req, res){
     try {
         // Fetch the top 8 restaurants sorted by rating (or any other criteria)
         const restaurants = await Restaurant.find({})
-            .sort({ rating: -1 }) // Sort by rating (descending)
-            .limit(8)
-            .select('hotelName rating `photos` address knownFor'); // Only fetch necessary fields
+        .sort({ rating: -1 }) // Sort by rating (descending)
+        .limit(8)
+        .select('hotelName rating `photos` address knownFor'); // Only fetch necessary fields
         
+        console.log(restaurants);
         return res.status(200).json(restaurants);
     } catch (error) {
         console.error("Error fetching restaurants:", error);

@@ -6,7 +6,7 @@ const upload = require('../middlewares/multerConfig'); // Import multer config
 const Auth = require("../middlewares/Auth")
 
 // Update restaurant profile
-router.post("/profile", isLoggedIn, restaurantController.updateProfile);
+router.post("/profile", isLoggedIn, Auth.authorizeManager, restaurantController.updateProfile);
 
 // List menu items
 router.get("/menu", isLoggedIn, restaurantController.listMenu);

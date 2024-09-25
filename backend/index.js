@@ -12,7 +12,10 @@ require("./config/mongoose_config.js");
 // Middleware
 const app = express();
 dotenv.config();
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:5173', // Your frontend URL
+    credentials: true // This allows cookies to be included in cross-origin requests
+}));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

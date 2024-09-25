@@ -51,3 +51,9 @@ Requirements
 * ajax
 * es6
 * dhtml (not req)
+
+
+
+* header 
+* multer forms
+* cart, hotels 

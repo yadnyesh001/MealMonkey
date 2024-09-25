@@ -13,3 +13,4 @@ const RestaurantCard = ({ restaurant }) => {
 };
 
 export default RestaurantCard;
+ 

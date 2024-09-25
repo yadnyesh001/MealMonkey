@@ -1,37 +1,66 @@
+const userModel = require ("../models/baseUserModel")
 class Auth{
-    authorizeCustomer(req, res, next) {
-        const role = req.userRole;
-        if(role === "customer"){
-            next();
-        }else{
-            res.status(401).send("Unauthorized User");
+    async authorizeCustomer(req, res, next) {
+        try{
+            const user = await userModel.findById(req.user.id)
+            if(!user){
+                return res.status(404).send("User not found");
+            }
+            if(user.role === "customer"){
+                next();
+            }else{
+                res.status(401).send("Unauthorized User");
+            }
+        }catch(err){
+            throw new Error(err)
         }
     }
 
-    authorizeManager(req, res, next) {
-        const role = req.userRole;
-        if(role === "restaurant"){
-            next();
-        }else{
-            res.status(401).send("Unauthorized User");
+    async authorizeManager(req, res, next) {
+        try{
+            const user = await userModel.findById(req.user.id)
+            if(!user){
+                return res.status(404).send("User not found");
+            }
+            if(user.role === "restaurant"){
+                next();
+            }else{
+                res.status(401).send("Unauthorized User");
+            }
+        }catch(err){
+            throw new Error(err)
         }
     }
 
-    authorizeDeliveryPartner(req, res, next) {
-        const role = req.userRole;
-        if(role === "deliveryPartner"){
-            next();
-        }else{
-            res.status(401).send("Unauthorized User");
+    async authorizeDeliveryPartner(req, res, next) {
+        try{
+            const user = await userModel.findById(req.user.id)
+            if(!user){
+                return res.status(404).send("User not found");
+            }
+            if(user.role === "popularRestaurants"){
+                next();
+            }else{
+                res.status(401).send("Unauthorized User");
+            }
+        }catch(err){
+            throw new Error(err)
         }
     }
 
-    authorizeAdmin(req, res, next) {
-        const role = req.userRole;
-        if(role === "admin"){
-            next();
-        }else{
-            res.status(401).send("Unauthorized User");
+    async authorizeAdmin(req, res, next) {
+        try{
+            const user = await userModel.findById(req.user.id)
+            if(!user){
+                return res.status(404).send("User not found");
+            }
+            if(user.role === "admin"){
+                next();
+            }else{
+                res.status(401).send("Unauthorized User");
+            }
+        }catch(err){
+            throw new Error(err)
         }
     }
     
