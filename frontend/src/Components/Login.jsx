@@ -18,7 +18,7 @@ const Login = () => {
       const response = await axiosInstance.post('/login', formData);
       if (response.status === 200) {
         const userRole = response.data.role;
-
+        
         if (userRole === 'admin') {
           navigate('/admin/dashboard');
         } else if (userRole === 'customer') {

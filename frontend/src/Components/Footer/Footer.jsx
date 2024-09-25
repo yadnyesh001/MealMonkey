@@ -1,4 +1,4 @@
-import React from 'react';
+import { Link } from 'react-router-dom';
 import './Footer.css'; // Importing the CSS file for styling
 
 const Footer = () => {
@@ -12,49 +12,49 @@ const Footer = () => {
             selection of products and place orders from the comfort of your own home.
           </p>
           <div className="socials">
-            <a href="#"><i className="fab fa-facebook"></i></a>
-            <a href="#"><i className="fab fa-twitter"></i></a>
-            <a href="#"><i className="fab fa-linkedin"></i></a>
-            <a href="#"><i className="fab fa-instagram"></i></a>
-            <a href="#"><i className="fab fa-youtube"></i></a>
+            <Link to="/"><i className="fab fa-facebook"></i></Link>
+            <Link to="/"><i className="fab fa-twitter"></i></Link>
+            <Link to="/"><i className="fab fa-linkedin"></i></Link>
+            <Link to="/"><i className="fab fa-instagram"></i></Link>
+            <Link to="/"><i className="fab fa-youtube"></i></Link>
           </div>
         </div>
         <div className="footer-section links">
           <h2>Company</h2>
           <ul>
-            <li><a href="#">About us</a></li>
-            <li><a href="#">Contact us</a></li>
-            <li><a href="#">Offer</a></li>
-            <li><a href="#">FAQs</a></li>
+            <li><Link to="/">About us</Link></li>
+            <li><Link to="/">Contact us</Link></li>
+            <li><Link to="/">Offer</Link></li>
+            <li><Link to="/">FAQs</Link></li>
           </ul>
         </div>
         <div className="footer-section links">
           <h2>Account</h2>
           <ul>
-            <li><a href="#">My orders</a></li>
-            <li><a href="#">Wishlist</a></li>
-            <li><a href="#">Shopping Cart</a></li>
-            <li><a href="#">Saved Address</a></li>
+            <li><Link to="/">My orders</Link></li>
+            <li><Link to="/">Wishlist</Link></li>
+            <li><Link to="/">Shopping Cart</Link></li>
+            <li><Link to="/">Saved Address</Link></li>
           </ul>
         </div>
         <div className="footer-section links">
           <h2>Useful Links</h2>
           <ul>
-            <li><a href="#">Blogs</a></li>
-            <li><a href="#">Login</a></li>
-            <li><a href="#">Register</a></li>
-            <li><a href="#">Profile</a></li>
-            <li><a href="#">Settings</a></li>
+            <li><Link to="/">Blogs</Link></li>
+            <li><Link to="/login">Login</Link></li>
+            <li><Link to="/register">Register</Link></li>
+            <li><Link to="/">Profile</Link></li>
+            <li><Link to="/">Settings</Link></li>
           </ul>
         </div>
         <div className="footer-section links">
           <h2>Top Brands</h2>
           <ul>
-            <li><a href="#">PizzaBoy</a></li>
-            <li><a href="#">Saladish</a></li>
-            <li><a href="#">IcePops</a></li>
-            <li><a href="#">Mexican Hoy</a></li>
-            <li><a href="#">La Foodie</a></li>
+            <li><Link to="/">PizzaBoy</Link></li>
+            <li><Link to="/">Saladish</Link></li>
+            <li><Link to="/">IcePops</Link></li>
+            <li><Link to="/">Mexican Hoy</Link></li>
+            <li><Link to="/">La Foodie</Link></li>
           </ul>
         </div>
       </div>

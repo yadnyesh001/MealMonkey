@@ -157,7 +157,7 @@ module.exports.login = async function(req, res) {
                     role: user.role
                 })
             } else {
-                res.send("Incorrect Password.");
+                res.status(400).send("Incorrect Password.");
             }
         });
     } catch (err) {

@@ -35,7 +35,6 @@ module.exports.updateProfile = async function(req, res) {
     try {
         const {
             hotelName,
-            cuisines,
             averageCost,
             paymentMethods,
             knownFor,
@@ -49,7 +48,6 @@ module.exports.updateProfile = async function(req, res) {
         // Validate input
         if (
             !hotelName ||
-            !Array.isArray(cuisines) ||
             !averageCost ||
             !type ||
             !timingFrom ||
@@ -72,7 +70,6 @@ module.exports.updateProfile = async function(req, res) {
 
         // Add Restaurant-specific fields
         user.hotelName = hotelName;
-        user.cuisines = cuisines;
         user.averageCost = averageCost;
         user.paymentMethods = paymentMethods || { cash: true, cards: true, digitalPayments: true };
         user.knownFor = knownFor || [];

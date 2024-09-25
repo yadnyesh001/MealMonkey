@@ -11,6 +11,7 @@ import AddMenuItemForm from './Components/AddMenuItemForm';
 import './App.css';
 import RestaurantForm from './Components/Restaurant/RestaurantForm';
 import DeliveryPartnerCard from './Components/DeliveryPartner/DeliveryPartnerCard';
+import AboutUs from './Components/AboutUs';
 
 const App = () => {
   // const handleFormSubmit = (data) => {
@@ -18,7 +19,7 @@ const App = () => {
   // };
   return (
     <div className="App">
-      {/* <Header />
+      <Header />
       <div className="content-container">
         <Routes>
           <Route
@@ -27,6 +28,7 @@ const App = () => {
               <>
                 <SearchBox />
                 <Categories />
+                <PopularRestaurants />
                 <Footer />
               </>
             }
@@ -37,7 +39,6 @@ const App = () => {
             element={
             <>
             <Header />
-            <CustomerDashboard />
             <PopularRestaurants />
             <Footer />
             </>
@@ -45,9 +46,10 @@ const App = () => {
           />
           <Route path='/restaurant/menu/item' element= {<AddMenuItemForm />}/>
         </Routes>
-      </div> */}
+      </div>
       {/* <RestaurantForm onSubmit={handleFormSubmit} /> */}
-      <DeliveryPartnerCard/>
+      {/* <DeliveryPartnerCard/> */}
+      {/* <AboutUs />  */}
     </div>
   );
 }
