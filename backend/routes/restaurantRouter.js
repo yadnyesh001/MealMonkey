@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const restaurantController = require("../controllers/restaurantController");
 const isLoggedIn = require("../middlewares/isLoggedIn");
+const upload = require('../middlewares/multerConfig'); // Import multer config
+const Auth = require("../middlewares/Auth")
 
 // Update restaurant profile
 router.post("/profile", isLoggedIn, restaurantController.updateProfile);
@@ -10,7 +12,7 @@ router.post("/profile", isLoggedIn, restaurantController.updateProfile);
 router.get("/menu", isLoggedIn, restaurantController.listMenu);
 
 // Add a new food item
-router.post("/menu/item", isLoggedIn, restaurantController.addItem);
+router.post("/menu/item", isLoggedIn, Auth.authorizeManager, upload.single('image'), restaurantController.addItem);
 
 // Update an existing food item
 router.put("/menu/item/:itemId", isLoggedIn, restaurantController.updateItem);

@@ -1,12 +1,15 @@
-import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Header from './Components/Header/Header';
 import Footer from './Components/Footer/Footer';
-import SignUp from './Components/SignUp/signUp';
-import Login from './Components/Login/Login';
+import SignUp from './Components/signUp';
+import Login from './Components/Login';
+import CustomerDashboard from './Components/customerDashboard'
+import PopularRestaurants from './Components/PopularRestaurants';
 import SearchBox from './Components/SearchBox/SearchBox';
 import Categories from './Components/Categories/Categories';
+import AddMenuItemForm from './Components/AddMenuItemForm';
 import './App.css';
+
 
 function App() {
   return (
@@ -26,6 +29,17 @@ function App() {
           />
           <Route path="/register" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/customer/dashboard" 
+            element={
+            <>
+            <Header />
+            <CustomerDashboard />
+            <PopularRestaurants />
+            <Footer />
+            </>
+            } 
+          />
+          <Route path='/restaurant/menu/item' element= {<AddMenuItemForm />}/>
         </Routes>
       </div>
     </div>

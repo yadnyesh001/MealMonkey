@@ -25,8 +25,8 @@ module.exports.register = async function(req, res) {
         // Checks if password is valid
         if (!passwordRegex.test(password)) {
             return res.status(400).send(`
-            Password must meet the following criteria:
-            • At least 6 characters long
+            Password must meet the following criteria:\n
+            • At least 6 characters long\n
             • At least one uppercase letter
             • At least one lowercase letter
             • At least one number

@@ -7,6 +7,7 @@ const Order=require('../models/orderModel')
 const Admin=require('../models/adminModel')
 const Customer=require('../models/customerModel')
 const Review = require('../models/reviewModel');
+const Product = require('../models/productModel');
 // Update and transform baseUser to Restaurant
 module.exports.updateProfile = async function(req, res) {
     try {
@@ -84,18 +85,56 @@ module.exports.listMenu = async function(req, res) {
 };
 
 // 2. Add a New Food Item
-module.exports.addItem = async function(req, res) {
+// module.exports.addItem = async function(req, res) {
+//     try {
+//         const { image, name, price, foodType, discount } = req.body;
+
+//         // Validate input
+//         if (!name || !price || !foodType) {
+//             return res.status(400).send("Please provide name, price, and foodType.");
+//         }
+
+//         // Create new product
+//         const newProduct = new Product({
+//             image,
+//             name,
+//             price,
+//             foodType,
+//             discount,
+//             restaurant: req.userId
+//         });
+
+//         await newProduct.save();
+
+//         // Add product to restaurant's menu
+//         const restaurant = await Restaurant.findById(req.userId);
+//         restaurant.menu.push(newProduct._id);
+//         await restaurant.save();
+
+//         res.status(201).json(newProduct);
+//     } catch (err) {
+//         console.log(err);
+//         res.status(500).send("Error adding new item.");
+//     }
+// };
+module.exports.addItem = async function (req, res) {
     try {
-        const { image, name, price, foodType, discount } = req.body;
+        const { name, price, foodType, discount } = req.body;
 
         // Validate input
         if (!name || !price || !foodType) {
             return res.status(400).send("Please provide name, price, and foodType.");
         }
 
+        // Check if an image is uploaded via Multer
+        let imagePath;
+        if (req.file) {
+            imagePath = req.file.path; // This is the path where Multer stored the image
+        }
+
         // Create new product
         const newProduct = new Product({
-            image,
+            image: imagePath,  // Save image path in the product
             name,
             price,
             foodType,
@@ -105,12 +144,12 @@ module.exports.addItem = async function(req, res) {
 
         await newProduct.save();
 
-        // Add product to restaurant's menu
+        // Add product to the restaurant's menu
         const restaurant = await Restaurant.findById(req.userId);
         restaurant.menu.push(newProduct._id);
         await restaurant.save();
 
-        res.status(201).json(newProduct);
+        res.status(201).json(newProduct); // Return the newly created product
     } catch (err) {
         console.log(err);
         res.status(500).send("Error adding new item.");

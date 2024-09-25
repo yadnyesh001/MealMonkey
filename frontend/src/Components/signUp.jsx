@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axiosInstance from '../../utils/axiosInstance';
+import axiosInstance from '../utils/axiosInstance';
 
 const SignUp = () => {
   const [formData, setFormData] = useState({ name: '', email: '', password: '', role: '', contact: '', fullAddress: '', pincode: '' });
@@ -13,11 +13,12 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // console.log(formData)
     setError(''); // Reset error
     try {
       const response = await axiosInstance.post('/register', formData);
-      if (response.status === 200) {
-        navigate.push('/login'); // Redirect to login after successful registration
+      if (response.status === 201) {
+        navigate('/login'); // Redirect to login after successful registration
       }
     } catch (error) {
       setError(error.response?.data || "Registration failed");
@@ -75,7 +76,7 @@ const SignUp = () => {
             >
               <option value="" disabled>Select Your Role</option>
               <option value="customer">Customer</option>
-              <option value="manager">Manager</option>
+              <option value="restaurant">Manager</option>
               <option value="deliveryPartner">Delivery Partner</option>
             </select>
           </div>

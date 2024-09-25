@@ -1,7 +1,7 @@
 // controllers/restaurantController.js
 const ADMIN_ID = 'yourAdminIdHere';
 const BaseUser = require('../models/baseUserModel');
-const Restaurant = require('../models/Restaurant');
+const Restaurant = require('../models/restaurantModel');
 const Transaction=require('../models/transactionModel')
 const Order=require('../models/orderModel')
 const Admin=require('../models/adminModel')

@@ -10,7 +10,7 @@ class Auth{
 
     authorizeManager(req, res, next) {
         const role = req.userRole;
-        if(role === "manager"){
+        if(role === "restaurant"){
             next();
         }else{
             res.status(401).send("Unauthorized User");
@@ -19,7 +19,7 @@ class Auth{
 
     authorizeDeliveryPartner(req, res, next) {
         const role = req.userRole;
-        if(role === "Delivery Partner"){
+        if(role === "deliveryPartner"){
             next();
         }else{
             res.status(401).send("Unauthorized User");

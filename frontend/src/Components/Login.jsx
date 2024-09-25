@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axiosInstance from '../../utils/axiosInstance';
+import axiosInstance from '../utils/axiosInstance';
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -20,13 +20,13 @@ const Login = () => {
         const userRole = response.data.role;
 
         if (userRole === 'admin') {
-          navigate.push('/admin/dashboard');
+          navigate('/admin/dashboard');
         } else if (userRole === 'customer') {
-          navigate.push('/customer/dashboard');
+          navigate('/customer/dashboard');
         } else if (userRole === 'restaurant') {
-          navigate.push('/restaurant/profileDetails');
+          navigate('/restaurant/profileDetails');
         } else if (userRole === 'deliveryPartner') {
-          navigate.push('/deliveryPartner/profileDetails');
+          navigate('/deliveryPartner/profileDetails');
         }
       }
     } catch (error) {
@@ -91,7 +91,7 @@ const Login = () => {
         </form>
 
         <p className="mt-6 text-center text-gray-600">
-          Don't have an account?{' '}
+          Dont have an account?{' '}
           <Link to="/register" className="text-orange-500 hover:underline transition-all duration-200">
             Sign Up
           </Link>

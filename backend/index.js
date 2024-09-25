@@ -1,11 +1,11 @@
 const express = require("express");
+const path = require('path');
 const cookieParser = require("cookie-parser");
 const multer = require("multer");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const PORT = process.env.PORT || 3000;
 require("./config/mongoose_config.js");
-const indexController = require("./controllers/indexController");
 // Load environment variables
 
 
@@ -16,20 +16,19 @@ app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// // File Storage
+// const Storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//         cb(null, "public/assets");
+//     },
+//     filename: function (req, file, cb) {
+//         cb(null, file.originalname);
+//     }
+// });
 
-// File Storage
-const Storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, "public/assets");
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.originalname);
-    }
-});
-const upload = multer({ storage: Storage });
 
-// Routes with files
-app.post("/register", upload.single("file"), indexController.register);
+// const upload = multer({ storage: Storage });
 
 
 // Routes
