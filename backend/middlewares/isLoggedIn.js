@@ -11,7 +11,7 @@ module.exports = function(req, res, next) {
         const decoded = jwt.verify(token, SECRET_KEY);
         // req.userId = decoded.id; // Store the user ID in the request object to update 
         // req.userRole = decoded.role; //Store the user Role for the authorization
-        req.user = decoded;
+        req.userId = decoded.id;
         next();
     } catch (err) {
         res.status(400).send(err);

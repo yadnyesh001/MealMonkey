@@ -1,8 +1,10 @@
-const userModel = require ("../models/baseUserModel")
+const customer = require("../models/customerModel");
+const restaurant = require("../models/restaurantModel");
+const deliveryPartner = require("../models/deliveryPartnerModel");
 class Auth{
     async authorizeCustomer(req, res, next) {
         try{
-            const user = await userModel.findById(req.user.id)
+            const user = await customer.findById(req.user.id)
             if(!user){
                 return res.status(404).send("User not found");
             }
@@ -18,7 +20,7 @@ class Auth{
 
     async authorizeManager(req, res, next) {
         try{
-            const user = await userModel.findById(req.user.id)
+            const user = await restaurant.findById(req.user.id)
             if(!user){
                 return res.status(404).send("User not found");
             }
@@ -34,11 +36,11 @@ class Auth{
 
     async authorizeDeliveryPartner(req, res, next) {
         try{
-            const user = await userModel.findById(req.user.id)
+            const user = await deliveryPartner.findById(req.user.id)
             if(!user){
                 return res.status(404).send("User not found");
             }
-            if(user.role === "popularRestaurants"){
+            if(user.role === "deliveryPartner"){
                 next();
             }else{
                 res.status(401).send("Unauthorized User");
@@ -50,11 +52,11 @@ class Auth{
 
     async authorizeAdmin(req, res, next) {
         try{
-            const user = await userModel.findById(req.user.id)
+            const user = await customer.findById(req.user.id)
             if(!user){
                 return res.status(404).send("User not found");
             }
-            if(user.role === "admin"){
+            if(user.isAdmin===true){
                 next();
             }else{
                 res.status(401).send("Unauthorized User");
