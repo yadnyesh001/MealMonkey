@@ -9,9 +9,12 @@ import SearchBox from './Components/SearchBox/SearchBox';
 import Categories from './Components/Categories/Categories';
 import AddMenuItemForm from './Components/AddMenuItemForm';
 import './App.css';
+import RestaurantForm from './Components/Restaurant/RestaurantForm';
 
-
-function App() {
+const App = () => {
+  // const handleFormSubmit = (data) => {
+  //   console.log('Submitted Data:', data);
+  // };
   return (
     <div className="App">
       <Header />
@@ -42,6 +45,7 @@ function App() {
           <Route path='/restaurant/menu/item' element= {<AddMenuItemForm />}/>
         </Routes>
       </div>
+      {/* <RestaurantForm onSubmit={handleFormSubmit} /> */}
     </div>
   );
 }
