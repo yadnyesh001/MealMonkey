@@ -8,6 +8,28 @@ const Admin=require('../models/adminModel')
 const Customer=require('../models/customerModel')
 const Review = require('../models/reviewModel');
 const Product = require('../models/productModel');
+
+//Get restaurant details
+// controllers/restaurantController.js
+
+module.exports.getRestaurantDetails = async function(req, res) {
+    try {
+        // Find the restaurant by the user's ID
+        const restaurant = await Restaurant.findById(req.userId)
+            .select('-password','menu'); // Exclude sensitive fields like 'password'
+
+        if (!restaurant) {
+            return res.status(404).send("Restaurant not found.");
+        }
+
+        // Return the restaurant's details
+        res.status(200).json(restaurant);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error fetching restaurant details.");
+    }
+};
+
 // Update and transform baseUser to Restaurant
 module.exports.updateProfile = async function(req, res) {
     try {
