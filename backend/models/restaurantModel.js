@@ -1,16 +1,54 @@
 const mongoose = require('mongoose');
-const baseUser = require('./baseUserModel'); // Ensure the casing matches exactly
+// Ensure the casing matches exactly
 
 // Define Restaurant Schema
 const restaurantSchema = new mongoose.Schema({
-    hotelName: {
+    username: {
+        type: String,
+        required: true
+    },
+    profilePhoto: {
+        type: String,
+        default: ""
+    },
+    email: {
         type: String,
         required: true,
+        unique: true
+    },
+    password: {
+        type: String,
+        required: true
+    },
+    address: {
+        fullAddress: {
+            type: String, 
+            required: false
+        },
+        pincode: {
+            type: String, 
+            required: false
+        },
+    },
+    contact: {
+        type: String,
+        required: false
+    },
+    isAdmin: {
+        type: Boolean,
+        default: false
+    },
+    role: {
+        type:String,
+        default:"restaurant"
+    },
+
+    hotelName: {
+        type: String,
         trim: true
     },
     averageCost: {
         type: Number, // Changed to Number for better numerical operations
-        required: true,
         min: 0
     },
     paymentMethods: {
@@ -30,7 +68,6 @@ const restaurantSchema = new mongoose.Schema({
     knownFor: [
         {
             type: String,
-            required: true,
             trim: true
         }
     ],
@@ -77,12 +114,10 @@ const restaurantSchema = new mongoose.Schema({
     // Operating hours
     timingFrom: {
         type: String,
-        required: true,
         trim: true
     },
     timingTo: {
         type: String,
-        required: true,
         trim: true
     },
     // Boolean to indicate if the restaurant is open
@@ -117,7 +152,7 @@ const restaurantSchema = new mongoose.Schema({
 });
 
 // Create Restaurant Model using Discriminator
-const Restaurant = baseUser.discriminator('Restaurant', restaurantSchema);
+const Restaurant = mongoose.model('Restaurant', restaurantSchema);
 
 module.exports = Restaurant;
 

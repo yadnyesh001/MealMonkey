@@ -1,4 +1,6 @@
-const userModel = require("../models/baseUserModel");
+const customer = require("../models/customerModel");
+const restaurant = require("../models/restaurantModel");
+const deliveryPartner = require("../models/deliveryPartnerModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const SECRET_KEY = process.env.JWT_SECRET_KEY;
@@ -33,37 +35,98 @@ module.exports.register = async function(req, res) {
             • At least one special character (!@#$%^&*())
             `);
         }
-
-        // Check if user already exists
-        let user = await userModel.findOne({ email: email });
-        if (user) return res.status(400).send("You already have an account. Please login.");
-        // Hash the password
-        bcrypt.genSalt(10, function(err, salt) {
-            bcrypt.hash(password, salt, async function(err, hash) {
-                if (err) throw err;
-
-                // Create new user
-                let newUser = new userModel({
-                name: name,
-                email: email,
-                password: hash,
-                role: role,
-                isAdmin: isAdmin,
-                contact: contact,
-                address: {
-                    fullAddress: fullAddress,
-                    pincode: pincode
-                }
-                });
-
-                const savedUser =await newUser.save();
-                res.status(201).json({
-                    success: true,
-                    message: "User registered successfully",
-                    user: savedUser
+        let user1 = await deliveryPartner.findOne({ email: email });
+        let user2 = await restaurant.findOne({ email: email });
+        let user3 = await customer.findOne({ email: email });
+        if (user1 || user2 || user3) return res.status(400).send("You already have an account. Please login.");
+        
+        if(role==="customer"){
+            // Hash the password
+            bcrypt.genSalt(10, function(err, salt) {
+                bcrypt.hash(password, salt, async function(err, hash) {
+                    if (err) throw err;
+    
+                    // Create new user
+                    let newUser = new customer({
+                    name: name,
+                    email: email,
+                    password: hash,
+                    role: role,
+                    isAdmin: isAdmin,
+                    contact: contact,
+                    address: {
+                        fullAddress: fullAddress,
+                        pincode: pincode
+                    }
+                    });
+    
+                    const savedUser =await newUser.save();
+                    res.status(201).json({
+                        success: true,
+                        message: "User registered successfully",
+                        user: savedUser
+                    });
                 });
             });
-        });
+        }
+        else if(role==="restaurant"){
+            // Hash the password
+            bcrypt.genSalt(10, function(err, salt) {
+                bcrypt.hash(password, salt, async function(err, hash) {
+                    if (err) throw err;
+    
+                    // Create new user
+                    let newUser = new restaurant({
+                    name: name,
+                    email: email,
+                    password: hash,
+                    role: role,
+                    isAdmin: isAdmin,
+                    contact: contact,
+                    address: {
+                        fullAddress: fullAddress,
+                        pincode: pincode
+                    }
+                    });
+    
+                    const savedUser =await newUser.save();
+                    res.status(201).json({
+                        success: true,
+                        message: "User registered successfully",
+                        user: savedUser
+                    });
+                });
+            });
+        }else if(role==="deliveryPartner"){
+            
+            // Hash the password
+            bcrypt.genSalt(10, function(err, salt) {
+                bcrypt.hash(password, salt, async function(err, hash) {
+                    if (err) throw err;
+    
+                    // Create new user
+                    let newUser = new deliveryPartner({
+                    name: name,
+                    email: email,
+                    password: hash,
+                    role: role,
+                    isAdmin: isAdmin,
+                    contact: contact,
+                    address: {
+                        fullAddress: fullAddress,
+                        pincode: pincode
+                    }
+                    });
+    
+                    const savedUser =await newUser.save();
+                    res.status(201).json({
+                        success: true,
+                        message: "User registered successfully",
+                        user: savedUser
+                    });
+                });
+            });
+        }
     } catch (err) {
         console.log(err);
         res.status(500).send("Error in registering user");
@@ -73,10 +136,16 @@ module.exports.register = async function(req, res) {
 module.exports.login = async function(req, res) {
     try {
         let { email, password } = req.body;
-
-        let user = await userModel.findOne({ email: email });
+        
+        let user = await customer.findOne({ email: email });
         if (!user) {
-            return res.status(400).send("Incorrect Username or Password.");
+            user = await deliveryPartner.findOne({ email: email });
+            if(!user){
+                let user = await restaurant.findOne({ email: email }); 
+                if(!user){
+                    return res.status(400).send("Incorrect Username or Password.");
+                }
+            }
         }
 
         bcrypt.compare(password, user.password, function(err, result) {
