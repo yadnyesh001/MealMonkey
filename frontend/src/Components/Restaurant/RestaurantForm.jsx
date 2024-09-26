@@ -136,19 +136,19 @@ const RestaurantForm = () => {
     e.preventDefault();
     
     const formDataToSubmit = new FormData();
+
     for (const key in formData) {
       if (Array.isArray(formData[key])) {
         formData[key].forEach(file => formDataToSubmit.append(key, file));
-      } else if (typeof formData[key] === 'object') {
-        for (const subKey in formData[key]) {
-          formDataToSubmit.append(`${key}[${subKey}]`, formData[key][subKey]);
-        }
+      } else if (typeof formData[key] === 'object' && key !== 'photos') {
+        formDataToSubmit.append(key, JSON.stringify(formData[key])); // Convert object to JSON string
       } else {
         formDataToSubmit.append(key, formData[key]);
       }
     }
-
+  
     try {
+      console.log(formDataToSubmit)
       const response = await axiosInstance.post('restaurant/profile', formDataToSubmit, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
@@ -157,7 +157,7 @@ const RestaurantForm = () => {
       console.error('Error submitting form:', error);
     }
   };
-
+  
 
 
   return (
@@ -288,15 +288,24 @@ const RestaurantForm = () => {
         ))}
       </div>
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">Type</label>
-        <input
-          type="text"
-          name="type"
-          value={formData.type}
-          onChange={handleChange}
-          className="mt-1 p-2 block w-full border border-gray-300 rounded-md"
-        />
-      </div>
+  <label className="block text-sm font-medium text-gray-700">Type</label>
+  <select
+    name="type"
+    value={formData.type}
+    onChange={handleChange}
+    className="mt-1 p-2 block w-full border border-gray-300 rounded-md"
+  >
+    <option value="Pure Veg">Pure Veg</option>
+    <option value="Oriental">Oriental</option>
+    <option value="Indian">Indian</option>
+    <option value="Mixed">Mixed</option>
+    <option value="Continental">Continental</option>
+    <option value="Italian">Italian</option>
+    <option value="Mexican">Mexican</option>
+    <option value="Fast Food">Fast Food</option>
+  </select>
+</div>
+
       <div className="mb-4">
         <label className="block text-sm font-medium text-gray-700">Photos</label>
         <input

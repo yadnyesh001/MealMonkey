@@ -33,7 +33,7 @@ module.exports.getRestaurantDetails = async function(req, res) {
 // Update and transform baseUser to Restaurant
 module.exports.updateProfile = async function(req, res) {
     try {
-        const {
+        let {
             hotelName,
             averageCost,
             paymentMethods,
@@ -44,7 +44,7 @@ module.exports.updateProfile = async function(req, res) {
             timingTo,
             photos
         } = req.body;
-
+       console.log(type)
         // Validate input
         if (
             !hotelName ||
@@ -55,7 +55,14 @@ module.exports.updateProfile = async function(req, res) {
         ) {
             return res.status(400).send("Please provide all necessary fields.");
         }
+        if (typeof paymentMethods === 'string') {
+           paymentMethods = JSON.parse(paymentMethods);
+        }
 
+        // Parse moreInfo if it's a string
+        if (typeof moreInfo === 'string') {
+            moreInfo = JSON.parse(moreInfo);
+        }
         // Find the baseUser
         let user = await Restaurant.findById(req.userId);
 

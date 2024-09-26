@@ -35,7 +35,7 @@ const RestaurantMenu = () => {
                                 <h2 className="text-lg font-bold">{item.name}</h2>
 
                                 {/* Display regular price */}
-                                <p className="text-gray-600 font-bold">${item.price}</p> 
+                                <p className="text-gray-600 font-bold">₹{item.price}</p> 
 
                                 <p className="text-gray-600">Food Type: {item.foodType}</p>
 
