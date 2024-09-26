@@ -91,7 +91,7 @@ const restaurantSchema = new mongoose.Schema({
     },
     // Photos for restaurant
     photos:{
-        type: String
+        type: [String]
     },
     // Restaurant rating (out of 5)
     rating: {

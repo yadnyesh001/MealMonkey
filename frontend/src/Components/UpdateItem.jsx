@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axiosInstance from '../utils/axiosInstance';
 
 const UpdateMenuItemForm = () => {
@@ -9,16 +9,20 @@ const UpdateMenuItemForm = () => {
   const [foodType, setFoodType] = useState('');
   const [discount, setDiscount] = useState('');
   const [image, setImage] = useState(null);
+  const navigate = useNavigate(); // Add navigate to redirect after update
 
   useEffect(() => {
     const fetchMenuItem = async () => {
       try {
         const res = await axiosInstance.get(`/restaurant/getItem/${id}`);
         const item = res.data;
-        setName(item.name);
-        setPrice(item.price);
-        setFoodType(item.foodType);
-        setDiscount(item.discount || ''); // Handle optional discount
+        // Ensure the item is defined and contains the expected properties
+        if (item) {
+          setName(item.name || '');
+          setPrice(item.price || '');
+          setFoodType(item.foodType || '');
+          setDiscount(item.discount || ''); // Handle optional discount
+        }
       } catch (error) {
         console.error('Error fetching menu item', error);
       }
@@ -32,11 +36,11 @@ const UpdateMenuItemForm = () => {
 
     // Log form values before submitting
     console.log('Form Values:', {
-        name,
-        price,
-        foodType,
-        discount,
-        image
+      name,
+      price,
+      foodType,
+      discount,
+      image
     });
 
     // Prepare form data
@@ -46,18 +50,20 @@ const UpdateMenuItemForm = () => {
     formData.append('foodType', foodType);
     formData.append('discount', discount);
     if (image) {
-        formData.append('image', image); // Append the selected image if provided
+      formData.append('image', image); // Append the selected image if provided
     }
 
     try {
-        const res = await axiosInstance.put(`/restaurant/updateItem/${id}`, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data', // Set the correct content type
-            },
-        });
-        console.log('Update successful:', res.data);
+      const res = await axiosInstance.put(`/restaurant/updateItem/${id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data', // Set the correct content type
+        },
+      });
+      console.log('Update successful:', res.data);
+      alert('Menu item updated successfully'); // Notify user of success
+      navigate('/restaurant'); // Redirect after successful update
     } catch (error) {
-        console.error('Error updating menu item:', error.response.data);
+      console.error('Error updating menu item:', error.response.data);
     }
 };
 
@@ -77,7 +83,7 @@ const UpdateMenuItemForm = () => {
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 placeholder-gray-400"
-            placeholder={name || "Enter dish name"} // Set placeholder to existing value
+            placeholder="Enter dish name" // Set placeholder to existing value
             required
           />
         </div>
@@ -89,7 +95,7 @@ const UpdateMenuItemForm = () => {
             value={price}
             onChange={(e) => setPrice(e.target.value)}
             className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 placeholder-gray-400"
-            placeholder={price || "Enter price"} // Set placeholder to existing value
+            placeholder="Enter price" // Set placeholder to existing value
             required
           />
         </div>
@@ -101,7 +107,7 @@ const UpdateMenuItemForm = () => {
             value={foodType}
             onChange={(e) => setFoodType(e.target.value)}
             className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 placeholder-gray-400"
-            placeholder={foodType || "Enter food type (e.g., Vegan, Non-Veg)"} // Set placeholder to existing value
+            placeholder="Enter food type (e.g., Vegan, Non-Veg)" // Set placeholder to existing value
             required
           />
         </div>
@@ -113,7 +119,7 @@ const UpdateMenuItemForm = () => {
             value={discount}
             onChange={(e) => setDiscount(e.target.value)}
             className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 placeholder-gray-400"
-            placeholder={discount || "Enter discount (optional)"} // Set placeholder to existing value
+            placeholder="Enter discount (optional)" // Set placeholder to existing value
           />
         </div>
 
