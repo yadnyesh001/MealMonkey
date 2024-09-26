@@ -356,8 +356,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/UserProvider'; // Adjust the path based on your project structure
-import axiosInstance from '../../utils/axiosInstance';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 const RestaurantForm = () => {
   const { user } = useUser(); // Get user data from UserProvider

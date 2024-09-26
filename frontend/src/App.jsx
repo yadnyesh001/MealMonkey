@@ -43,7 +43,7 @@ const App = () => {
             <Route path="/restaurant/menu/item" element={<AddMenuItemForm />} />
             <Route path="/restaurant/menu" element={<Menu />} />
             <Route path="/restaurant/updateItem/:id" element={<UpdateMenuItemForm/>} />
-            <Route path="/admin" element={<AdminDashboard />}/>
+            <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/getUser" element={<GetUser />} />
             <Route path="/admin/deleteUser" element={<DeleteUser />} />
             <Route path="/admin/changeUserRole" element={<ChangeUserRole />} />
