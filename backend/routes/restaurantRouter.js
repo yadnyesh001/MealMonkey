@@ -55,4 +55,8 @@ router.get("/transactions", isLoggedIn, restaurantController.getTransactions);
 // Route to write a review
 router.post("/writeReview", isLoggedIn, restaurantController.writeReview);
 
+router.get("/getItem/:id", isLoggedIn, restaurantController.getMenuItemDetails);
+
+router.put("/updateItem/:id", isLoggedIn, restaurantController.updateMenuItem);
+
 module.exports = router;
