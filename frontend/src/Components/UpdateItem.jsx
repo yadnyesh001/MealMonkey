@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axiosInstance from '../utils/axiosInstance';
-
 const UpdateMenuItemForm = () => {
   const { id } = useParams(); // Get the item ID from the URL
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [foodType, setFoodType] = useState('');
-  const [discount, setDiscount] = useState('');
-  const [image, setImage] = useState(null);
+  const [Discount, setDiscount] = useState('');
   const navigate = useNavigate(); // Add navigate to redirect after update
 
   useEffect(() => {
@@ -21,7 +19,7 @@ const UpdateMenuItemForm = () => {
           setName(item.name || '');
           setPrice(item.price || '');
           setFoodType(item.foodType || '');
-          setDiscount(item.discount || ''); // Handle optional discount
+          setDiscount(item.Discount || ''); // Handle optional discount
         }
       } catch (error) {
         console.error('Error fetching menu item', error);
@@ -31,42 +29,61 @@ const UpdateMenuItemForm = () => {
     fetchMenuItem();
   }, [id]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
 
-    // Log form values before submitting
-    console.log('Form Values:', {
-      name,
-      price,
-      foodType,
-      discount,
-      image
-    });
+//     // Log form values before submitting
+//     console.log('Form Values:', {
+//       name,
+//       price,
+//       foodType,
+//       discount,
+//       image
+//     });
 
-    // Prepare form data
-    const formData = new FormData();
-    formData.append('name', name);
-    formData.append('price', price);
-    formData.append('foodType', foodType);
-    formData.append('discount', discount);
-    if (image) {
-      formData.append('image', image); // Append the selected image if provided
-    }
+//     // Prepare form data
+//     const formData = new FormData();
+//     formData.append('name', name);
+//     formData.append('price', price);
+//     formData.append('foodType', foodType);
+//     formData.append('discount', discount);
+//     if (image) {
+//       formData.append('image', image); // Append the selected image if provided
+//     }
 
-    try {
-      const res = await axiosInstance.put(`/restaurant/updateItem/${id}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data', // Set the correct content type
-        },
-      });
-      console.log('Update successful:', res.data);
-      alert('Menu item updated successfully'); // Notify user of success
-      navigate('/restaurant'); // Redirect after successful update
-    } catch (error) {
-      console.error('Error updating menu item:', error.response.data);
-    }
+//     try {
+//       const res = await axiosInstance.put(`/restaurant/updateItem/${id}`, formData, {
+//         headers: {
+//           'Content-Type': 'multipart/form-data', // Set the correct content type
+//         },
+//       });
+//       console.log('Update successful:', res.data);
+//       alert('Menu item updated successfully'); // Notify user of success
+//       navigate('/restaurant'); // Redirect after successful update
+//     } catch (error) {
+//       console.error('Error updating menu item:', error.response.data);
+//     }
+// };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  // Prepare form data
+  const formData = new FormData();
+  formData.append('name', name);
+  formData.append('price', price);
+  formData.append('foodType', foodType);
+  formData.append('Discount', Discount ? Discount : ''); // Handle optional discount
+
+  try {
+    const res = await axiosInstance.put(`/restaurant/updateItem/${id}`, formData);
+    console.log('Update successful:', res.data);
+    alert('Menu item updated successfully');
+    navigate('/restaurant');
+  } catch (error) {
+    console.error('Error updating menu item:', error.response.data);
+    alert('Failed to update menu item: ' + error.response.data); // Show error message
+  }
 };
-
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 flex items-center justify-center">
@@ -116,14 +133,14 @@ const UpdateMenuItemForm = () => {
           <label className="block text-gray-700 font-semibold mb-2">Discount:</label>
           <input
             type="number"
-            value={discount}
+            value={Discount}
             onChange={(e) => setDiscount(e.target.value)}
             className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 placeholder-gray-400"
             placeholder="Enter discount (optional)" // Set placeholder to existing value
           />
         </div>
 
-        <div className="mb-6">
+        {/* <div className="mb-6">
           <label className="block text-gray-700 font-semibold mb-2">Image:</label>
           <input
             type="file"
@@ -131,7 +148,7 @@ const UpdateMenuItemForm = () => {
             onChange={(e) => setImage(e.target.files[0])}
             className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
           />
-        </div>
+        </div> */}
 
         <button
           type="submit"

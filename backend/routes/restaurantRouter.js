@@ -18,7 +18,7 @@ router.get("/menu", isLoggedIn, restaurantController.listMenu);
 router.post("/menu/item", isLoggedIn, Auth.authorizeManager, upload.single('image'), restaurantController.addItem);
 
 // Update an existing food item
-router.put("/menu/item/:itemId", isLoggedIn, restaurantController.updateItem);
+router.put("/menu/item/:itemId", isLoggedIn, Auth.authorizeManager, restaurantController.updateItem);
 
 // Delete a food item
 router.delete("/menu/item/:itemId", isLoggedIn, restaurantController.deleteItem);

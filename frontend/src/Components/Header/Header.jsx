@@ -57,7 +57,7 @@ const Header = () => {
         {loggedIn && role === 'admin' && (
           <>
             <Link to='/admin/'>Home</Link>
-            <Link to='/admin'>Admin Dashboard</Link>
+            <Link to='/admin'>Reviews</Link>
           </>
         )}
         {loggedIn && role === 'customer' && (

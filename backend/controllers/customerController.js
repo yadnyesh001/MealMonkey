@@ -1,5 +1,6 @@
 const customer = require("../models/customerModel");
 const Restaurant = require("../models/restaurantModel")
+const Product = require('../models/productModel');
 module.exports.profileDetailsCustomer = async function(req, res) {
     try {
         const user = await customer.findById(req.userId).select("-password");

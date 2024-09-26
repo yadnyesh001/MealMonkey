@@ -190,21 +190,25 @@ module.exports.addItem = async function (req, res) {
 module.exports.updateItem = async function(req, res) {
     try {
         const { itemId } = req.params;
-        const { image, name, price, foodType, discount } = req.body;
+        const { image, name, price, foodType, Discount } = req.body;
 
         // Find the product and verify it belongs to the restaurant
-        const product = await Product.findOne({ _id: itemId, restaurant: req.userId });
+        const product = await Product.findOne({ _id: itemId});
         if (!product) {
             return res.status(404).send("Product not found in your menu.");
         }
-
+        console.log(product)
         // Update the product fields
-        if (image !== undefined) product.image = image;
+        // if (image !== undefined) product.image = image;
         if (name !== undefined) product.name = name;
         if (price !== undefined) product.price = price;
         if (foodType !== undefined) product.foodType = foodType;
-        if (discount !== undefined) product.discount = discount;
+        if (Discount !== undefined) product.Discount = Discount;
 
+        if (req.file) {
+            product.photos = `/public/Images/${req.file.filename}`; // Store the path as a string
+        }
+        
         await product.save();
 
         res.status(200).json(product);
@@ -213,6 +217,9 @@ module.exports.updateItem = async function(req, res) {
         res.status(500).send("Error updating the item.");
     }
 };
+
+
+
 
 // 4. Delete a Food Item
 module.exports.deleteItem = async function(req, res) {

@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Categories.css';
 import deliveryBoy from "../../assets/images/delivery-boy.png";
 import burger from '../../assets/images/burger.png';
@@ -11,6 +12,7 @@ import noodles from '../../assets/images/noodles.png';
 import donuts from '../../assets/images/donuts.png';
 
 const Categories = () => {
+  const navigate = useNavigate();
   const scrollRef = useRef(null);
   const [scrollPosition, setScrollPosition] = useState(0);
   const cardWidth = window.innerWidth / 5; 
@@ -54,6 +56,9 @@ const Categories = () => {
       behavior: 'smooth',
     });
   }, [scrollPosition]);
+  const handleCategoryClick = (foodType) => {
+    navigate(`/customer/restaurants/${foodType}`);
+};
 
   return (
     <div className="categories-section">
@@ -73,12 +78,16 @@ const Categories = () => {
       </p>
       <div className="categories-container">
         <div className="categories-list" ref={scrollRef}>
-          {categories.map((category, index) => (
-            <div className="category-card" key={index}>
+        {categories.map((category, index) => (
+          <div 
+              className="category-card" 
+              key={index} 
+              onClick={() => handleCategoryClick(category.name.toLowerCase())}
+          >
               <img src={category.img} alt={category.name} className="category-img" />
               <p className="category-name">{category.name}</p>
-            </div>
-          ))}
+          </div>
+      ))}
         </div>
         <img src={deliveryBoy} alt="Delivery Boy" className="scooter-img" />
       </div>
