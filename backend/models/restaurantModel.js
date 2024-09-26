@@ -45,7 +45,7 @@ const restaurantSchema = new mongoose.Schema({
 
     hotelName: {
         type: String,
-        trim: true
+        default: ""
     },
     averageCost: {
         type: Number, // Changed to Number for better numerical operations

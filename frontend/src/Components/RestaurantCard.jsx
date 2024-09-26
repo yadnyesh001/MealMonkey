@@ -1,16 +1,29 @@
+import React from 'react';
+
 const RestaurantCard = ({ restaurant }) => {
+    console.log(restaurant);
+    if (!restaurant) {
+        return null; // Avoid rendering the card if restaurant data is undefined.
+    }
+
+    const { hotelName, rating, photos, address, knownFor } = restaurant;
+
     return (
-        <div className="border rounded-lg p-4 shadow-lg">
-            <img src={restaurant.photos[0]} alt={restaurant.hotelName} className="w-full h-32 object-cover rounded-t-lg" />
-            <div className="mt-4">
-                <h2 className="text-lg font-bold">{restaurant.hotelName}</h2>
-                <p className="text-gray-500">Rating: {restaurant.rating}</p>
-                <p className="text-sm text-gray-600">{restaurant.knownFor.join(', ')}</p>
-                <p className="text-xs text-gray-400">{restaurant.address.fullAddress}</p>
+        <div className="border p-4 rounded-lg shadow-lg">
+            {/* Safely check if photos exist before accessing the first image */}
+            <img 
+                src={photos && photos[0] ? photos[0] : 'default-image-url.jpg'} 
+                alt={hotelName} 
+                className="w-full h-48 object-cover rounded-md"
+            />
+            <div className="mt-2">
+                <h2 className="text-lg font-bold">{hotelName || 'Unknown Restaurant'}</h2>
+                <p>Rating: {rating || 'N/A'}</p>
+                <p>Known For: {knownFor || 'N/A'}</p>
+                <p>{address || 'Address not available'}</p>
             </div>
         </div>
     );
 };
 
 export default RestaurantCard;
- 

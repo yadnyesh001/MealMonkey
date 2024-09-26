@@ -57,7 +57,7 @@ module.exports.updateProfile = async function(req, res) {
         }
 
         // Find the baseUser
-        let user = await Restauarant.findById(req.userId);
+        let user = await Restaurant.findById(req.userId);
 
         if (!user) {
             return res.status(404).send("User not found.");

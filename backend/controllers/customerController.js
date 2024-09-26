@@ -54,7 +54,7 @@ module.exports.getTopRestaurant = async function(req, res){
         const restaurants = await Restaurant.find({})
         .sort({ rating: -1 }) // Sort by rating (descending)
         .limit(8)
-        .select('hotelName rating `photos` address knownFor'); // Only fetch necessary fields
+        .select('hotelName rating `photos` address.fullAddress knownFor'); // Only fetch necessary fields
         
         console.log(restaurants);
         return res.status(200).json(restaurants);
@@ -65,4 +65,21 @@ module.exports.getTopRestaurant = async function(req, res){
 }
 
 
+module.exports.listMenu = async function(req, res) {
+    try {
+        const restaurantId = req.params.restaurantId;  // Get the restaurant ID from the URL params
 
+        // Find the restaurant by ID and populate the 'menu' field with the referenced products
+        const restaurant = await Restaurant.findById(restaurantId).populate('menu');
+        
+        if (!restaurant) {
+            return res.status(404).send("Restaurant not found.");
+        }
+
+        // Return the populated menu
+        res.status(200).json(restaurant.menu);
+    } catch (err) {
+        console.log(err);
+        res.status(500).send("Error fetching menu.");
+    }
+};

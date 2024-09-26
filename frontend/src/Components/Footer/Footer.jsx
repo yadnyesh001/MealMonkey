@@ -1,12 +1,13 @@
 import { Link } from 'react-router-dom';
 import './Footer.css'; // Importing the CSS file for styling
+import logo from "../../assets/images/logo.png";
 
 const Footer = () => {
   return (
     <footer className="footer">
       <div className="footer-content">
         <div className="footer-section about">
-          <h1 className="footer-logo">Logo</h1>
+          <h1 className="footer-logo"><img src={logo} alt="Logo" /></h1>
           <p>
             Welcome to our online order website! Here, you can browse our wide
             selection of products and place orders from the comfort of your own home.

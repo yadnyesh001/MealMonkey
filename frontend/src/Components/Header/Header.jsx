@@ -43,12 +43,14 @@ const Header = () => {
           <>
             <Link to='/resturant/dashboard'>Home</Link>
             <Link to='/restaurant/menu/item'>Add dish</Link>
+            <Link to='/restaurant/profileDetails'>Profile</Link>
           </>
         )}
-        {loggedIn && role === 'delivery' && (
+        {loggedIn && role === 'deliveryPartner' && (
           <>
             <Link to='/deliveryPartner/dashboard'>Home</Link>
             <Link to='/deliveries'>My Deliveries</Link>
+            <Link to='/deliveryPartner/profile'>Profile</Link>
           </>
         )}
         {loggedIn && role === 'admin' && (
@@ -57,10 +59,11 @@ const Header = () => {
             <Link to='/admin'>Admin Dashboard</Link>
           </>
         )}
-        {loggedIn && role === 'user' && (
+        {loggedIn && role === 'customer' && (
           <>
             <Link to='/customer/dashboard'>Home</Link>
             <Link to='/myorders'>My Orders</Link>
+            <Link to='/customer/profile'>Profile</Link>
           </>
         )}
         {!loggedIn && <Link to='/'>Home</Link>}
