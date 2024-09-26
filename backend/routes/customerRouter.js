@@ -40,7 +40,7 @@ router.post("/cart/add", isLoggedIn, customerController.addToCart);
 router.get('/cart', isLoggedIn, customerController.getCart); // Get cart items
 router.put('/cart/:itemId', isLoggedIn, customerController.updateCartQuantity); // Update cart item quantity
 router.post('/checkout', isLoggedIn, customerController.checkout); // Checkout
-
+router.get('/orders', isLoggedIn, Auth.authorizeCustomer, customerController.getOrders);
 
 
 module.exports = router;

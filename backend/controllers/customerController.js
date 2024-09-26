@@ -202,7 +202,6 @@ module.exports.checkout = async function(req, res) {
 const adminID='66f50593a65bcef6719b2644'
 /// controllers/customerController.js
 const Order = require('../models/orderModel');
-const Product=require("../models/productModel")
 // module.exports.checkout = async function(req, res) {
 //     try {
 //         const customer = await Customer.findById(req.userId).populate('cart.product');
@@ -339,3 +338,47 @@ module.exports.checkout = async function(req, res) {
     }
 };
 
+module.exports.getOrders = async function(req, res) {
+    try {
+        const userId = req.userId; // Assuming req.userId is set by your authentication middleware
+
+        // Find orders for the user and populate relevant fields
+        const orders = await Order.find({ customer: userId })
+            .populate('restaurant', 'email') // Get restaurant email
+            .populate('items.product'); // Populate the product details
+
+        // Check if orders exist
+        if (!orders || orders.length === 0) {
+            return res.status(200).json([]); // Return an empty array if no orders found
+        }
+
+        // Format the response
+        const formattedOrders = orders.map(order => {
+            // Ensure restaurant data is available
+            if (!order.restaurant) {
+                return {
+                    restaurantId: null,
+                    restaurantEmail: 'N/A',
+                    items: order.items,
+                    totalAmount: order.totalAmount,
+                    status: order.status,
+                    createdAt: order.createdAt
+                };
+            }
+
+            return {
+                restaurantId: order.restaurant._id,
+                restaurantEmail: order.restaurant.email,
+                items: order.items,
+                totalAmount: order.totalAmount,
+                status: order.status,
+                createdAt: order.createdAt
+            };
+        });
+
+        res.status(200).json(formattedOrders);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error fetching orders.");
+    }
+};
