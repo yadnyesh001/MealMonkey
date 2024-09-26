@@ -1,76 +1,136 @@
-const userModel = require("../models/userModel");
+const customer = require("../models/customerModel");
+const restaurant = require("../models/restaurantModel");
+const deliveryPartner = require("../models/deliveryPartnerModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const SECRET_KEY = process.env.JWT_SECRET_KEY;
 const validator = require('validator');
 const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*()]).{6,}$/;
+const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
 function generateToken(user) {
     return jwt.sign({ id: user._id, email: user.email }, SECRET_KEY, { expiresIn: '1h' });
 }
 
 module.exports.register = async function(req, res) {
     try {
-        let { username, email, password, role, isAdmin} = req.body;
-
+        let { username, email, password, role, isAdmin = false, contact, fullAddress, pincode } = req.body;
+        
         // Validate input
-        if (!username || !email || !password || !role) {
-            return res.status(400).send("Please provide all details, including role.");
+        if (!username || !email || !password || !role || !contact || !fullAddress || !pincode) {
+            return res.status(400).send("Please provide all details.");
         }
-
-        // Checks if email is valid or not
-        if(!validator.isEmail(email)){
+        // Checks if email is valid
+        if (!validator.isEmail(email)) {
             return res.status(400).send("Please provide a valid email address.");
         }
 
-        // Checks if password is valid or not
-        if(!passwordRegex.test(password)){
-            return res.status(400).send(`
-      Password must meet the following criteria:
-      • At least 6 characters long
-      • At least one uppercase letter
-      • At least one lowercase letter
-      • At least one number
-      • At least one special character (!@#$%^&*())
-    `);
+        if (!emailRegex.test(email)) {
+            return res.status(400).send(`Provide valid email address`);
         }
-        // Check if user already exists
-        let user = await userModel.findOne({ email: email });
-        if (user) return res.status(400).send("You already have an account. Please login.");
-
-        // Hash the password
-        bcrypt.genSalt(10, function(err, salt) {
-            bcrypt.hash(password, salt, async function(err, hash) {
-                if (err) throw err;
-
-                // Create new user
-                let newUser = new userModel({
-                    user: username,
+        email = email.toLowerCase();
+        // Checks if password is valid
+        if (!passwordRegex.test(password)) {
+            return res.status(400).send(`
+            Password must meet the following criteria:\n
+            • At least 6 characters long\n
+            • At least one uppercase letter
+            • At least one lowercase letter 
+            • At least one number
+            • At least one special character (!@#$%^&*())
+            `);
+        }
+        let user1 = await deliveryPartner.findOne({ email: email });
+        let user2 = await restaurant.findOne({ email: email });
+        let user3 = await customer.findOne({ email: email });
+        if (user1 || user2 || user3) return res.status(400).send("You already have an account. Please login.");
+        
+        if(role==="customer" || role==="admin"){
+            // Hash the password
+            bcrypt.genSalt(10, function(err, salt) {
+                bcrypt.hash(password, salt, async function(err, hash) {
+                    if (err) throw err;
+    
+                    // Create new user
+                    let newUser = new customer({
+                    username: username,
                     email: email,
                     password: hash,
                     role: role,
                     isAdmin: isAdmin,
+                    contact: contact,
+                    address: {
+                        fullAddress: fullAddress,
+                        pincode: pincode
+                    }
+                    });
+    
+                    const savedUser =await newUser.save();
+                    res.status(201).json({
+                        success: true,
+                        message: "User registered successfully",
+                        user: savedUser
+                    });
                 });
-
-                await newUser.save();
-
-                // Generate token and set cookies
-                let token = generateToken(newUser);
-                res.cookie("token", token);
-                res.cookie("email", email);
-
-                if(isAdmin === true){
-                    res.redirect("/admin/dashboard");
-                }
-                // Redirect based on selected role
-                if (role === "user") {
-                    res.redirect("/user/profileDetails");
-                } else if (role === "manager") {
-                    res.redirect("/manager/profileDetails");
-                } else if (role === "delivery") {
-                    res.redirect("/delivery/profileDetails");
-                }
             });
-        });
+        }
+        else if(role==="restaurant"){
+            // Hash the password
+            bcrypt.genSalt(10, function(err, salt) {
+                bcrypt.hash(password, salt, async function(err, hash) {
+                    if (err) throw err;
+    
+                    // Create new user
+                    let newUser = new restaurant({
+                    username: username,
+                    email: email,
+                    password: hash,
+                    role: role,
+                    isAdmin: isAdmin,
+                    contact: contact,
+                    address: {
+                        fullAddress: fullAddress,
+                        pincode: pincode
+                    },
+                    });
+    
+                    const savedUser =await newUser.save();
+                    res.status(201).json({
+                        success: true,
+                        message: "User registered successfully",
+                        user: savedUser
+                    });
+                });
+            });
+        }else if(role==="deliveryPartner"){
+            
+            // Hash the password
+            bcrypt.genSalt(10, function(err, salt) {
+                bcrypt.hash(password, salt, async function(err, hash) {
+                    if (err) throw err;
+    
+                    // Create new user
+                    let newUser = new deliveryPartner({
+                    username: username,
+                    email: email,
+                    password: hash,
+                    role: role,
+                    isAdmin: isAdmin,
+                    contact: contact,
+                    address: {
+                        fullAddress: fullAddress,
+                        pincode: pincode
+                    }
+                    });
+    
+                    const savedUser =await newUser.save();
+                    res.status(201).json({
+                        success: true,
+                        message: "User registered successfully",
+                        user: savedUser
+                    });
+                });
+            });
+        }
     } catch (err) {
         console.log(err);
         res.status(500).send("Error in registering user");
@@ -80,39 +140,29 @@ module.exports.register = async function(req, res) {
 module.exports.login = async function(req, res) {
     try {
         let { email, password } = req.body;
+        
+        // First check in customer, then deliveryPartner, and lastly restaurant
+        let user = await customer.findOne({ email: email }) ||
+                   await deliveryPartner.findOne({ email: email }) ||
+                   await restaurant.findOne({ email: email });
 
-        let user = await userModel.findOne({ email: email });
+        // If no user is found, return the incorrect credentials message
         if (!user) {
             return res.status(400).send("Incorrect Username or Password.");
         }
 
+        
         bcrypt.compare(password, user.password, function(err, result) {
             if (result) {
                 let token = generateToken(user);
                 res.cookie("token", token);
-
-                // Check if the user has filled in the "Name" field
-                if (!user.name || user.Name.trim() === "") {
-                    // Redirect to the profile details page based on role if name is missing
-                    if (user.role === "user") {
-                        res.redirect("/user/profileDetails");
-                    } else if (user.role === "manager") {
-                        res.redirect("/manager/profileDetails");
-                    } else if (user.role === "delivery") {
-                        res.redirect("/delivery/profileDetails");
-                    }
-                } else {
-                    // Redirect to the dashboard based on role if name is filled
-                    if (user.role === "user") {
-                        res.redirect("/user/dashboard");
-                    } else if (user.role === "manager") {
-                        res.redirect("/manager/dashboard");
-                    } else if (user.role === "delivery") {
-                        res.redirect("/delivery/dashboard");
-                    }
-                }
+                res.cookie("role", user.role);
+                res.status(200).json({
+                    message: "Login successful",
+                    role: user.role
+                })
             } else {
-                res.send("Incorrect Password.");
+                res.status(400).send("Incorrect Password.");
             }
         });
     } catch (err) {
@@ -121,115 +171,8 @@ module.exports.login = async function(req, res) {
     }
 };
 
-
 module.exports.logout = function(req, res) {
     res.clearCookie("token");
-    res.clearCookie("email");
-    res.redirect("/");
-};
-
-
-
-
-// Render profile form for User (Customer) - GET
-module.exports.profileDetailsUser = async function(req, res) {
-    let email = req.cookies.email;
-    let user = await userModel.findOne({ email: email });
-    if (!user) return res.redirect("/");
-
-    // Render the profile details form for the user
-    res.render("profileDetailsUser", { user });
-};
-
-// Render profile form for Manager - GET
-module.exports.profileDetailsManager = async function(req, res) {
-    let email = req.cookies.email;
-    let user = await userModel.findOne({ email: email });
-    if (!user) return res.redirect("/");
-
-    // Render the profile details form for the manager
-    res.render("profileDetailsManager", { user });
-};
-
-// Render profile form for Delivery - GET
-module.exports.profileDetailsDelivery = async function(req, res) {
-    let email = req.cookies.email;
-    let user = await userModel.findOne({ email: email });
-    if (!user) return res.redirect("/");
-
-    // Render the profile details form for the delivery person
-    res.render("profileDetailsDelivery", { user });
-};
-
-// Update profile details for User (Customer) - POST
-module.exports.updateDetailsUser = async function(req, res) {
-    try {
-        let email = req.cookies.email;
-        let { Name, address, contact } = req.body;
-        
-        if(!Name || !address || !contact ){
-            return res.status(400).send("Please fill in all the fields.");
-        }
-        // Find the user and update their profile details
-        let user = await userModel.findOneAndUpdate(
-            { email: email },
-            { Name: Name, address: address, contact: contact },
-            { new: true }
-        );
-
-        // Redirect to the user (customer) dashboard
-        res.redirect("/user/dashboard");
-    } catch (err) {
-        console.log(err);
-        res.status(500).send("Error updating user profile");
-    }
-};
-
-// Update profile details for Manager - POST
-module.exports.updateDetailsManager = async function(req, res) {
-    try {
-        let email = req.cookies.email;
-        let { Name, address, contact, HotelName } = req.body;
-        
-        if(!Name || !address || !contact || !HotelName){
-            return res.status(400).send("Please fill in all the fields.");
-        }
-        // Find the manager and update their profile details
-        let user = await userModel.findOneAndUpdate(
-            { email: email },
-            { Name: Name, address: address, contact: contact, HotelName: HotelName },
-            { new: true }
-        );
-
-        // Redirect to the manager dashboard
-        res.redirect("/manager/dashboard");
-    } catch (err) {
-        console.log(err);
-        res.status(500).send("Error updating manager profile");
-    }
-};
-
-// Update profile details for Delivery - POST
-module.exports.updateDetailsDelivery = async function(req, res) {
-    try {
-        let email = req.cookies.email;
-        let { Name, address, contact, license, vehicleNumber } = req.body;
-
-        if(!Name || !address || !contact || !license || !vehicleNumber){
-            return res.status(400).send("Please fill in all the fields.");
-        }
-        // Find the delivery person and update their profile details
-        let user = await userModel.findOneAndUpdate(
-            { email: email },
-            { Name: Name, address: address, contact: contact, license: license, vehicleNumber: vehicleNumber},
-            { new: true }
-        );
-
-        // Redirect to the delivery dashboard
-        res.redirect("/delivery/dashboard");
-    } catch (err) {
-        console.log(err);
-        res.status(500).send("Error updating delivery profile");
-    }
+    res.redirect(303,"/");
 };
 

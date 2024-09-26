@@ -1,0 +1,69 @@
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 0 7%;
+    background: #232220;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    height: 70px;
+    line-height: 80px;
+}
+
+.logo {
+    /* font-size: 32px; */
+    /* height: 0.5vh;
+    color: #fff;
+    font-weight: 700; */
+}
+
+.navbar a {
+    position: relative;
+    font-size: 21px;
+    color: #fff;
+    font-weight: 500;
+    margin-left: 70px;
+    transition: color 0.3s ease; /* Add transition for smooth color change */
+}
+
+.navbar a::before {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #fff;
+    transition: .3s;
+}
+
+.navbar a:hover::before {
+    width: 100%;
+}
+
+.navbar a:hover {
+    color: #FF8C00; /* Change to a variant of orange on hover */
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover; 
+    border: 2px solid #ccc; 
+}
+
+.profile-name {
+    font-size: 16px;
+    font-weight: 500;
+    color: #fff;
+}

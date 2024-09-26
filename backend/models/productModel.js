@@ -1,13 +1,19 @@
 const mongoose = require("mongoose")
 
 const productSchema = new mongoose.Schema({
-    image: String,
-    Name:{
+    image:{
+        type: String
+    },
+   name: {
         type: String,
         required: true
     },
-    Price:{
+    price: {
         type: Number,
+        required: true
+    },
+    foodType: {
+        type: String,
         required: true
     },
     Discount:{
