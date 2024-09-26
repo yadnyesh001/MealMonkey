@@ -2,6 +2,7 @@ const customer = require("../models/customerModel");
 const restaurant = require("../models/restaurantModel");
 const deliveryPartner = require("../models/deliveryPartnerModel");
 const bcrypt = require("bcrypt");
+const isLoggedIn=require('../middlewares/isLoggedIn')
 const jwt = require("jsonwebtoken");
 const SECRET_KEY = process.env.JWT_SECRET_KEY;
 const validator = require('validator');
