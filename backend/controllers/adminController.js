@@ -1,83 +1,189 @@
 const customer = require("../models/customerModel");
 const restaurant = require("../models/restaurantModel");
 const deliveryPartner = require("../models/deliveryPartnerModel");
-
-// module.exports.getUsers = async function(req, res){
-//     try{
-//         const users = await userModel.find({role: "customer"});
-//         if(!users) res.send("User not Found")
-//         return users
-//     }catch(err){
-//         res.send(err);
-//     }
-// }
-
-// module.exports.getRestaurants = async function(req, res){
-//     try{
-//         const restaurants = await userModel.find({role: "manager"})
-//         if(!restaurants) res.send("No Manager Found")
-//         return restaurants
-//     }catch(err){
-//         res.send(err)
-//     }
-// }
-
-// module.exports.getDeliveryPartner = async function(req, res){
-//     try{
-//         const deliveryPartners = await userModel.find({role: "deliveryPartner"})
-//         if(!deliveryPartners) res.send("No Delivrey Partner Found")
-//             return deliveryPartners
-//     }catch(err){
-//         res.send(err)
-//     }
-// }
-
-// module.exports.deleteUser = async function(req, res){
-//     try{
-//         const user = await userModel.findByIdAndUpdate(req.params.id, {email: "", password: ""})
-//         if(!user) res.send("User not Found")
-//     }catch(err){
-//         res.send(err)
-//     }
-// }
-
+const bcrypt = require("bcrypt");
 class CRUD{
-    getCustomers = async function(){
+    getCustomers = async function(req, res){
         try{
             const users = await customer.find({role: "customer"})
-
             if(users.length === 0){
                 return {message: "No Users Found for this role"}
             }
-            return users
+            return res.status(200).json(users);
         }catch(err){
             throw new Error(err)
         }
     }
-    getRestaurants = async function(){
+    getRestaurants = async function(req, res){
         try{
             const users = await restaurant.find({role: "restaurant"})
 
             if(users.length === 0){
                 return {message: "No Users Found for this role"}
             }
-            return users
+            return res.status(200).json(users);
         }catch(err){
             throw new Error(err)
         }
     }
-    getDeliveryPartner = async function(){
+    getDeliveryPartner = async function(req, res){
         try{
             const users = await deliveryPartner.find({role: "deliveryPartner"})
 
             if(users.length === 0){
                 return {message: "No Users Found for this role"}
             }
-            return users
+            return res.status(200).json(users);
         }catch(err){
             throw new Error(err)
         }
     }
+
+    addCustomer = async function(req, res){
+        try{
+
+            let { username, email, password, contact, fullAdress, pincode } = req.body
+            const user = await customer.findOne({email: email})
+
+            if(user){
+                return res.status(400).send("User already exists")
+            }
+            // Hash the password
+            bcrypt.genSalt(10, function(err, salt) {
+                bcrypt.hash(password, salt, async function(err, hash) {
+                    if (err) throw err;
+                    // Create new user
+                    let newUser = new customer({
+                    username: username,
+                    email: email,
+                    password: hash,
+                    role: "customer",
+                    contact: contact,
+                    address: {
+                        fullAddress: fullAdress,
+                        pincode: pincode
+                    }
+                    });
+                    const savedUser =await newUser.save();
+                    res.status(201).json({
+                        success: true, message: "User registered successfully", user: savedUser });
+                });
+            });
+
+        }catch(err){
+            throw new Error(err)
+        }
+    }
+
+    addRestaurant = async function(req, res){
+        try{
+            let { username, email, password, contact, fullAdress, pincode, hotelName, averageCost, knownFor, rating } = req.body    
+            const user = await restaurant.findOne({email: email})
+
+            if(user){
+                return res.status(400).send("User already exists")
+            }
+            // Hash the password
+            bcrypt.genSalt(10, function(err, salt) {
+                bcrypt.hash(password, salt, async function(err, hash) {
+                    if (err) throw err;
+                    // Create new user  
+                    let newUser = new restaurant({
+                    username: username, 
+                    email: email,
+                    password: hash,
+                    role: "restaurant",
+                    contact: contact,
+                    address: {
+                        fullAddress: fullAdress,
+                        pincode: pincode
+                    },
+                    hotelName: hotelName,
+                    averageCost: averageCost,
+                    knownFor: knownFor,
+                    rating: rating
+                    });
+                    const savedUser =await newUser.save();
+                    res.status(201).json({
+                        success: true, message: "User registered successfully", user: savedUser });
+                });
+            });
+        }catch(err){
+            throw new Error(err)
+        }
+    }
+
+    addDeliveryPartner = async function(req, res){
+        try{
+            let { username, email, password, contact, fullAdress, pincode, license, vehicleNumber } = req.body
+            const user = await deliveryPartner.findOne({email: email})
+
+            if(user){
+                return res.status(400).send("User already exists")
+            }
+            // Hash the password
+            bcrypt.genSalt(10, function(err, salt) {
+                bcrypt.hash(password, salt, async function(err, hash) {
+                    if (err) throw err;
+                    // Create new user
+                    let newUser = new deliveryPartner({ 
+                    username: username,
+                    email: email,
+                    password: hash,
+                    role: "deliveryPartner",
+                    contact: contact,
+                    address: {
+                        fullAddress: fullAdress,
+                        pincode: pincode
+                    },
+                    license: license,
+                    vehicleNumber: vehicleNumber
+                    });
+                    const savedUser =await newUser.save();
+                    res.status(201).json({
+                        success: true, message: "User registered successfully", user: savedUser });
+                });
+            });
+        }catch(err){
+            throw new Error(err)
+        }
+    }   
+
+    addAdmin = async function(req, res){
+        try{
+            let { username, email, password, contact, fullAdress, pincode } = req.body
+            const user = await customer.findOne({email: email})
+
+            if(user){
+                return res.status(400).send("User already exists")
+            }
+            // Hash the password        
+            bcrypt.genSalt(10, function(err, salt) {
+                bcrypt.hash(password, salt, async function(err, hash) {
+                    if (err) throw err;
+                    // Create new user
+                    let newUser = new customer({   
+                    username: username,
+                    email: email,
+                    password: hash,
+                    role: "admin",
+                    contact: contact,
+                    address: {
+                        fullAddress: fullAdress,
+                        pincode: pincode
+                    },
+                    isAdmin: true
+                    });
+                    const savedUser =await newUser.save();
+                    res.status(201).json({
+                        success: true, message: "User registered successfully", user: savedUser });
+                });
+            });
+        }catch(err){
+            throw new Error(err)
+        }
+    }
+
 
     getUser = async function(req, res){
         try{
@@ -247,10 +353,7 @@ class CRUD{
                     contact: existingUser.contact,
                     role: newRole,
                 };
-    
-                // Delete the user from the old schema
-                await currentModel.deleteOne({ email: userEmail });
-    
+                
                 // Create a new user in the new schema
                 let newUser;
                 if (newRole === 'customer') {
@@ -260,10 +363,14 @@ class CRUD{
                 } else if (newRole === 'deliveryPartner') {
                     newUser = new deliveryPartner(userData);
                 } else if (newRole === 'admin') {
-                    newUser = new customer({ ...userData, isAdmin: true });
+                    newUser = new customer(userData);
                 } else {
                     return res.status(400).json({ success: false, message: 'Invalid role' });
                 }
+                
+                // Delete the user from the old schema
+                await currentModel.deleteOne({ email: userEmail });
+    
     
                 // Try saving the new user and catch any errors
                 try {

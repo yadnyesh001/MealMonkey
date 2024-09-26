@@ -26,7 +26,7 @@ const Login = () => {
         } else if (userRole === 'restaurant') {
           navigate('/restaurant/');
         } else if (userRole === 'deliveryPartner') {
-          navigate('/deliveryPartner/profileDetails');
+          navigate('/deliveryPartner/');
         }
       }
     } catch (error) {

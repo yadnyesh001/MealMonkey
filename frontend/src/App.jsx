@@ -11,9 +11,15 @@ import SearchBox from './Components/SearchBox/SearchBox';
 import Categories from './Components/Categories/Categories';
 import AddMenuItemForm from './Components/AddMenuItemForm';
 import AdminDashboard from './Components/AdminDashboard';
+import GetCustomer from './Components/getCustomers';
+import GetRestaurant from './Components/getRestaurants';
 import GetUser from './Components/GetUser'
 import DeleteUser from './Components/DeleteUser';
 import ChangeUserRole from './Components/ChangeUserRole';
+import AddCustomer from './Components/addCustomer';
+import AddDeliveryPartner from './Components/addDeliveryPartner';
+import AddRestaurant from './Components/addRestaurant';
+import AddAdmin from './Components/addAdmin';
 import './App.css';
 import RestaurantForm from './Components/Restaurant/RestaurantForm';
 import DeliveryPartnerCard from './Components/DeliveryPartner/DeliveryPartnerCard';
@@ -44,9 +50,15 @@ const App = () => {
             <Route path="/restaurant/menu" element={<Menu />} />
             <Route path="/restaurant/updateItem/:id" element={<UpdateMenuItemForm/>} />
             <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/getCustomers" element={<GetCustomer />} />
+            <Route path="/admin/getRestaurants" element={<GetRestaurant />} />
             <Route path="/admin/getUser" element={<GetUser />} />
             <Route path="/admin/deleteUser" element={<DeleteUser />} />
             <Route path="/admin/changeUserRole" element={<ChangeUserRole />} />
+            <Route path="/admin/addAdmin" element={<AddAdmin />} />
+            <Route path="/admin/addCustomer" element={<AddCustomer />} />
+            <Route path="/admin/addRestaurant" element={<AddRestaurant />} />
+
             
           </Routes>
         </div>
