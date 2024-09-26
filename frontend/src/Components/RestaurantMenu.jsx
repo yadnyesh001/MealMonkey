@@ -80,6 +80,27 @@ const RestaurantMenu = () => {
         fetchMenu();
     }, [restaurantId]);
 
+    const handleAddToCart = async (itemId) => {
+        try {
+            const response = await axiosInstance.post('/customer/cart/add', {
+                productId: itemId,
+                quantity: 1 // Assuming you want to add one item at a time
+            });
+            console.log("Item added to cart:", response.data);
+        } catch (error) {
+            console.error("Error adding to cart:", error);
+        }
+    };
+    
+    // Update the button inside the map function to call handleAddToCart
+    <button
+        className="mt-2 px-4 py-2 bg-yellow-500 text-white rounded-md"
+        onClick={() => handleAddToCart(item._id)} // Call the function with the product ID
+    >
+        Add to Cart
+    </button>
+    
+
     return (
         <div className="p-4">
             <h1 className="text-2xl font-bold mb-4">Restaurant Menu</h1>
@@ -99,7 +120,8 @@ const RestaurantMenu = () => {
                                     <h2 className="text-lg font-bold">{item.name}</h2>
                                     <p className="text-gray-600 font-bold">${item.price}</p> 
                                     <p className="text-gray-600">Food Type: {item.foodType}</p>
-                                    <button className="mt-2 px-4 py-2 bg-yellow-500 text-white rounded-md">
+                                    <button className="mt-2 px-4 py-2 bg-yellow-500 text-white rounded-md"
+                                    onClick={() => handleAddToCart(item._id)}>
                                         Add to Cart
                                     </button>
                                 </div>

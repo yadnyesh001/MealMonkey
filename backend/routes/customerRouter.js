@@ -16,4 +16,13 @@ router.get("/popularRestaurants", isLoggedIn, Auth.authorizeCustomer, customerCo
 
 router.get('/menu/:restaurantId', customerController.listMenu);
 
+
+router.post("/cart/add", isLoggedIn, customerController.addToCart);
+
+router.get('/cart', isLoggedIn, customerController.getCart); // Get cart items
+router.put('/cart/:itemId', isLoggedIn, customerController.updateCartQuantity); // Update cart item quantity
+router.post('/checkout', isLoggedIn, customerController.checkout); // Checkout
+
+
+
 module.exports = router;

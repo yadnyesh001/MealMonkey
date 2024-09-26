@@ -23,7 +23,7 @@ import RestaurantMenu from './Components/RestaurantMenu';
 import { UserProvider } from './contexts/UserProvider';
 import Menu from './Components/Menu';
 import UpdateMenuItemForm from './Components/UpdateItem';
-
+import Cart from './Components/Cart'
 const App = () => {
   return (
     <UserProvider>
@@ -37,6 +37,7 @@ const App = () => {
             <Route path='/about' element={<AboutUs />} />
             <Route path='/contact' element={<Contact />} />
             <Route path="/customer/" element={<><SearchBox /><Categories /><PopularRestaurants /><Footer /></>} />
+            <Route path="/customer/cart" element={<Cart/>}/>
             <Route path="/customer/menu/:restaurantId" element={<RestaurantMenu />} />
             <Route path="/restaurant/" element={<RestaurantDashboard />} />
             <Route path="/restaurant/profileDetails" element={<RestaurantForm />} />

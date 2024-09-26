@@ -48,7 +48,7 @@ router.get("/orders/history", isLoggedIn, restaurantController.getOrderHistory);
 router.get("/reviews", isLoggedIn, restaurantController.getAllReviews);
 
 // Get daily analytics
-router.get("/analytics/daily", isLoggedIn, restaurantController.getDailyAnalytics);
+router.get("/analytics/daily-weekly", isLoggedIn, restaurantController.getDailyAndWeeklyAnalytics);
 //Get all transactions of the restaurant
 router.get("/transactions", isLoggedIn, restaurantController.getTransactions);
 

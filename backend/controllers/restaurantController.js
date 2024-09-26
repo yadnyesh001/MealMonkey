@@ -469,54 +469,104 @@ module.exports.getAllReviews = async function(req, res) {
 };
 
 
-module.exports.getDailyAnalytics = async function(req, res) {
+// module.exports.getDailyAnalytics = async function(req, res) {
+//     try {
+//         const restaurantId = req.userId; // Assuming req.userId is the restaurant's ID
+//         const today = new Date();
+//         const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+//         const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+
+//         // Total profit for the day
+//         const totalProfit = await Transaction.aggregate([
+//             { $match: { 'to.restaurant': restaurantId, createdAt: { $gte: startOfDay, $lt: endOfDay } } },
+//             { $group: { _id: null, total: { $sum: '$amount' } } }
+//         ]);
+
+//         // Daily average orders
+//         const dailyOrders = await Order.countDocuments({
+//             restaurant: restaurantId,
+//             createdAt: { $gte: startOfDay, $lt: endOfDay }
+//         });
+
+//         // Daily profit
+//         const dailyProfit = totalProfit.length ? totalProfit[0].total : 0;
+
+//         // Daily average rejected orders
+//         const dailyRejectedOrders = await Order.countDocuments({
+//             restaurant: restaurantId,
+//             status: 'rejected',
+//             createdAt: { $gte: startOfDay, $lt: endOfDay }
+//         });
+
+//         // Total ratings for the day
+//         const totalRatings = await Review.countDocuments({
+//             'target.restaurant': restaurantId,
+//             createdAt: { $gte: startOfDay, $lt: endOfDay }
+//         });
+
+//         // Constructing the analytics data
+//         const analytics = {
+//             totalProfit: dailyProfit,
+//             dailyAverageOrders: dailyOrders,
+//             dailyProfit,
+//             dailyAverageRejectedOrders: dailyRejectedOrders,
+//             totalRatings
+//         };
+
+//         res.status(200).json(analytics);
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).send("Error fetching daily analytics.");
+//     }
+// };
+
+module.exports.getDailyAndWeeklyAnalytics = async function(req, res) {
     try {
         const restaurantId = req.userId; // Assuming req.userId is the restaurant's ID
         const today = new Date();
         const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
         const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
 
-        // Total profit for the day
-        const totalProfit = await Transaction.aggregate([
-            { $match: { 'to.restaurant': restaurantId, createdAt: { $gte: startOfDay, $lt: endOfDay } } },
-            { $group: { _id: null, total: { $sum: '$amount' } } }
-        ]);
+        // Calculate the start of the week (assuming week starts from Sunday)
+        const startOfWeek = new Date(today);
+        startOfWeek.setDate(today.getDate() - today.getDay()); // Moves to the start of the week (Sunday)
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 7); // End of the week (next Sunday)
 
-        // Daily average orders
-        const dailyOrders = await Order.countDocuments({
+        // Get daily orders
+        const dailyOrders = await Order.find({
             restaurant: restaurantId,
             createdAt: { $gte: startOfDay, $lt: endOfDay }
         });
 
-        // Daily profit
-        const dailyProfit = totalProfit.length ? totalProfit[0].total : 0;
+        // Calculate daily total balance from orders
+        const dailyBalance = dailyOrders.reduce((total, order) => total + order.totalAmount, 0);
 
-        // Daily average rejected orders
-        const dailyRejectedOrders = await Order.countDocuments({
+        // Calculate the maximum profit from a single order for today
+        const maxDailyProfit = dailyOrders.length > 0 ? Math.max(...dailyOrders.map(order => order.totalAmount)) : 0;
+
+        // Get weekly orders
+        const weeklyOrders = await Order.find({
             restaurant: restaurantId,
-            status: 'rejected',
-            createdAt: { $gte: startOfDay, $lt: endOfDay }
+            createdAt: { $gte: startOfWeek, $lt: endOfWeek }
         });
 
-        // Total ratings for the day
-        const totalRatings = await Review.countDocuments({
-            'target.restaurant': restaurantId,
-            createdAt: { $gte: startOfDay, $lt: endOfDay }
-        });
+        // Calculate weekly total balance from orders
+        const weeklyBalance = weeklyOrders.reduce((total, order) => total + order.totalAmount, 0);
 
         // Constructing the analytics data
         const analytics = {
-            totalProfit: dailyProfit,
-            dailyAverageOrders: dailyOrders,
-            dailyProfit,
-            dailyAverageRejectedOrders: dailyRejectedOrders,
-            totalRatings
+            dailyBalance: dailyBalance,
+            dailyOrders: dailyOrders.length,
+            maxDailyProfit: maxDailyProfit, // Maximum profit from a single order today
+            weeklyBalance: weeklyBalance,
+            weeklyOrders: weeklyOrders.length
         };
 
         res.status(200).json(analytics);
     } catch (err) {
         console.error(err);
-        res.status(500).send("Error fetching daily analytics.");
+        res.status(500).send("Error fetching daily and weekly analytics.");
     }
 };
 
