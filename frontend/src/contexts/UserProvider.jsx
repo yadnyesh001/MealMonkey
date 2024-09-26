@@ -1,5 +1,5 @@
 // src/contexts/UserContext.js
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import  { createContext, useContext, useEffect, useState } from 'react';
 import axiosInstance from '../utils/axiosInstance'; // Adjust the import path as necessary
 
 const UserContext = createContext();

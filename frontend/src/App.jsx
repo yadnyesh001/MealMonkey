@@ -10,6 +10,10 @@ import PopularRestaurants from './Components/PopularRestaurants';
 import SearchBox from './Components/SearchBox/SearchBox';
 import Categories from './Components/Categories/Categories';
 import AddMenuItemForm from './Components/AddMenuItemForm';
+import AdminDashboard from './Components/AdminDashboard';
+import GetUser from './Components/GetUser'
+import DeleteUser from './Components/DeleteUser';
+import ChangeUserRole from './Components/ChangeUserRole';
 import './App.css';
 import RestaurantForm from './Components/Restaurant/RestaurantForm';
 import DeliveryPartnerCard from './Components/DeliveryPartner/DeliveryPartnerCard';
@@ -25,14 +29,20 @@ const App = () => {
         <Header />
         <div className="content-container">
           <Routes>
-            <Route path="/" element={<><SearchBox /><Categories /><Footer /></>} />
+            <Route path="/" element={<><SearchBox /><Categories /><PopularRestaurants /><Footer /></>} />
             <Route path="/register" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/customer/dashboard" element={<><SearchBox /><Categories /><PopularRestaurants /><Footer /></>} />
+            <Route path='/about' element={<AboutUs />} />
+            <Route path='/contact' element={<Contact />} />
+            <Route path="/customer/" element={<><SearchBox /><Categories /><PopularRestaurants /><Footer /></>} />
             <Route path="/customer/menu/:restaurantId" element={<RestaurantMenu />} />
-            <Route path="/restaurant/dashboard" element={<RestaurantDashboard />} />
+            <Route path="/restaurant/" element={<RestaurantDashboard />} />
             <Route path="/restaurant/profileDetails" element={<RestaurantForm />} />
             <Route path="/restaurant/menu/item" element={<AddMenuItemForm />} />
+            <Route path="/admin" element={<AdminDashboard />}/>
+            <Route path="/admin/getUser" element={<GetUser />} />
+            <Route path="/admin/deleteUser" element={<DeleteUser />} />
+            <Route path="/admin/changeUserRole" element={<ChangeUserRole />} />
           </Routes>
         </div>
       </div>
