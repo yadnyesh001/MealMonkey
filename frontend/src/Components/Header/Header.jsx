@@ -41,8 +41,9 @@ const Header = () => {
         
         {loggedIn && role === 'restaurant' && (
           <>
-            <Link to='/resturant/'>Home</Link>
+            <Link to='/restaurant/'>Home</Link>
             <Link to='/restaurant/menu/item'>Add dish</Link>
+            <Link to='/restaurant/menu'>Menu</Link>
             <Link to='/restaurant/profileDetails'>Profile</Link>
           </>
         )}
