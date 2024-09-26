@@ -45,8 +45,8 @@ const App = () => {
             <Route path="/admin/changeUserRole" element={<ChangeUserRole />} />
           </Routes>
         </div>
-      </div>
       <Footer/>
+      </div>
     </UserProvider>
   );
 }

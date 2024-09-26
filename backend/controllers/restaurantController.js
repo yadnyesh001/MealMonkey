@@ -77,8 +77,12 @@ module.exports.updateProfile = async function(req, res) {
         user.type = type;
         user.timingFrom = timingFrom;
         user.timingTo = timingTo;
-        user.photos = photos || [];
 
+        // Handle single uploaded photo
+        if (req.file) {
+            user.photos = `/public/Images/${req.file.filename}`; // Store the path as a string
+        }
+        
         // Save the updated user as a Restaurant
         await user.save();
 
@@ -148,7 +152,7 @@ module.exports.addItem = async function (req, res) {
         // Check if an image is uploaded via Multer
         let imagePath;
         if (req.file) {
-            imagePath = req.file.path; // This is the path where Multer stored the image
+            imagePath = `/public/Images/${req.file.filename}`; // Correct relative path
         }
 
         // Create new product
