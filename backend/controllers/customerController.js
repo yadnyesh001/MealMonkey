@@ -1,5 +1,6 @@
 const customer = require("../models/customerModel");
 const Restaurant = require("../models/restaurantModel")
+const Product = require('../models/productModel');
 module.exports.profileDetailsCustomer = async function(req, res) {
     try {
         const user = await customer.findById(req.userId).select("-password");
@@ -81,5 +82,21 @@ module.exports.listMenu = async function(req, res) {
     } catch (err) {
         console.log(err);
         res.status(500).send("Error fetching menu.");
+    }
+};
+
+module.exports.getCategories = async function(req, res)  {
+    try {
+        const { foodType } = req.params;
+
+        // Find restaurants that have menu items of the specified food type
+        const restaurants = await Restaurant.find({ 
+            menu: { $in: await Product.find({ foodType: foodType }).distinct('_id') }
+        }).populate('menu'); // Populate menu if needed
+
+        res.status(200).json(restaurants);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error fetching restaurants.");
     }
 };

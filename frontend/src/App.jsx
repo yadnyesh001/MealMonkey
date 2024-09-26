@@ -29,6 +29,7 @@ import RestaurantMenu from './Components/RestaurantMenu';
 import { UserProvider } from './contexts/UserProvider';
 import Menu from './Components/Menu';
 import UpdateMenuItemForm from './Components/UpdateItem';
+import RestaurantsList from './Components/RestaurantList';
 
 const App = () => {
   return (
@@ -43,6 +44,7 @@ const App = () => {
             <Route path='/about' element={<AboutUs />} />
             <Route path='/contact' element={<Contact />} />
             <Route path="/customer/" element={<><SearchBox /><Categories /><PopularRestaurants /><Footer /></>} />
+            <Route path="/customer/restaurants/:foodType" element={<RestaurantsList />} />
             <Route path="/customer/menu/:restaurantId" element={<RestaurantMenu />} />
             <Route path="/restaurant/" element={<RestaurantDashboard />} />
             <Route path="/restaurant/profileDetails" element={<RestaurantForm />} />
