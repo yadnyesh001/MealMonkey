@@ -31,7 +31,7 @@ const App = () => {
         <Header />
         <div className="content-container">
           <Routes>
-            <Route path="/" element={<><SearchBox /><Categories /><PopularRestaurants /><Footer /></>} />
+            <Route path="/" element={<><SearchBox /><Categories /><PopularRestaurants /></>} />
             <Route path="/register" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
             <Route path='/about' element={<AboutUs />} />
@@ -43,7 +43,7 @@ const App = () => {
             <Route path="/restaurant/menu/item" element={<AddMenuItemForm />} />
             <Route path="/restaurant/menu" element={<Menu />} />
             <Route path="/restaurant/updateItem/:id" element={<UpdateMenuItemForm/>} />
-            <Route path="/admin" element={<AdminDashboard />}/>
+            <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/getUser" element={<GetUser />} />
             <Route path="/admin/deleteUser" element={<DeleteUser />} />
             <Route path="/admin/changeUserRole" element={<ChangeUserRole />} />
