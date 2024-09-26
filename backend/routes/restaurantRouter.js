@@ -9,7 +9,7 @@ const Auth = require("../middlewares/Auth")
 //Restaurant dashboard
 router.get("/",isLoggedIn, Auth.authorizeManager, restaurantController.getRestaurantDetails)
 // Update restaurant profile
-router.post("/profile", isLoggedIn, Auth.authorizeManager, restaurantController.updateProfile);
+router.post("/profile", isLoggedIn, Auth.authorizeManager,upload.array('photos'), restaurantController.updateProfile);
 
 // List menu items
 router.get("/menu", isLoggedIn, restaurantController.listMenu);
