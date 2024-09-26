@@ -31,6 +31,7 @@ import Menu from './Components/Menu';
 import UpdateMenuItemForm from './Components/UpdateItem';
 import RestaurantsList from './Components/RestaurantList';
 import Cart from './Components/Cart'
+import CustomerOrderList from './Components/CustomerOrderList'
 import RestaurantOrders from './Components/RestaurantOrders';
 const App = () => {
   return (
@@ -47,6 +48,7 @@ const App = () => {
             <Route path="/customer/" element={<><SearchBox /><Categories /><PopularRestaurants /><Footer /></>} />
             <Route path="/customer/restaurants/:foodType" element={<RestaurantsList />} />
             <Route path="/customer/cart" element={<Cart/>}/>
+            <Route path="/customer/orders" element={<CustomerOrderList/>}/>
             <Route path="/customer/menu/:restaurantId" element={<RestaurantMenu />} />
             <Route path="/restaurant/" element={<RestaurantDashboard />} />
             <Route path="/restaurant/profileDetails" element={<RestaurantForm />} />

@@ -64,7 +64,7 @@ const Header = () => {
         {loggedIn && role === 'customer' && (
           <>
             <Link to='/customer/'>Home</Link>
-            <Link to='/myorders'>My Orders</Link>
+            <Link to='/customer/orders'>My Orders</Link>
             <Link to='/customer/profile'>Profile</Link>
             <Link to='/customer/cart'>Cart</Link>
             <Link to='/about'>About</Link>
