@@ -140,68 +140,71 @@ class CRUD{
         }
     };
 
-    changeUserRole = async (req, res) => {
-        const { user_email, newRole } = req.body;
+    // changeUserRole = async (req, res) => {
+    //     const { userEmail, newRole } = req.body;
       
-        try {
-          // Find the user in all schemas in parallel
-          const [foundCustomer, foundRestaurant, foundDeliveryPartner] = await Promise.all([
-            customer.findOne({ email: user_email }),
-            restaurant.findOne({ email: user_email }),
-            deliveryPartner.findOne({ email: user_email }),
-          ]);
+    //     try {
+    //       // Find the user in all schemas in parallel
+    //       const [foundCustomer, foundRestaurant, foundDeliveryPartner] = await Promise.all([
+    //         customer.findOne({ email: userEmail }),
+    //         restaurant.findOne({ email: userEmail }),
+    //         deliveryPartner.findOne({ email: userEmail }),
+    //       ]);
+    //     // const foundCustomer = await customer.findOne({ email: userEmail });
+    //     // const foundRestaurant = await restaurant.findOne({ email: userEmail });
+    //     // const foundDeliveryPartner = await deliveryPartner.findOne({ email: userEmail });
       
-          let existingUser = foundCustomer || foundRestaurant || foundDeliveryPartner;
-          let currentModel;
-          console.log(existingUser)
-          // Determine which model the user belongs to
-          if (foundCustomer) {
-            currentModel = customer;
-          } else if (foundRestaurant) {
-            currentModel = restaurant;
-          } else if (foundDeliveryPartner) {
-            currentModel = deliveryPartner;
-          }
+    //       let existingUser = foundCustomer || foundRestaurant || foundDeliveryPartner;
+    //       let currentModel;
+    //       console.log(existingUser)
+    //       // Determine which model the user belongs to
+    //       if (foundCustomer) {
+    //         currentModel = customer;
+    //       } else if (foundRestaurant) {
+    //         currentModel = restaurant;
+    //       } else if (foundDeliveryPartner) {
+    //         currentModel = deliveryPartner;
+    //       }
       
-          // If user is found, proceed to delete and create new user
-          if (existingUser) {
-            // Prepare user data
-            const userData = {
-              name: existingUser.name,
-              email: existingUser.email,
-              address: existingUser.address,
-              contact: existingUser.contact,
-              role: newRole,
-            };
+    //       // If user is found, proceed to delete and create new user
+    //       if (existingUser) {
+    //         // Prepare user data
+    //         const userData = {
+    //           name: existingUser.name,
+    //           email: existingUser.email,
+    //           address: existingUser.address,
+    //           contact: existingUser.contact,
+    //           role: newRole,
+    //         };
       
-            // Delete the user from the old schema
-            await currentModel.deleteOne({ email: user_email });
+    //         // Delete the user from the old schema
+    //         await currentModel.deleteOne({ email: userEmail });
       
-            // Create a new user in the new schema
-            let newUser;
-            if (newRole === 'customer') {
-              newUser = new customer(userData);
-            } else if (newRole === 'restaurant') {
-              newUser = new restaurant(userData);
-            } else if (newRole === 'deliveryPartner') {
-              newUser = new deliveryPartner(userData);
-            } else if(newRole === 'admin') {
-                newUser = new customer({ ...userData, isAdmin: true });
-            }else {
-              return res.status(400).json({ success: false, message: 'Invalid role' });
-            }
+    //         // Create a new user in the new schema
+    //         let newUser;
+    //         if (newRole === 'customer') {
+    //           newUser = new customer(userData);
+    //         } else if (newRole === 'restaurant') {
+    //           newUser = new restaurant(userData);
+    //         } else if (newRole === 'deliveryPartner') {
+    //           newUser = new deliveryPartner(userData);
+    //         } else if(newRole === 'admin') {
+    //             newUser = new customer({ ...userData, isAdmin: true });
+    //         }else {
+    //           return res.status(400).json({ success: false, message: 'Invalid role' });
+    //         }
       
-            await newUser.save();
+    //         await newUser.save();
       
-            return res.status(200).json({ success: true, user: newUser });
-          } else {
-            return res.status(404).json({ success: false, message: 'User not found in any schema' });
-          }
-        } catch (error) {
-          console.error(error);
-          return res.status(500).json({ success: false, message: error.message });
-        }
-      };
+    //         return res.status(200).json({ success: true, user: newUser });
+    //       } else {
+    //         return res.status(404).json({ success: false, message: 'User not found in any schema' });
+    //       }
+    //     } catch (error) {
+    //       console.error(error);
+    //       return res.status(500).json({ success: false, message: error.message });
+    //     }
+    //   };
       
     
     // getAllOrders = async function(model){
@@ -211,6 +214,74 @@ class CRUD{
     //         throw new Error(err)
     //     }
     // }
+    changeUserRole = async (req, res) => {
+        const { userEmail, newRole } = req.body; // Ensure this matches with your front end
+    
+        try {
+            // Find the user in all schemas in parallel
+            const [foundCustomer, foundRestaurant, foundDeliveryPartner] = await Promise.all([
+                customer.findOne({ email: userEmail }),
+                restaurant.findOne({ email: userEmail }),
+                deliveryPartner.findOne({ email: userEmail }),
+            ]);
+    
+            let existingUser = foundCustomer || foundRestaurant || foundDeliveryPartner;
+            let currentModel;
+            console.log(existingUser)
+            // Determine which model the user belongs to
+            if (foundCustomer) {
+                currentModel = customer;
+            } else if (foundRestaurant) {
+                currentModel = restaurant;
+            } else if (foundDeliveryPartner) {
+                currentModel = deliveryPartner;
+            }
+    
+            // If user is found, proceed to delete and create new user
+            if (existingUser) {
+                // Prepare user data
+                const userData = {
+                    name: existingUser.name,
+                    email: existingUser.email,
+                    address: existingUser.address,
+                    contact: existingUser.contact,
+                    role: newRole,
+                };
+    
+                // Delete the user from the old schema
+                await currentModel.deleteOne({ email: userEmail });
+    
+                // Create a new user in the new schema
+                let newUser;
+                if (newRole === 'customer') {
+                    newUser = new customer(userData);
+                } else if (newRole === 'restaurant') {
+                    newUser = new restaurant(userData);
+                } else if (newRole === 'deliveryPartner') {
+                    newUser = new deliveryPartner(userData);
+                } else if (newRole === 'admin') {
+                    newUser = new customer({ ...userData, isAdmin: true });
+                } else {
+                    return res.status(400).json({ success: false, message: 'Invalid role' });
+                }
+    
+                // Try saving the new user and catch any errors
+                try {
+                    await newUser.save();
+                } catch (saveError) {
+                    console.error("Error saving new user:", saveError);
+                    return res.status(500).json({ success: false, message: "Failed to create new user." });
+                }
+    
+                return res.status(200).json({ success: true, user: newUser });
+            } else {
+                return res.status(404).json({ success: false, message: 'User not found in any schema' });
+            }
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ success: false, message: error.message });
+        }
+    };      
 }
 
 

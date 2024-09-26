@@ -90,13 +90,9 @@ const restaurantSchema = new mongoose.Schema({
         enum: ['Pure Veg', 'Oriental', 'Indian', 'Mixed', 'Continental', 'Italian', 'Mexican', 'Fast Food'],
     },
     // Photos for restaurant
-    photos: [
-        {
-            type: String,
-            required: false,
-            trim: true
-        }
-    ],
+    photos:{
+        type: String
+    },
     // Restaurant rating (out of 5)
     rating: {
         type: Number,

@@ -1,13 +1,13 @@
 import { useState } from 'react';
-import axiosInstance from '../utils/axiosInstance';
-
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 const AddMenuItemForm = () => {
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [foodType, setFoodType] = useState('');
   const [discount, setDiscount] = useState('');
   const [image, setImage] = useState(null);
-
+  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -20,12 +20,17 @@ const AddMenuItemForm = () => {
     formData.append('image', image); // Append the selected image
 
     try {
-      const res = await axiosInstance.post('/restaurant/menu/item', formData, {
+      const res = await axios.post('http://localhost:3000/restaurant/menu/item', formData, {
+        // Content-Type is not set; let the browser handle it
         headers: {
           'Content-Type': 'multipart/form-data', // Set the correct content type
         },
+        withCredentials: true,
       });
       console.log(res.data);
+      console.log(formData);
+      alert('Menu item added successfully');
+      navigate('/restaurant');
     } catch (error) {
       console.error('Error adding menu item', error);
     }

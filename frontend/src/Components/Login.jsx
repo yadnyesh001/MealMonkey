@@ -24,7 +24,7 @@ const Login = () => {
         } else if (userRole === 'customer') {
           navigate('/customer/');
         } else if (userRole === 'restaurant') {
-          navigate('/restaurant/profileDetails');
+          navigate('/restaurant/');
         } else if (userRole === 'deliveryPartner') {
           navigate('/deliveryPartner/profileDetails');
         }

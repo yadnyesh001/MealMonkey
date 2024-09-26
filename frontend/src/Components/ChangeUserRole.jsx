@@ -8,16 +8,15 @@ const ChangeUserRole = () => {
   const handleChangeRole = async (e) => {
     e.preventDefault();
     try {
+        setUserEmail('');
+        setNewRole('');
       const response = await axiosInstance.post('/admin/changeUserRole', {
-        user_email: userEmail,
+        userEmail,
         newRole,
       });
 
       if (response.data.success) {
         alert('User role changed successfully');
-        // Reset form
-        setUserEmail('');
-        setNewRole('');
       } else {
         alert('Error: ' + response.data.message);
       }
