@@ -13,7 +13,7 @@ const reviewSchema = new Schema({
     target: {
         restaurant: { type: mongoose.Schema.Types.ObjectId, ref: 'Restaurant', required: false },
         deliveryPartner: { type: mongoose.Schema.Types.ObjectId, ref: 'DeliveryPartner', required: false },
-        admin: { type: mongoose.Schema.Types.ObjectId, ref: 'Admin', required: false }
+        customer: { type: mongoose.Schema.Types.ObjectId, ref: 'Customer', required: false }
     },
     // Review Type: general review categories (service, delivery, food quality, etc.)
     reviewType: {
