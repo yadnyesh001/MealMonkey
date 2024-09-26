@@ -701,3 +701,19 @@ module.exports.updateMenuItem = async function(req, res) {
         res.status(500).send("Error updating menu item.");
     }
 };
+
+module.exports.getOrdersByRestaurant = async (req, res) => {
+    try {
+        const restaurantId = req.userId; // Assuming req.userId is the restaurant's ID
+
+        const orders = await Order.find({ restaurant: restaurantId })
+            .populate('customer', 'name email') // Include relevant customer details (you can adjust the fields as needed) // Include relevant delivery partner details
+            .select('items totalAmount createdAt status') // Select only important details
+            .sort({ createdAt: -1 }); // Sort by latest order first
+
+        res.status(200).json(orders);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error fetching orders.");
+    }
+};

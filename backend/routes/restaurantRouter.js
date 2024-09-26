@@ -59,4 +59,6 @@ router.get("/getItem/:id", isLoggedIn, restaurantController.getMenuItemDetails);
 
 router.put("/updateItem/:id", isLoggedIn, restaurantController.updateMenuItem);
 
+
+router.get("/orders",isLoggedIn, restaurantController.getOrdersByRestaurant)
 module.exports = router;

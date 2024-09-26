@@ -31,6 +31,7 @@ import Menu from './Components/Menu';
 import UpdateMenuItemForm from './Components/UpdateItem';
 import RestaurantsList from './Components/RestaurantList';
 import Cart from './Components/Cart'
+import RestaurantOrders from './Components/RestaurantOrders';
 const App = () => {
   return (
     <UserProvider>
@@ -52,6 +53,7 @@ const App = () => {
             <Route path="/restaurant/menu/item" element={<AddMenuItemForm />} />
             <Route path="/restaurant/menu" element={<Menu />} />
             <Route path="/restaurant/updateItem/:id" element={<UpdateMenuItemForm/>} />
+            <Route path="/restaurant/orders" element={<RestaurantOrders/>}/>
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/getCustomers" element={<GetCustomer />} />
             <Route path="/admin/getRestaurants" element={<GetRestaurant />} />

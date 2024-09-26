@@ -44,6 +44,7 @@ const Header = () => {
             <Link to='/restaurant/'>Home</Link>
             <Link to='/restaurant/menu/item'>Add dish</Link>
             <Link to='/restaurant/menu'>Menu</Link>
+            <Link to='/restaurant/orders'>My Orders</Link>
             <Link to='/restaurant/profileDetails'>Profile</Link>
           </>
         )}
@@ -66,11 +67,12 @@ const Header = () => {
             <Link to='/myorders'>My Orders</Link>
             <Link to='/customer/profile'>Profile</Link>
             <Link to='/customer/cart'>Cart</Link>
+            <Link to='/about'>About</Link>
+        <Link to='/contact'>Contact</Link>
           </>
         )}
         {!loggedIn && <Link to='/'>Home</Link>}
-        <Link to='/about'>About</Link>
-        <Link to='/contact'>Contact</Link>
+        
       </nav>
 
       <div className='text-xl text-black'>

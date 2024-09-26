@@ -202,7 +202,7 @@ module.exports.checkout = async function(req, res) {
 const adminID='66f50593a65bcef6719b2644'
 /// controllers/customerController.js
 const Order = require('../models/orderModel');
-const Product=require("../models/productModel")
+
 // module.exports.checkout = async function(req, res) {
 //     try {
 //         const customer = await Customer.findById(req.userId).populate('cart.product');
