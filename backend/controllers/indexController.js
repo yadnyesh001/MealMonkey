@@ -13,10 +13,10 @@ function generateToken(user) {
 
 module.exports.register = async function(req, res) {
     try {
-        let { name, email, password, role, isAdmin = false, contact, fullAddress, pincode } = req.body;
+        let { username, email, password, role, isAdmin = false, contact, fullAddress, pincode } = req.body;
         
         // Validate input
-        if (!name || !email || !password || !role || !contact || !fullAddress || !pincode) {
+        if (!username || !email || !password || !role || !contact || !fullAddress || !pincode) {
             return res.status(400).send("Please provide all details.");
         }
         // Checks if email is valid
@@ -48,7 +48,7 @@ module.exports.register = async function(req, res) {
     
                     // Create new user
                     let newUser = new customer({
-                    name: name,
+                    username: username,
                     email: email,
                     password: hash,
                     role: role,
@@ -77,7 +77,7 @@ module.exports.register = async function(req, res) {
     
                     // Create new user
                     let newUser = new restaurant({
-                    name: name,
+                    username: username,
                     email: email,
                     password: hash,
                     role: role,
@@ -86,7 +86,7 @@ module.exports.register = async function(req, res) {
                     address: {
                         fullAddress: fullAddress,
                         pincode: pincode
-                    }
+                    },
                     });
     
                     const savedUser =await newUser.save();
@@ -106,7 +106,7 @@ module.exports.register = async function(req, res) {
     
                     // Create new user
                     let newUser = new deliveryPartner({
-                    name: name,
+                    username: username,
                     email: email,
                     password: hash,
                     role: role,
@@ -137,21 +137,21 @@ module.exports.login = async function(req, res) {
     try {
         let { email, password } = req.body;
         
-        let user = await customer.findOne({ email: email });
+        // First check in customer, then deliveryPartner, and lastly restaurant
+        let user = await customer.findOne({ email: email }) ||
+                   await deliveryPartner.findOne({ email: email }) ||
+                   await restaurant.findOne({ email: email });
+
+        // If no user is found, return the incorrect credentials message
         if (!user) {
-            user = await deliveryPartner.findOne({ email: email });
-            if(!user){
-                let user = await restaurant.findOne({ email: email }); 
-                if(!user){
-                    return res.status(400).send("Incorrect Username or Password.");
-                }
-            }
+            return res.status(400).send("Incorrect Username or Password.");
         }
 
         bcrypt.compare(password, user.password, function(err, result) {
             if (result) {
                 let token = generateToken(user);
                 res.cookie("token", token);
+                res.cookie("role", user.role);
                 res.status(200).json({
                     message: "Login successful",
                     role: user.role

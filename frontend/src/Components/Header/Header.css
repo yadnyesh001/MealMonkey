@@ -14,9 +14,10 @@
 }
 
 .logo {
-    font-size: 32px;
+    /* font-size: 32px; */
+    /* height: 0.5vh;
     color: #fff;
-    font-weight: 700;
+    font-weight: 700; */
 }
 
 .navbar a {

@@ -4,7 +4,6 @@ import axiosInstance from '../utils/axiosInstance';
 
 const PopularRestaurants = () => {
     const [restaurants, setRestaurants] = useState([]);
-    console.log("Hello")
     useEffect(() => {
         const fetchRestaurants = async () => {
             try {

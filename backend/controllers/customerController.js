@@ -1,8 +1,8 @@
-const userModel = require("../models/baseUserModel")
+const customer = require("../models/customerModel");
 const Restaurant = require("../models/restaurantModel")
 module.exports.profileDetailsCustomer = async function(req, res) {
     try {
-        const user = await userModel.findById(req.userId).select("-password");
+        const user = await customer.findById(req.userId).select("-password");
         if (!user) {
             return res.status(404).send("User not found.");
         }
@@ -29,7 +29,7 @@ module.exports.updateDetailsCustomer = async function(req, res) {
         console.log(req.userId);
         
         // Find the user and update their profile details
-        const updatedUser = await userModel.findByIdAndUpdate(
+        const updatedUser = await customer.findByIdAndUpdate(
             req.userId,
             { address, contact },
             { new: true } // Return the updated user document

@@ -39,7 +39,7 @@ const restaurantSchema = new mongoose.Schema({
         default: false
     },
     role: {
-        type:String,
+        type: String,
         default:"restaurant"
     },
 
@@ -88,7 +88,6 @@ const restaurantSchema = new mongoose.Schema({
     type: {
         type: String,
         enum: ['Pure Veg', 'Oriental', 'Indian', 'Mixed', 'Continental', 'Italian', 'Mexican', 'Fast Food'],
-        required: true
     },
     // Photos for restaurant
     photos: [

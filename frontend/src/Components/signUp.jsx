@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axiosInstance from '../utils/axiosInstance';
 
 const SignUp = () => {
-  const [formData, setFormData] = useState({ name: '', email: '', password: '', role: '', contact: '', fullAddress: '', pincode: '' });
+  const [formData, setFormData] = useState({ username: '', email: '', password: '', role: '', contact: '', fullAddress: '', pincode: '' });
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -36,9 +36,9 @@ const SignUp = () => {
           <div>
             <input
               type="text"
-              name="name"
+              name="username"
               placeholder="Full Name"
-              value={formData.name}
+              value={formData.username}
               onChange={onChange}
               className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
               required
