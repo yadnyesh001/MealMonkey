@@ -585,3 +585,59 @@ module.exports.writeReview = async function(req, res) {
         res.status(500).send("Error writing review.");
     }
 };
+
+
+// controllers/restaurantController.js
+
+// Get Menu Item Details
+module.exports.getMenuItemDetails = async function(req, res) {
+    try {
+        const { id } = req.params; // Get the item ID from the request parameters
+        const item = await Product.findById(id);
+        
+        if (!item) {
+            return res.status(404).send("Menu item not found.");
+        }
+
+        res.status(200).json(item);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error fetching menu item details.");
+    }
+};
+
+// Update Menu Item
+module.exports.updateMenuItem = async function(req, res) {
+    try {
+        const { id } = req.params; // Get the item ID from the request parameters
+        const { name, price, foodType, discount } = req.body;
+        console.log(name,price,foodType)
+        // Validate input
+        if (!name || !price || !foodType) {
+            return res.status(400).send("Please provide all necessary fields.");
+        }
+
+        // Find the menu item by ID
+        const item = await Product.findById(id);
+        if (!item) {
+            return res.status(404).send("Menu item not found.");
+        }
+
+        // Update item details
+        item.name = name;
+        item.price = price;
+        item.foodType = foodType;
+        item.discount = discount || item.discount; // Only update if a new value is provided
+
+        // Handle image upload (if provided)
+        if (req.file) {
+            item.image = req.file.path; // Assuming you save the image path
+        }
+
+        await item.save();
+        res.status(200).json(item);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error updating menu item.");
+    }
+};

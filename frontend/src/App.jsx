@@ -21,6 +21,8 @@ import AboutUs from './Components/AboutUs';
 import Contact from './Components/Contact';
 import RestaurantMenu from './Components/RestaurantMenu';
 import { UserProvider } from './contexts/UserProvider';
+import Menu from './Components/Menu';
+import UpdateMenuItemForm from './Components/UpdateItem';
 
 const App = () => {
   return (
@@ -39,10 +41,13 @@ const App = () => {
             <Route path="/restaurant/" element={<RestaurantDashboard />} />
             <Route path="/restaurant/profileDetails" element={<RestaurantForm />} />
             <Route path="/restaurant/menu/item" element={<AddMenuItemForm />} />
+            <Route path="/restaurant/menu" element={<Menu />} />
+            <Route path="/restaurant/updateItem/:id" element={<UpdateMenuItemForm/>} />
             <Route path="/admin" element={<AdminDashboard />}/>
             <Route path="/admin/getUser" element={<GetUser />} />
             <Route path="/admin/deleteUser" element={<DeleteUser />} />
             <Route path="/admin/changeUserRole" element={<ChangeUserRole />} />
+            
           </Routes>
         </div>
       </div>

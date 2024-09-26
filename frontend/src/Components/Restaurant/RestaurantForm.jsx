@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../../contexts/UserProvider'; // Adjust the path based on your project structure
 import axiosInstance from '../../utils/axiosInstance';
+import { useNavigate } from 'react-router-dom';
 const RestaurantForm = () => {
+  const navigate=useNavigate()
   const { user } = useUser(); // Get user data from UserProvider
   const [formData, setFormData] = useState({
     username: '',
@@ -156,6 +158,7 @@ const RestaurantForm = () => {
     } catch (error) {
       console.error('Error submitting form:', error);
     }
+    navigate('/restaurant/')
   };
   
 
