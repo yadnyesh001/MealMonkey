@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 const SECRET_KEY = process.env.JWT_SECRET_KEY;
 const validator = require('validator');
 const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*()]).{6,}$/;
-
+const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
 function generateToken(user) {
     return jwt.sign({ id: user._id, email: user.email }, SECRET_KEY, { expiresIn: '1h' });
 }
@@ -24,13 +24,17 @@ module.exports.register = async function(req, res) {
             return res.status(400).send("Please provide a valid email address.");
         }
 
+        if (!emailRegex.test(email)) {
+            return res.status(400).send(`Provide valid email address`);
+        }
+        email = email.toLowerCase();
         // Checks if password is valid
         if (!passwordRegex.test(password)) {
             return res.status(400).send(`
             Password must meet the following criteria:\n
             • At least 6 characters long\n
             • At least one uppercase letter
-            • At least one lowercase letter
+            • At least one lowercase letter 
             • At least one number
             • At least one special character (!@#$%^&*())
             `);
@@ -40,7 +44,7 @@ module.exports.register = async function(req, res) {
         let user3 = await customer.findOne({ email: email });
         if (user1 || user2 || user3) return res.status(400).send("You already have an account. Please login.");
         
-        if(role==="customer"){
+        if(role==="customer" || role==="admin"){
             // Hash the password
             bcrypt.genSalt(10, function(err, salt) {
                 bcrypt.hash(password, salt, async function(err, hash) {
@@ -147,6 +151,7 @@ module.exports.login = async function(req, res) {
             return res.status(400).send("Incorrect Username or Password.");
         }
 
+        
         bcrypt.compare(password, user.password, function(err, result) {
             if (result) {
                 let token = generateToken(user);

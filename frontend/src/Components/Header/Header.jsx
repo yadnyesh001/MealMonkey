@@ -41,27 +41,27 @@ const Header = () => {
         
         {loggedIn && role === 'restaurant' && (
           <>
-            <Link to='/resturant/dashboard'>Home</Link>
+            <Link to='/resturant/'>Home</Link>
             <Link to='/restaurant/menu/item'>Add dish</Link>
             <Link to='/restaurant/profileDetails'>Profile</Link>
           </>
         )}
         {loggedIn && role === 'deliveryPartner' && (
           <>
-            <Link to='/deliveryPartner/dashboard'>Home</Link>
+            <Link to='/deliveryPartner/'>Home</Link>
             <Link to='/deliveries'>My Deliveries</Link>
             <Link to='/deliveryPartner/profile'>Profile</Link>
           </>
         )}
         {loggedIn && role === 'admin' && (
           <>
-            <Link to='/admin/dashboard'>Home</Link>
+            <Link to='/admin/'>Home</Link>
             <Link to='/admin'>Admin Dashboard</Link>
           </>
         )}
         {loggedIn && role === 'customer' && (
           <>
-            <Link to='/customer/dashboard'>Home</Link>
+            <Link to='/customer/'>Home</Link>
             <Link to='/myorders'>My Orders</Link>
             <Link to='/customer/profile'>Profile</Link>
           </>

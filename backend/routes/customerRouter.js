@@ -7,7 +7,7 @@ const Auth = require("../middlewares/Auth")
 
 // router.get("/profileDetails", isLoggedIn,  customerController.profileDetailsCustomer);
 // router.post("/profileDetails",isLoggedIn, customerController.updateDetailsCustomer);
-router.get("/dashboard", isLoggedIn, Auth.authorizeCustomer, function(req, res){
+router.get("/", isLoggedIn, Auth.authorizeCustomer, function(req, res){
     res.status(200).send("Customer Dashboard");
 })
 

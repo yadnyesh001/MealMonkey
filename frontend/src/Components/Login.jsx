@@ -20,9 +20,9 @@ const Login = () => {
         const userRole = response.data.role;
         
         if (userRole === 'admin') {
-          navigate('/admin/dashboard');
+          navigate('/admin/');
         } else if (userRole === 'customer') {
-          navigate('/customer/dashboard');
+          navigate('/customer/');
         } else if (userRole === 'restaurant') {
           navigate('/restaurant/profileDetails');
         } else if (userRole === 'deliveryPartner') {
