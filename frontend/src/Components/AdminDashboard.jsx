@@ -51,9 +51,9 @@ const AdminDashboard = () => {
           <li className="hover:bg-gray-700 p-2 rounded cursor-pointer">
             <Link to={"/admin/deleteUser"}>Delete User</Link>
           </li>
-          <li className="hover:bg-gray-700 p-2 rounded cursor-pointer">
+          {/* <li className="hover:bg-gray-700 p-2 rounded cursor-pointer">
             <Link to={"/admin/changeUserRole"}>Change User Role</Link>
-          </li>
+          </li> */}
         </ul>
       </div>
 
