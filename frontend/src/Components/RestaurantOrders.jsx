@@ -46,7 +46,10 @@ const RestaurantOrders = () => {
                                     <strong className="text-lg">Total Amount:</strong> <span className="text-gray-800">₹{order.totalAmount.toFixed(2)}</span>
                                 </div>
                                 <div className="mb-2">
-                                    <strong className="text-lg">Customer Email:</strong> <span className="text-gray-800">{order.customer.email}</span>
+                                    <strong className="text-lg">Customer Email:</strong> <span className="text-gray-800">{order.customerEmail}</span>
+                                </div>
+                                <div className="mb-2">
+                                    <strong className="text-lg">Customer Name:</strong> <span className="text-gray-800">{order.customerName}</span>
                                 </div>
                                 <div className="mb-2">
                                     <strong className="text-lg">Created At:</strong> <span className="text-gray-800">{new Date(order.createdAt).toLocaleString()}</span>

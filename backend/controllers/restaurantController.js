@@ -702,18 +702,38 @@ module.exports.updateMenuItem = async function(req, res) {
     }
 };
 
+
+
+// Fetch all orders for a specific restaurant
 module.exports.getOrdersByRestaurant = async (req, res) => {
     try {
-        const restaurantId = req.userId; // Assuming req.userId is the restaurant's ID
+        const restaurantId = req.userId; // Assuming req.userId contains the restaurant ID from the auth middleware
 
+        // Find all orders related to the restaurant and populate customer email and product details
         const orders = await Order.find({ restaurant: restaurantId })
-            .populate('customer', 'name email') // Include relevant customer details (you can adjust the fields as needed) // Include relevant delivery partner details
-            .select('items totalAmount createdAt status') // Select only important details
-            .sort({ createdAt: -1 }); // Sort by latest order first
+            .populate('customer', 'email name') // Populate customer email and name
+            .populate('items.product'); // Populate product details in the items
 
-        res.status(200).json(orders);
+        // Check if orders exist
+        if (!orders || orders.length === 0) {
+            return res.status(200).json([]); // Return an empty array if no orders are found
+        }
+
+        // Format the response
+        const formattedOrders = orders.map(order => ({
+            customerId: order.customer._id,
+            customerEmail: order.customer.email,
+            customerName: order.customer.name,
+            items: order.items,
+            totalAmount: order.totalAmount,
+            createdAt: order.createdAt
+        }));
+
+        res.status(200).json(formattedOrders);
     } catch (err) {
         console.error(err);
-        res.status(500).send("Error fetching orders.");
+        res.status(500).send("Error fetching restaurant orders.");
     }
 };
+
+
