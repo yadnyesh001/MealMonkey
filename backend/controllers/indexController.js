@@ -176,3 +176,72 @@ module.exports.logout = function(req, res) {
     res.redirect(303,"/");
 };
 
+const getStartOfDay = () => {
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    return now;
+};
+
+// Helper function to get the start of the week
+const getStartOfWeek = () => {
+    const now = new Date();
+    const dayOfWeek = now.getDay(); // 0 (Sunday) - 6 (Saturday)
+    const diff = now.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); // Adjust when day is Sunday
+    return new Date(now.setDate(diff));
+};
+
+
+const Order = require('../models/orderModel');
+const Restaurant = require('../models/restaurantModel');
+const Customer = require('../models/customerModel');
+module.exports.getAdminDashboardStats = async (req, res) => {
+    try {
+        const startOfDay = getStartOfDay();
+        const startOfWeek = getStartOfWeek();
+        
+        // Today's Orders
+        const todayOrders = await Order.find({ createdAt: { $gte: startOfDay } });
+        const todayOrdersCount = todayOrders.length;
+
+        // Today's Profit (10% of total order amount)
+        const todayProfit = todayOrders.reduce((total, order) => total + (order.totalAmount * 0.10), 0);
+
+        // Weekly Orders
+        const weeklyOrders = await Order.find({ createdAt: { $gte: startOfWeek } });
+        const weeklyOrdersCount = weeklyOrders.length;
+
+        // Weekly Profit (10% of total order amount)
+        const weeklyProfit = weeklyOrders.reduce((total, order) => total + (order.totalAmount * 0.10), 0);
+
+        // Customers Joined Today
+        const todayCustomersCount = await Customer.countDocuments({ role: 'customer', createdAt: { $gte: startOfDay } });
+
+        // Customers Joined This Week
+        const weeklyCustomersCount = await Customer.countDocuments({ role: 'customer', createdAt: { $gte: startOfWeek } });
+
+        // Restaurants Joined Today
+        const todayRestaurantsCount = await Restaurant.countDocuments({ createdAt: { $gte: startOfDay } });
+
+        // Restaurants Joined This Week
+        const weeklyRestaurantsCount = await Restaurant.countDocuments({ createdAt: { $gte: startOfWeek } });
+
+        // Return the stats
+        res.status(200).json({
+            today: {
+                ordersCount: todayOrdersCount,
+                profit: todayProfit.toFixed(2),
+                customersJoined: todayCustomersCount,
+                restaurantsJoined: todayRestaurantsCount,
+            },
+            week: {
+                ordersCount: weeklyOrdersCount,
+                profit: weeklyProfit.toFixed(2),
+                customersJoined: weeklyCustomersCount,
+                restaurantsJoined: weeklyRestaurantsCount,
+            }
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error fetching dashboard stats.");
+    }
+};

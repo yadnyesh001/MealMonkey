@@ -18,7 +18,7 @@ router.get("/menu", isLoggedIn, restaurantController.listMenu);
 router.post("/menu/item", isLoggedIn, Auth.authorizeManager, upload.single('image'), restaurantController.addItem);
 
 // Update an existing food item
-router.put("/menu/item/:itemId", isLoggedIn, restaurantController.updateItem);
+router.put("/menu/item/:itemId", isLoggedIn, Auth.authorizeManager, restaurantController.updateItem);
 
 // Delete a food item
 router.delete("/menu/item/:itemId", isLoggedIn, restaurantController.deleteItem);
@@ -48,11 +48,17 @@ router.get("/orders/history", isLoggedIn, restaurantController.getOrderHistory);
 router.get("/reviews", isLoggedIn, restaurantController.getAllReviews);
 
 // Get daily analytics
-router.get("/analytics/daily", isLoggedIn, restaurantController.getDailyAnalytics);
+router.get("/analytics/daily-weekly", isLoggedIn, restaurantController.getDailyAndWeeklyAnalytics);
 //Get all transactions of the restaurant
 router.get("/transactions", isLoggedIn, restaurantController.getTransactions);
 
 // Route to write a review
 router.post("/writeReview", isLoggedIn, restaurantController.writeReview);
 
+router.get("/getItem/:id", isLoggedIn, restaurantController.getMenuItemDetails);
+
+router.put("/updateItem/:id", isLoggedIn, restaurantController.updateMenuItem);
+
+
+router.get("/orders",isLoggedIn, restaurantController.getOrdersByRestaurant)
 module.exports = router;

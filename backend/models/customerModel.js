@@ -76,11 +76,23 @@ const customerSchema = new mongoose.Schema({
         balance: {
             type: Number,
             default: 0,
-            min: 0
+            min: 0,
         }
     },
 
-    
+    cart: [
+        {
+            product: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Product' // Reference to the Product model
+            },
+            quantity: {
+                type: Number,
+                default: 1, // Default quantity
+                min: 1 // Minimum quantity
+            }
+        }
+    ]
 
 }, {
     timestamps: true

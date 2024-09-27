@@ -5,12 +5,12 @@ const orderSchema = new mongoose.Schema({
     customer: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Customer',
-        required: true
+        
     },
     restaurant: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Restaurant',
-        required: true
+        
     },
     deliveryPartner: {
         type: mongoose.Schema.Types.ObjectId,

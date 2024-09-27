@@ -190,21 +190,25 @@ module.exports.addItem = async function (req, res) {
 module.exports.updateItem = async function(req, res) {
     try {
         const { itemId } = req.params;
-        const { image, name, price, foodType, discount } = req.body;
+        const { image, name, price, foodType, Discount } = req.body;
 
         // Find the product and verify it belongs to the restaurant
-        const product = await Product.findOne({ _id: itemId, restaurant: req.userId });
+        const product = await Product.findOne({ _id: itemId});
         if (!product) {
             return res.status(404).send("Product not found in your menu.");
         }
-
+        console.log(product)
         // Update the product fields
-        if (image !== undefined) product.image = image;
+        // if (image !== undefined) product.image = image;
         if (name !== undefined) product.name = name;
         if (price !== undefined) product.price = price;
         if (foodType !== undefined) product.foodType = foodType;
-        if (discount !== undefined) product.discount = discount;
+        if (Discount !== undefined) product.Discount = Discount;
 
+        if (req.file) {
+            product.photos = `/public/Images/${req.file.filename}`; // Store the path as a string
+        }
+        
         await product.save();
 
         res.status(200).json(product);
@@ -213,6 +217,9 @@ module.exports.updateItem = async function(req, res) {
         res.status(500).send("Error updating the item.");
     }
 };
+
+
+
 
 // 4. Delete a Food Item
 module.exports.deleteItem = async function(req, res) {
@@ -469,54 +476,104 @@ module.exports.getAllReviews = async function(req, res) {
 };
 
 
-module.exports.getDailyAnalytics = async function(req, res) {
+// module.exports.getDailyAnalytics = async function(req, res) {
+//     try {
+//         const restaurantId = req.userId; // Assuming req.userId is the restaurant's ID
+//         const today = new Date();
+//         const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+//         const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+
+//         // Total profit for the day
+//         const totalProfit = await Transaction.aggregate([
+//             { $match: { 'to.restaurant': restaurantId, createdAt: { $gte: startOfDay, $lt: endOfDay } } },
+//             { $group: { _id: null, total: { $sum: '$amount' } } }
+//         ]);
+
+//         // Daily average orders
+//         const dailyOrders = await Order.countDocuments({
+//             restaurant: restaurantId,
+//             createdAt: { $gte: startOfDay, $lt: endOfDay }
+//         });
+
+//         // Daily profit
+//         const dailyProfit = totalProfit.length ? totalProfit[0].total : 0;
+
+//         // Daily average rejected orders
+//         const dailyRejectedOrders = await Order.countDocuments({
+//             restaurant: restaurantId,
+//             status: 'rejected',
+//             createdAt: { $gte: startOfDay, $lt: endOfDay }
+//         });
+
+//         // Total ratings for the day
+//         const totalRatings = await Review.countDocuments({
+//             'target.restaurant': restaurantId,
+//             createdAt: { $gte: startOfDay, $lt: endOfDay }
+//         });
+
+//         // Constructing the analytics data
+//         const analytics = {
+//             totalProfit: dailyProfit,
+//             dailyAverageOrders: dailyOrders,
+//             dailyProfit,
+//             dailyAverageRejectedOrders: dailyRejectedOrders,
+//             totalRatings
+//         };
+
+//         res.status(200).json(analytics);
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).send("Error fetching daily analytics.");
+//     }
+// };
+
+module.exports.getDailyAndWeeklyAnalytics = async function(req, res) {
     try {
         const restaurantId = req.userId; // Assuming req.userId is the restaurant's ID
         const today = new Date();
         const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
         const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
 
-        // Total profit for the day
-        const totalProfit = await Transaction.aggregate([
-            { $match: { 'to.restaurant': restaurantId, createdAt: { $gte: startOfDay, $lt: endOfDay } } },
-            { $group: { _id: null, total: { $sum: '$amount' } } }
-        ]);
+        // Calculate the start of the week (assuming week starts from Sunday)
+        const startOfWeek = new Date(today);
+        startOfWeek.setDate(today.getDate() - today.getDay()); // Moves to the start of the week (Sunday)
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 7); // End of the week (next Sunday)
 
-        // Daily average orders
-        const dailyOrders = await Order.countDocuments({
+        // Get daily orders
+        const dailyOrders = await Order.find({
             restaurant: restaurantId,
             createdAt: { $gte: startOfDay, $lt: endOfDay }
         });
 
-        // Daily profit
-        const dailyProfit = totalProfit.length ? totalProfit[0].total : 0;
+        // Calculate daily total balance from orders
+        const dailyBalance = dailyOrders.reduce((total, order) => total + order.totalAmount, 0);
 
-        // Daily average rejected orders
-        const dailyRejectedOrders = await Order.countDocuments({
+        // Calculate the maximum profit from a single order for today
+        const maxDailyProfit = dailyOrders.length > 0 ? Math.max(...dailyOrders.map(order => order.totalAmount)) : 0;
+
+        // Get weekly orders
+        const weeklyOrders = await Order.find({
             restaurant: restaurantId,
-            status: 'rejected',
-            createdAt: { $gte: startOfDay, $lt: endOfDay }
+            createdAt: { $gte: startOfWeek, $lt: endOfWeek }
         });
 
-        // Total ratings for the day
-        const totalRatings = await Review.countDocuments({
-            'target.restaurant': restaurantId,
-            createdAt: { $gte: startOfDay, $lt: endOfDay }
-        });
+        // Calculate weekly total balance from orders
+        const weeklyBalance = weeklyOrders.reduce((total, order) => total + order.totalAmount, 0);
 
         // Constructing the analytics data
         const analytics = {
-            totalProfit: dailyProfit,
-            dailyAverageOrders: dailyOrders,
-            dailyProfit,
-            dailyAverageRejectedOrders: dailyRejectedOrders,
-            totalRatings
+            dailyBalance: dailyBalance,
+            dailyOrders: dailyOrders.length,
+            maxDailyProfit: maxDailyProfit, // Maximum profit from a single order today
+            weeklyBalance: weeklyBalance,
+            weeklyOrders: weeklyOrders.length
         };
 
         res.status(200).json(analytics);
     } catch (err) {
         console.error(err);
-        res.status(500).send("Error fetching daily analytics.");
+        res.status(500).send("Error fetching daily and weekly analytics.");
     }
 };
 
@@ -589,3 +646,94 @@ module.exports.writeReview = async function(req, res) {
         res.status(500).send("Error writing review.");
     }
 };
+
+
+// controllers/restaurantController.js
+
+// Get Menu Item Details
+module.exports.getMenuItemDetails = async function(req, res) {
+    try {
+        const { id } = req.params; // Get the item ID from the request parameters
+        const item = await Product.findById(id);
+        
+        if (!item) {
+            return res.status(404).send("Menu item not found.");
+        }
+
+        res.status(200).json(item);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error fetching menu item details.");
+    }
+};
+
+// Update Menu Item
+module.exports.updateMenuItem = async function(req, res) {
+    try {
+        const { id } = req.params; // Get the item ID from the request parameters
+        const { name, price, foodType, discount } = req.body;
+        // Validate input
+        if (!name || !price || !foodType) {
+            return res.status(400).send("Please provide all necessary fields.");
+        }
+
+        // Find the menu item by ID
+        const item = await Product.findById(id);
+        if (!item) {
+            return res.status(404).send("Menu item not found.");
+        }
+
+        // Update item details
+        item.name = name;
+        item.price = price;
+        item.foodType = foodType;
+        item.discount = discount || item.discount; // Only update if a new value is provided
+
+        // Handle image upload (if provided) let imagePath;
+        if (req.file) {
+            imagePath = `/public/Images/${req.file.filename}`; 
+        }
+         item.image=imagePath
+        await item.save();
+        res.status(200).json(item);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error updating menu item.");
+    }
+};
+
+
+
+// Fetch all orders for a specific restaurant
+module.exports.getOrdersByRestaurant = async (req, res) => {
+    try {
+        const restaurantId = req.userId; // Assuming req.userId contains the restaurant ID from the auth middleware
+
+        // Find all orders related to the restaurant and populate customer email and product details
+        const orders = await Order.find({ restaurant: restaurantId })
+            .populate('customer', 'email name') // Populate customer email and name
+            .populate('items.product'); // Populate product details in the items
+
+        // Check if orders exist
+        if (!orders || orders.length === 0) {
+            return res.status(200).json([]); // Return an empty array if no orders are found
+        }
+
+        // Format the response
+        const formattedOrders = orders.map(order => ({
+            customerId: order.customer._id,
+            customerEmail: order.customer.email,
+            customerName: order.customer.name,
+            items: order.items,
+            totalAmount: order.totalAmount,
+            createdAt: order.createdAt
+        }));
+
+        res.status(200).json(formattedOrders);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error fetching restaurant orders.");
+    }
+};
+
+

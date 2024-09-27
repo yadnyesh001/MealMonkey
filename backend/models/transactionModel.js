@@ -9,12 +9,12 @@ const transactionSchema = new mongoose.Schema({
     },
     from: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'BaseUser', // Reference to the user making the payment (Customer, etc.)
+        ref: 'Customer', // Reference to the user making the payment (Customer, etc.)
         required: true
     },
     to: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'BaseUser', // Reference to the recipient (Admin, Restaurant, DeliveryPartner, etc.)
+        ref: 'Restaurant', // Reference to the recipient (Admin, Restaurant, DeliveryPartner, etc.)
         required: true
     },
     amount: {
