@@ -47,4 +47,6 @@ router.get('/get_user', isLoggedIn, async (req, res) => {
     }
 });
 
+
+ router.get("/admin_stats",indexController.getAdminDashboardStats)
 module.exports = router;
