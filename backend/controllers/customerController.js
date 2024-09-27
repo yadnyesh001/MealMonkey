@@ -383,3 +383,43 @@ module.exports.getOrders = async function(req, res) {
         res.status(500).send("Error fetching orders.");
     }
 };
+
+module.exports.getWalletBalance = async (req, res) => {
+    try {
+        const customerId = req.userId; // Assuming req.userId is set by your auth middleware
+        const customer = await Customer.findById(customerId);
+
+        if (!customer) {
+            return res.status(404).json({ message: "Customer not found." });
+        }
+
+        res.status(200).json({ balance: customer.wallet.balance }); // Adjusted to match the model structure
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error fetching wallet balance.");
+    }
+};
+// Add money to customer's wallet
+module.exports.addMoneyToWallet = async (req, res) => {
+    try {
+        const customerId = req.userId;
+        const { amount } = req.body;
+
+        if (amount <= 0) {
+            return res.status(400).json({ message: "Amount must be greater than zero." });
+        }
+
+        const customer = await Customer.findById(customerId);
+        if (!customer) {
+            return res.status(404).json({ message: "Customer not found." });
+        }
+
+        customer.wallet.balance += amount; // Increment wallet balance
+        await customer.save(); // Save the updated customer
+
+        res.status(200).json({ message: "Money added successfully.", newBalance: customer.wallet.balance });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error adding money to wallet.");
+    }
+};
