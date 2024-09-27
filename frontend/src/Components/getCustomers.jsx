@@ -1,20 +1,27 @@
 import { useEffect, useState } from 'react';
-import axiosInstance from '../utils/axiosInstance';
+
 const Customers = () => {
     const [customers, setCustomers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+
     useEffect(() => {
-        const fetchCustomers = async () => {
-            try {
-                const response = await axiosInstance.get('/admin/getCustomers');
-                console.log(response.data);
-                setCustomers(response.data);
-            } catch (err) {
-                setError('Failed to fetch customers');
-            } finally {
-                setLoading(false);
-            }
+        const fetchCustomers = () => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', '/admin/getCustomers', true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    setLoading(false);
+                    if (xhr.status === 200) {
+                        const data = JSON.parse(xhr.responseText); 
+                        console.log(data);
+                        setCustomers(data); 
+                    } else {
+                        setError('Failed to fetch customers'); 
+                    }
+                }
+            };
+            xhr.send(); // Send the request
         };
 
         fetchCustomers();
