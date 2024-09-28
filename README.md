@@ -1,4 +1,4 @@
-# Welcome to Food Delievery App: Meal Monkey
+# Welcome to Food Delievery Website: Meal Monkey
 
 ## Getting Started
 
