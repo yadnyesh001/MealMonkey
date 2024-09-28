@@ -1,4 +1,4 @@
-# Welcome to Food Delievery Website: Meal Monkey
+# Welcome to Food Delivery Website: Meal Monkey
 
 ## Getting Started
 
