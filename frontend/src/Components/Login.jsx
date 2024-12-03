@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axiosInstance from '../utils/axiosInstance';
 
 const Login = () => {
-  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [formData, setFormData] = useState({ email: 'user@gmail.com', password: 'User@123' });
   const [error, setError] = useState('');
   const navigate = useNavigate();
 

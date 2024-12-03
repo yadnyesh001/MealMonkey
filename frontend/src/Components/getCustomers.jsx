@@ -5,28 +5,43 @@ const Customers = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
-    useEffect(() => {
-        const fetchCustomers = () => {
-            const xhr = new XMLHttpRequest();
-            xhr.open('GET', '/admin/getCustomers', true);
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4) {
-                    setLoading(false);
-                    if (xhr.status === 200) {
-                        const data = JSON.parse(xhr.responseText); 
-                        console.log(data);
-                        setCustomers(data); 
-                    } else {
-                        setError('Failed to fetch customers'); 
-                    }
-                }
-            };
-            xhr.send(); // Send the request
-        };
+    // useEffect(() => {
+    //     const fetchCustomers = () => {
+    //         const xhr = new XMLHttpRequest();
+    //         xhr.open('GET', '/admin/getCustomers', true);
+    //         xhr.onreadystatechange = function () {
+    //             if (xhr.readyState === 4) {
+    //                 setLoading(false);
+    //                 if (xhr.status === 200) {
+    //                     const data = JSON.parse(xhr.responseText); 
+    //                     console.log(data);
+    //                     setCustomers(data); 
+    //                 } else {
+    //                     setError('Failed to fetch customers'); 
+    //                 }
+    //             }
+    //         };
+    //         xhr.send(); // Send the request
+    //     };
 
+    //     fetchCustomers();
+    // }, []);
+
+    useEffect(() => {
+        const fetchCustomers = async () => {
+            try {
+                const response = await axiosInstance.get('/admin/getCustomers');
+                console.log(response.data);
+                setCustomers(response.data);
+            } catch (err) {
+                setError('Failed to fetch customers');
+            } finally {
+                setLoading(false);
+            }
+        };
         fetchCustomers();
     }, []);
-
+    
     return (
         <div className="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-lg">
             <h2 className="text-2xl font-bold mb-4 text-center">Customers</h2>
