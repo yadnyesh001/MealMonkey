@@ -13,6 +13,7 @@ import AddMenuItemForm from './Components/AddMenuItemForm';
 import AdminDashboard from './Components/AdminDashboard';
 import GetCustomer from './Components/getCustomers';
 import GetRestaurant from './Components/getRestaurants';
+import RestaurantDetails from './Components/RestaurantDetails';
 import GetUser from './Components/GetUser'
 import DeleteUser from './Components/DeleteUser';
 import ChangeUserRole from './Components/ChangeUserRole';
@@ -54,7 +55,7 @@ const App = () => {
             <Route path="/customer/cart" element={<Cart/>}/>
             <Route path="/customer/orders" element={<CustomerOrderList/>}/>
             <Route path="/customer/menu/:restaurantId" element={<RestaurantMenu />} />
-            <Route path="/restaurant/" element={<RestaurantDashboard />} />
+            <Route path="/restaurant" element={<RestaurantDashboard />} />
             <Route path="/restaurant/profileDetails" element={<RestaurantForm />} />
             <Route path="/restaurant/menu/item" element={<AddMenuItemForm />} />
             <Route path="/restaurant/menu" element={<Menu />} />
@@ -64,6 +65,7 @@ const App = () => {
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/getCustomers" element={<GetCustomer />} />
             <Route path="/admin/getRestaurants" element={<GetRestaurant />} />
+            <Route path="/admin/restaurantDetails/:restaurantId" element={<RestaurantDetails/>} />
             <Route path="/admin/getUser" element={<GetUser />} />
             <Route path="/admin/deleteUser" element={<DeleteUser />} />
             <Route path="/admin/changeUserRole" element={<ChangeUserRole />} />
