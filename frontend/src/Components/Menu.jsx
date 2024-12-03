@@ -31,7 +31,7 @@ const Menu = () => {
         return [...prevCart, { ...menuItem }];
       }
     });
-  };
+  };  
 
   const updateQuantity = (id, amount) => {
     setCart((prevCart) => {
@@ -43,6 +43,7 @@ const Menu = () => {
       return updatedCart.filter((item) => item.quantity > 0);
     });
   };
+  
 
   const reviews = [
     {
@@ -71,10 +72,12 @@ const Menu = () => {
     },
   ];
   
+  const navigate = useNavigate();
 
   const subtotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
   const discount = subtotal * 0.1;
   const total = subtotal - discount;
+
 
   const renderContent = () => {
     switch (activeSection) {
@@ -271,7 +274,10 @@ const Menu = () => {
             <span className="text-gray-800">To Pay</span>
             <span className="text-yellow-500">${total.toFixed(2)}</span>
           </div>
-          <button className="w-full mt-6 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white py-3 rounded-lg text-lg hover:opacity-90 shadow-lg">
+          <button
+            onClick={() => navigate("/restaurant/menu/checkout")}
+            className="w-full mt-6 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white py-3 rounded-lg text-lg hover:opacity-90 shadow-lg"
+          >
             Proceed to Payment
           </button>
         </div>
