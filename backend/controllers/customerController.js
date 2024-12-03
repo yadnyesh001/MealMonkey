@@ -70,7 +70,7 @@ module.exports.getRestaurant = async function(req, res) {
 
         
         const restaurant = await Restaurant.findById(restaurantId);
-        
+        console.log(restaurant);
         if (!restaurant) {
             return res.status(404).send("Restaurant not found.");
         }

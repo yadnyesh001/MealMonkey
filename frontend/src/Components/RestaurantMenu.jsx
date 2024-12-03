@@ -1,15 +1,50 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axiosInstance from "../utils/axiosInstance";
-
+import ReviewCard from "./Review";
+import ReviewForm from "./ReviewForm"
 const RestaurantMenu = () => {
   const { restaurantId } = useParams();
   const [activeSection, setActiveSection] = useState("Order Online");
   const [menuItems, setMenuItems] = useState([]);
   const [restaurantDetails, setRestaurantDetails] = useState({});
   const [cart, setCart] = useState([]);
-
-  useEffect(() => {
+  const dummyReviews = [
+    {
+      reviewType: "Food Quality",
+      rating: 4,
+      comment: "The food was really good, but could use a little more spice!",
+      createdAt: "2024-12-01T10:00:00Z",
+      source: {
+        customer: {
+          name: "John Doe",
+        },
+      },
+    },
+    {
+      reviewType: "Service",
+      rating: 5,
+      comment: "Excellent service, the staff was friendly and quick.",
+      createdAt: "2024-12-02T12:30:00Z",
+      source: {
+        customer: {
+          name: "Jane Smith",
+        },
+      },
+    },
+    {
+      reviewType: "Ambiance",
+      rating: 3,
+      comment: "The ambiance was decent, but the lighting could be improved.",
+      createdAt: "2024-12-03T14:45:00Z",
+      source: {
+        customer: {
+          name: "Alice Johnson",
+        },
+      },
+    },
+  ];
+ useEffect(() => {
     const fetchMenu = async () => {
       try {
         const menuResponse = await axiosInstance.get(`/customer/menu/${restaurantId}`);
@@ -32,20 +67,38 @@ const RestaurantMenu = () => {
     fetchRestaurantDetails();
   }, [restaurantId]);
 
-  const addToCart = (menuItem) => {
+  const addToCart = async (menuItem) => {
+    // Update static cart
     setCart((prevCart) => {
       const itemExists = prevCart.find((item) => item._id === menuItem._id);
       if (itemExists) {
         return prevCart.map((item) =>
           item._id === menuItem._id ? { ...item, quantity: item.quantity + 1 } : item
         );
-      } else {
-        return [...prevCart, { ...menuItem, quantity: 1 }];
       }
+      return [...prevCart, { ...menuItem, quantity: 1 }];
     });
+
+    // Update server cart
+    try {
+      const response = await axiosInstance.post('/customer/cart/add', {
+        productId: menuItem._id,
+        quantity: 1
+      });
+      console.log("Item added to server cart:", response.data);
+    } catch (error) {
+      console.error("Error adding to server cart:", error);
+      // Revert static cart on server error
+      setCart((prevCart) => {
+        return prevCart.map((item) =>
+          item._id === menuItem._id ? { ...item, quantity: item.quantity - 1 } : item
+        ).filter((item) => item.quantity > 0);
+      });
+    }
   };
 
-  const updateQuantity = (id, amount) => {
+  const updateQuantity = async (id, amount) => {
+    // Update static cart
     setCart((prevCart) => {
       const updatedCart = prevCart.map((item) =>
         item._id === id
@@ -54,11 +107,31 @@ const RestaurantMenu = () => {
       );
       return updatedCart.filter((item) => item.quantity > 0);
     });
+
+    // Update server cart
+    try {
+      const response = await axiosInstance.post('/customer/cart/add', {
+        productId: id,
+        quantity: amount
+      });
+      console.log("Cart quantity updated on server:", response.data);
+    } catch (error) {
+      console.error("Error updating server cart:", error);
+      // Revert static cart on server error
+      setCart((prevCart) => {
+        const updatedCart = prevCart.map((item) =>
+          item._id === id
+            ? { ...item, quantity: item.quantity - amount > 0 ? item.quantity - amount : 0 }
+            : item
+        );
+        return updatedCart.filter((item) => item.quantity > 0);
+      });
+    }
   };
 
   const subtotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
-  const discount = subtotal * 0.1;
-  const total = subtotal - discount;
+
+  const total = subtotal;
 
   const renderContent = () => {
     switch (activeSection) {
@@ -248,12 +321,28 @@ const RestaurantMenu = () => {
       </div>
     );
   
-      case "Reviews":
-        return <p className="text-lg text-gray-600">Read reviews from our customers.</p>;
+    case "Reviews":
+        return (
+          <div className="mt-6">
+            {dummyReviews && dummyReviews.length > 0 ? (
+              <div className="max-h-[400px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
+                {dummyReviews.map((review, index) => (
+                  <ReviewCard key={index} review={review} />
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-500 italic">No reviews available for this restaurant.</p>
+            )}
+          </div>
+        );
       default:
         return null;
+        case "Write a Review":
+            return (<ReviewForm className="shadow-lg p-6"/>);
+          
     }
   };
+  
 
   return (
     <div className="relative w-screen min-h-[135vh] bg-gray-100 flex justify-center">
@@ -261,7 +350,7 @@ const RestaurantMenu = () => {
       <div className="absolute top-[-30px] w-full bg-[#232220] text-white py-4 flex flex-col items-center h-[200px]">
         <h1 className="text-4xl font-bold text-center mt-6">{restaurantDetails.hotelName}</h1>
         <div className="flex mt-16 space-x-40 text-lg">
-          {["Order Online", "Overview", "Photos", "Reviews"].map((section) => (
+          {["Order Online", "Overview", "Photos", "Reviews","Write a Review"].map((section) => (
             <span
               key={section}
               onClick={() => setActiveSection(section)}
@@ -289,7 +378,7 @@ const RestaurantMenu = () => {
               <div>
                 <h3 className="text-lg font-semibold text-gray-700">{item.name}</h3>
                 <p className="text-sm text-gray-500">
-                  <span className="text-yellow-500 font-medium">${item.price}</span> x {item.quantity}
+                  <span className="text-yellow-500 font-medium">₹{item.price}</span> x {item.quantity}
                 </p>
               </div>
               <div className="flex items-center">
@@ -316,10 +405,6 @@ const RestaurantMenu = () => {
           <div className="flex justify-between text-lg">
             <span className="text-gray-700">Sub Total</span>
             <span className="text-gray-800 font-medium">${subtotal}</span>
-          </div>
-          <div className="flex justify-between text-lg">
-            <span className="text-gray-700">Discount (10%)</span>
-            <span className="text-green-600 font-medium">-${discount.toFixed(2)}</span>
           </div>
           <div className="flex justify-between font-bold text-xl mt-4">
             <span className="text-gray-800">To Pay</span>
