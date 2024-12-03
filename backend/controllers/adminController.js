@@ -49,10 +49,10 @@ class CRUD{
     
             // Get daily orders
             const dailyOrders = await Order.find({
-                restaurants: restaurantId,
+                restaurant: restaurantId,
                 createdAt: { $gte: startOfDay, $lt: endOfDay }
             });
-    
+            console.log(restaurantId)
             // Calculate daily total balance from orders
             const dailyBalance = dailyOrders.reduce((total, order) => total + order.totalAmount, 0);
     
@@ -61,7 +61,7 @@ class CRUD{
     
             // Get weekly orders
             const weeklyOrders = await Order.find({
-                restaurants: restaurantId,
+                restaurant: restaurantId,
                 createdAt: { $gte: startOfWeek, $lt: endOfWeek }
             });
     

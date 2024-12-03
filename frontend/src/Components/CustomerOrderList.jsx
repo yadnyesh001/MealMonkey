@@ -94,7 +94,11 @@ const OrdersList = () => {
                                             className={`px-2 py-1 rounded-md ${
                                                 order.status === 'pending'
                                                     ? 'bg-yellow-200 text-yellow-800'
-                                                    : 'bg-green-200 text-green-800'
+                                                    : order.status === 'accepted'
+                                                    ? 'bg-green-200 text-green-800'
+                                                    : order.status === 'completed'
+                                                    ? 'bg-blue-200 text-blue-800'
+                                                    : ''
                                             }`}
                                         >
                                             {order.status}
@@ -109,7 +113,7 @@ const OrdersList = () => {
                                         <ul className="mt-2 pl-4 list-disc">
                                             {order.items.map((item, idx) => (
                                                 <li key={idx}>
-                                                    {item.name} <span>(Quantity: {item.quantity})</span>
+                                                    {item.product.name} <span>(Quantity: {item.quantity})</span>
                                                 </li>
                                             ))}
                                         </ul>
