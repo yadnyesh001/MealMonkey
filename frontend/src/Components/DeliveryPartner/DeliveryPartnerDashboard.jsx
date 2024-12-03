@@ -305,7 +305,6 @@
 //     </div>
 //   );
 
-
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../../utils/axiosInstance";
 import { useUser } from "../../contexts/UserProvider";
@@ -366,9 +365,9 @@ const DeliveryPartnerDashboard = () => {
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 -mt-8">
       {/* Sidebar */}
-      <aside className="w-1/4 bg-gradient-to-br from-orange-500 to-orange-600 text-white p-6 shadow-2xl ">
+      <aside className="w-1/4 bg-gradient-to-br from-orange-500 to-orange-600 text-white p-6 shadow-2xl">
         <div className="text-center">
-          <div className="w-40 h-40 mx-auto rounded-full border-4 border-white overflow-hidden mb-4 transform transition-transform hover:scale-105">
+          <div className="w-40 h-40 mx-auto rounded-full border-4 border-white overflow-hidden mb-4 transform transition-transform hover:scale-110 hover:rotate-6">
             <img
               src={boy}
               alt="Profile"
@@ -404,7 +403,7 @@ const DeliveryPartnerDashboard = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="w-3/4 p-8 space-y-8 ">
+      <main className="w-3/4 p-8 space-y-8">
         {/* Analytics Grid */}
         <div className="grid grid-cols-4 gap-6">
           {analyticsData.map((item, index) => (
@@ -443,7 +442,7 @@ const DeliveryPartnerDashboard = () => {
 };
 
 const ProfileInfoItem = ({ icon, label, value }) => (
-  <div className="flex items-center bg-white bg-opacity-20 rounded-lg p-3 hover:bg-opacity-30 transition-colors">
+  <div className="flex items-center bg-white bg-opacity-20 rounded-lg p-3 hover:bg-opacity-30 transition-colors hover:scale-105">
     {icon}
     <div>
       <p className="text-sm font-medium opacity-70">{label}</p>
@@ -453,7 +452,7 @@ const ProfileInfoItem = ({ icon, label, value }) => (
 );
 
 const AnalyticsCard = ({ title, value, icon }) => (
-  <div className="bg-white p-5 rounded-xl shadow-md hover:shadow-xl transition-all flex items-center space-x-4">
+  <div className="bg-white p-5 rounded-xl shadow-md hover:shadow-xl transition-all flex items-center space-x-4 hover:animate-bounce">
     <div className="p-3 bg-gray-100 rounded-full">{icon}</div>
     <div>
       <p className="text-sm text-gray-500">{title}</p>
@@ -464,7 +463,7 @@ const AnalyticsCard = ({ title, value, icon }) => (
 
 const OrderCard = ({ customerName, customerContact, restaurantName, orderPrice, onAccept, index }) => (
   <div 
-    className="flex items-center justify-between bg-gray-50 p-4 rounded-lg shadow-sm hover:bg-gray-100 transition-colors"
+    className="flex items-center justify-between bg-gray-50 p-4 rounded-lg shadow-sm hover:bg-gray-100 transition-colors animate-slide-in"
   >
     <div className="flex-grow pr-4">
       <h4 className="font-semibold text-gray-800 mb-1 flex items-center">
@@ -488,7 +487,7 @@ const OrderCard = ({ customerName, customerContact, restaurantName, orderPrice, 
     </div>
     <button
       onClick={onAccept}
-      className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-400"
+      className="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition-transform focus:outline-none focus:ring-2 focus:ring-orange-400"
     >
       Accept Order
     </button>
