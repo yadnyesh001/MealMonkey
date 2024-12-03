@@ -1,6 +1,7 @@
 const customer = require("../models/customerModel");
 const restaurant = require("../models/restaurantModel");
 const deliveryPartner = require("../models/deliveryPartnerModel");
+const Order = require("../models/orderModel");
 const bcrypt = require("bcrypt");
 class CRUD{
     getCustomers = async function(req, res){
@@ -29,10 +30,10 @@ class CRUD{
 
     getDailyAndWeeklyAnalytics = async function(req, res) {
         try {
-            const restaurantId = req.userId; // Assuming req.userId is the restaurant's ID
-            const restaurant = await restaurant.findById(restaurantId);
+            const restaurantId = req.params.restaurantId; // Assuming restaurantId is passed as a URL parameter
+            const restaurants = await restaurant.findById(restaurantId);
     
-            if (!restaurant) {
+            if (!restaurants) {
                 return res.status(404).send("Restaurant not found.");
             }
     
@@ -48,7 +49,7 @@ class CRUD{
     
             // Get daily orders
             const dailyOrders = await Order.find({
-                restaurant: restaurantId,
+                restaurants: restaurantId,
                 createdAt: { $gte: startOfDay, $lt: endOfDay }
             });
     
@@ -60,7 +61,7 @@ class CRUD{
     
             // Get weekly orders
             const weeklyOrders = await Order.find({
-                restaurant: restaurantId,
+                restaurants: restaurantId,
                 createdAt: { $gte: startOfWeek, $lt: endOfWeek }
             });
     
@@ -69,22 +70,25 @@ class CRUD{
     
             // Constructing the analytics data
             const analytics = {
-                dailyBalance: dailyBalance,
+                dailyBalance: dailyBalance * 0.1,
                 dailyOrders: dailyOrders.length,
-                maxDailyProfit: maxDailyProfit, // Maximum profit from a single order today
-                weeklyBalance: weeklyBalance,
+                maxDailyProfit: maxDailyProfit * 0.1, // Maximum profit from a single order today
+                weeklyBalance: weeklyBalance * 0.1,
                 weeklyOrders: weeklyOrders.length,
                 restaurantDetails: {
-                    image: restaurant.photos[0] || '',
-                    name: restaurant.hotelName || 'N/A',
-                    address: restaurant.address.fullAddress || 'N/A'
+                    image: restaurants.photos[0] || '',
+                    name: restaurants.hotelName || 'N/A',
+                    address: restaurants.address.fullAddress || 'N/A',
+                    email: restaurants.email || 'N/A',
+                    contact: restaurants.contact || 'N/A',
+                    pincode: restaurants.address.pincode || 'N/A',
                 }
             };
     
             res.status(200).json(analytics);
         } catch (err) {
             console.error(err);
-            res.status(500).send("Error fetching daily and weekly analytics.");
+            res.status(500).send("Error fetching admin analytics.");
         }
     };
 
