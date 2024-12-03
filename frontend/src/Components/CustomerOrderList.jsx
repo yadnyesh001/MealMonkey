@@ -1,7 +1,5 @@
-// src/components/OrdersList.jsx
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../utils/axiosInstance';
-import CustomerOrderCard from './CustomerOrderCard';
 
 const OrdersList = () => {
     const [orders, setOrders] = useState([]);
@@ -45,31 +43,83 @@ const OrdersList = () => {
         }
     };
 
-    if (loading) return <p className="text-center">Loading orders...</p>;
+    if (loading) return <p className="text-center text-gray-600">Loading orders...</p>;
 
     return (
-        <div className="flex flex-col items-center">
-            <div className="mb-4">
-                <h2 className="text-lg font-semibold">Wallet Balance: ₹{walletBalance}</h2>
-                <div className="flex items-center mt-2">
+        <div className="flex flex-col items-center bg-gray-50 min-h-screen py-8 px-4">
+            {/* Wallet Section */}
+            <div className="mb-6 bg-gradient-to-r from-blue-500 to-purple-600 p-6 rounded-lg shadow-lg w-full max-w-md text-black transition-transform duration-300 transform hover:scale-105">
+                <h2 className="text-2xl font-semibold">Wallet Balance: ₹{walletBalance}</h2>
+                <div className="flex items-center mt-4 space-x-4">
                     <input
                         type="number"
                         placeholder="Amount to add"
                         value={addAmount}
                         onChange={(e) => setAddAmount(Number(e.target.value))}
-                        className="border border-gray-300 rounded p-2"
+                        className="border-2 border-gray-300 rounded-md p-3 w-32 focus:outline-none focus:border-blue-500 transition-all duration-200"
                     />
-                    <button onClick={handleAddMoney} className="ml-2 bg-blue-500 text-white p-2 rounded">
+                    <button
+                        onClick={handleAddMoney}
+                        className="bg-white text-blue-600 font-semibold py-2 px-6 rounded-lg shadow-md hover:bg-gray-100 transition-colors duration-300"
+                    >
                         Add Money
                     </button>
                 </div>
             </div>
+
+            {/* Orders Section */}
             {orders.length === 0 ? (
-                <p>No orders found.</p>
+                <p className="text-lg text-gray-600">No orders found.</p>
             ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
-                    {orders.map(order => (
-                        <CustomerOrderCard key={order.restaurantId} order={order} />
+                <div className="w-full">
+                    {orders.map((order, index) => (
+                        <div
+                            key={order.restaurantId}
+                            className="flex justify-center mb-6 transition-transform duration-300 transform hover:scale-105"
+                        >
+                            <div className="w-11/12 md:w-7/12 lg:w-7/12 p-4 bg-gradient-to-br from-white to-gray-50 border-l-4 shadow-md rounded-lg border-blue-400">
+                                <div className="space-y-4">
+                                    <p className="text-lg font-semibold text-blue-700">
+                                        Order from: <span className="font-normal text-gray-700">{order.restaurantEmail}</span>
+                                    </p>
+                                    <p className="text-gray-800">
+                                        <strong className="text-blue-500">Restaurant ID:</strong>{' '}
+                                        <span className="text-gray-700">{order.restaurantId}</span>
+                                    </p>
+                                    <p className="text-gray-800">
+                                        <strong className="text-green-500">Total Amount:</strong>{' '}
+                                        <span className="text-gray-700">₹{order.totalAmount}</span>
+                                    </p>
+                                    <p className="text-gray-800">
+                                        <strong className="text-yellow-500">Status:</strong>{' '}
+                                        <span
+                                            className={`${
+                                                order.status === 'pending'
+                                                    ? 'text-yellow-600 bg-yellow-100 px-2 py-1 rounded-md'
+                                                    : 'text-green-600 bg-green-100 px-2 py-1 rounded-md'
+                                            } capitalize`}
+                                        >
+                                            {order.status}
+                                        </span>
+                                    </p>
+                                    <p className="text-gray-800">
+                                        <strong className="text-purple-500">Created At:</strong>{' '}
+                                        <span className="text-gray-700">{new Date(order.createdAt).toLocaleString()}</span>
+                                    </p>
+                                    <div className="text-gray-800">
+                                        <strong className="text-pink-500">Items:</strong>
+                                        <ul className="mt-2 pl-4 list-disc text-gray-700">
+                                            {order.items.map((item, idx) => (
+                                                <li key={idx} className="py-1">
+                                                    {item.name}{' '}
+                                                    <span className="text-gray-600">(Quantity: {item.quantity})</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     ))}
                 </div>
             )}
