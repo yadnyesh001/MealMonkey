@@ -48,19 +48,19 @@ const OrdersList = () => {
     return (
         <div className="flex flex-col items-center bg-gray-50 min-h-screen py-8 px-4">
             {/* Wallet Section */}
-            <div className="mb-6 bg-gradient-to-r from-blue-500 to-purple-600 p-6 rounded-lg shadow-lg w-full max-w-md text-black transition-transform duration-300 transform hover:scale-105">
-                <h2 className="text-2xl font-semibold">Wallet Balance: ₹{walletBalance}</h2>
+            <div className="mb-6 bg-gray-200 p-6 rounded-lg shadow-lg w-full max-w-md">
+                <h2 className="text-xl font-medium mb-2">Wallet Balance: ₹{walletBalance}</h2>
                 <div className="flex items-center mt-4 space-x-4">
                     <input
                         type="number"
                         placeholder="Amount to add"
                         value={addAmount}
                         onChange={(e) => setAddAmount(Number(e.target.value))}
-                        className="border-2 border-gray-300 rounded-md p-3 w-32 focus:outline-none focus:border-blue-500 transition-all duration-200"
+                        className="border-2 border-gray-300 rounded-md p-2 w-32 focus:outline-none focus:border-blue-500"
                     />
                     <button
                         onClick={handleAddMoney}
-                        className="bg-white text-blue-600 font-semibold py-2 px-6 rounded-lg shadow-md hover:bg-gray-100 transition-colors duration-300"
+                        className="bg-blue-500 text-white font-medium py-2 px-4 rounded hover:bg-blue-600"
                     >
                         Add Money
                     </button>
@@ -72,47 +72,48 @@ const OrdersList = () => {
                 <p className="text-lg text-gray-600">No orders found.</p>
             ) : (
                 <div className="w-full">
-                    {orders.map((order, index) => (
+                    {orders.map((order) => (
                         <div
                             key={order.restaurantId}
                             className="flex justify-center mb-6 transition-transform duration-300 transform hover:scale-105"
                         >
-                            <div className="w-11/12 md:w-7/12 lg:w-7/12 p-4 bg-gradient-to-br from-white to-gray-50 border-l-4 shadow-md rounded-lg border-blue-400">
-                                <div className="space-y-4">
-                                    <p className="text-lg font-semibold text-blue-700">
-                                        Order from: <span className="font-normal text-gray-700">{order.restaurantEmail}</span>
+                            <div className="w-11/12 md:w-7/12 lg:w-7/12 p-4 bg-white shadow-md rounded-lg border border-gray-200">
+                                <div className="space-y-3">
+                                    <p className="text-lg font-medium">
+                                        Order from: <span className="font-normal">{order.restaurantEmail}</span>
                                     </p>
-                                    <p className="text-gray-800">
-                                        <strong className="text-blue-500">Restaurant ID:</strong>{' '}
-                                        <span className="text-gray-700">{order.restaurantId}</span>
+                                    <p>
+                                        <strong>Restaurant ID:</strong> {order.restaurantId}
                                     </p>
-                                    <p className="text-gray-800">
-                                        <strong className="text-green-500">Total Amount:</strong>{' '}
-                                        <span className="text-gray-700">₹{order.totalAmount}</span>
+                                    <p>
+                                        <strong>Total Amount:</strong> ₹{order.totalAmount}
                                     </p>
-                                    <p className="text-gray-800">
-                                        <strong className="text-yellow-500">Status:</strong>{' '}
+                                    <p>
+                                        <strong>Status:</strong>{' '}
                                         <span
-                                            className={`${
+                                            className={`px-2 py-1 rounded-md ${
                                                 order.status === 'pending'
-                                                    ? 'text-yellow-600 bg-yellow-100 px-2 py-1 rounded-md'
-                                                    : 'text-green-600 bg-green-100 px-2 py-1 rounded-md'
-                                            } capitalize`}
+                                                    ? 'bg-yellow-200 text-yellow-800'
+                                                    : order.status === 'accepted'
+                                                    ? 'bg-green-200 text-green-800'
+                                                    : order.status === 'completed'
+                                                    ? 'bg-blue-200 text-blue-800'
+                                                    : ''
+                                            }`}
                                         >
                                             {order.status}
                                         </span>
                                     </p>
-                                    <p className="text-gray-800">
-                                        <strong className="text-purple-500">Created At:</strong>{' '}
-                                        <span className="text-gray-700">{new Date(order.createdAt).toLocaleString()}</span>
+                                    <p>
+                                        <strong>Created At:</strong>{' '}
+                                        {new Date(order.createdAt).toLocaleString()}
                                     </p>
-                                    <div className="text-gray-800">
-                                        <strong className="text-pink-500">Items:</strong>
-                                        <ul className="mt-2 pl-4 list-disc text-gray-700">
+                                    <div>
+                                        <strong>Items:</strong>
+                                        <ul className="mt-2 pl-4 list-disc">
                                             {order.items.map((item, idx) => (
-                                                <li key={idx} className="py-1">
-                                                    {item.name}{' '}
-                                                    <span className="text-gray-600">(Quantity: {item.quantity})</span>
+                                                <li key={idx}>
+                                                    {item.product.name} <span>(Quantity: {item.quantity})</span>
                                                 </li>
                                             ))}
                                         </ul>

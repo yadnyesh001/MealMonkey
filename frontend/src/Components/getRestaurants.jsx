@@ -88,7 +88,7 @@ const Restaurants = () => {
     }, []);
 
     const handleRestaurantClick = (restaurantId) => {
-        navigate(`/restaurantDetails/${restaurantId}`);
+        navigate(`/admin/${restaurantId}`);
     };
 
     return (

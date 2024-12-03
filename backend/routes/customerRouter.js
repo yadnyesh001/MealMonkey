@@ -12,7 +12,7 @@ router.get("/", isLoggedIn, Auth.authorizeCustomer, function(req, res){
     res.status(200).send("Customer Dashboard");
 })
 // router.get('/categories/:foodType', isLoggedIn, Auth.authorizeCustomer, customerController.getCategories)
-router.get("/popularRestaurants", isLoggedIn, Auth.authorizeCustomer, customerController.getTopRestaurant)
+router.get("/popularRestaurants", customerController.getTopRestaurant)
 // router.post("/address_update", Address_Update);
 router.get("/restaurantDetails/:restaurantId", customerController.getRestaurant);
 router.get('/menu/:restaurantId', customerController.listMenu);

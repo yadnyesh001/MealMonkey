@@ -55,7 +55,7 @@ module.exports.getTopRestaurant = async function(req, res){
         const restaurants = await Restaurant.find({})
         .sort({ rating: -1 }) // Sort by rating (descending)
         .limit(8)
-        .select('hotelName rating `photos` address.fullAddress knownFor'); // Only fetch necessary fields
+        .select('hotelName rating photos address.fullAddress knownFor'); // Only fetch necessary fields
         
         console.log(restaurants);
         return res.status(200).json(restaurants);
@@ -64,6 +64,9 @@ module.exports.getTopRestaurant = async function(req, res){
         return res.status(500).json({ message: 'Server Error' });
     }
 }
+
+
+
 module.exports.getRestaurant = async function(req, res) {
     try {
         const restaurantId = req.params.restaurantId;  
