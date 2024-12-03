@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-
+import axiosInstance from '../utils/axiosInstance';
 const Customers = () => {
     const [customers, setCustomers] = useState([]);
     const [loading, setLoading] = useState(true);
