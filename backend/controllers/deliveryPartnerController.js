@@ -66,8 +66,10 @@ exports.getTodaysPendingOrders = async (req, res) => {
 
             return {
                 ...order.toObject(),
+                customerName: customer.username,
                 customerContact: customer.contact,
-                restaurantName: restaurant.name
+                restaurantName: restaurant.hotelName,
+
             };
         }));
 
@@ -78,21 +80,65 @@ exports.getTodaysPendingOrders = async (req, res) => {
 };
 
 //update order status
-exports.updateOrderStatus = async (req, res) => {
-    try {
-        const orderId = req.params.id;
-        const updatedOrder = await Order.findByIdAndUpdate(orderId, { status: 'accepted' }, { new: true });
+// exports.updateOrderStatus = async (req, res) => {
+//     try {
+//         const orderId = req.params.id;
+//         const updatedOrder = await Order.findByIdAndUpdate(orderId, { status: 'accepted' }, { new: true });
         
-        if (!updatedOrder) {
-            return res.status(404).json({ message: 'Order not found' });
-        }
+//         if (!updatedOrder) {
+//             return res.status(404).json({ message: 'Order not found' });
+//         }
 
-        res.status(200).json(updatedOrder);
+//         res.status(200).json(updatedOrder);
+//     } catch (error) {
+//         res.status(500).json({ message: 'Error updating order status', error });
+//     }
+// };
+exports.updateOrderStatus = async (req, res) => {
+    const { orderId } = req.params;
+    const { deliveryPartnerId } = req.body;
+  
+    try {
+      const order = await Order.findByIdAndUpdate(orderId, { status: 'accepted', deliveryPartner: deliveryPartnerId }, { new: true });
+      res.status(200).json(order);
     } catch (error) {
-        res.status(500).json({ message: 'Error updating order status', error });
+      res.status(500).json({ message: 'Error accepting order', error });
     }
-};
-
+  };
+  
+exports.getAcceptedOrders = async (req, res) => {
+    try {
+      const orders = await Order.find({ status: 'accepted' }).populate('items');
+      res.status(200).json(orders);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching accepted orders', error });
+    }
+  };
+  
+  exports.completeOrder = async (req, res) => {
+    const { orderId } = req.params;
+  
+    try {
+      const order = await Order.findByIdAndUpdate(orderId, { status: 'completed' }, { new: true });
+      res.status(200).json(order);
+    } catch (error) {
+      console.error('Error completing order:', error);
+      res.status(500).json({ message: 'Error completing order', error });
+    }
+  };
+  
+  exports.getDeliveriesDone = async (req, res) => {
+    const { deliveryPartnerId } = req.query;
+  
+    try {
+        console.log(deliveryPartnerId);
+      const orders = await Order.find({ status: 'completed', deliveryPartner: deliveryPartnerId });
+      const revenue = orders.reduce((total, order) => total + (order.totalAmount * 0.1), 0);
+      res.status(200).json({ orders, revenue });
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching deliveries', error });
+    }
+  };
 
 // 1. Get Wallet Amount
 module.exports.getWallet = async function(req, res) {
@@ -317,55 +363,55 @@ module.exports.viewOrderQueue = async function(req, res) {
 
 // controllers/deliveryPartnerController.js
 
-module.exports.completeOrder = async function(req, res) {
-    try {
-        const { orderId } = req.params; // Assume order ID is passed as a URL parameter
+// module.exports.completeOrder = async function(req, res) {
+//     try {
+//         const { orderId } = req.params; // Assume order ID is passed as a URL parameter
 
-        // Find the order and associated delivery partner
-        const order = await Order.findById(orderId).populate('restaurant customer');
-        const deliveryPartner = await DeliveryPartner.findById(req.userId);
+//         // Find the order and associated delivery partner
+//         const order = await Order.findById(orderId).populate('restaurant customer');
+//         const deliveryPartner = await DeliveryPartner.findById(req.userId);
 
-        if (!order || !deliveryPartner) {
-            return res.status(404).send("Order or delivery partner not found.");
-        }
+//         if (!order || !deliveryPartner) {
+//             return res.status(404).send("Order or delivery partner not found.");
+//         }
 
-        // Change the order status to completed
-        order.status = 'Completed';
+//         // Change the order status to completed
+//         order.status = 'Completed';
 
-        // Remove from order queue and add to delivery history
-        deliveryPartner.orderQueue.pull(orderId);
-        deliveryPartner.deliveryHistory.push(orderId);
-        await deliveryPartner.save();
+//         // Remove from order queue and add to delivery history
+//         deliveryPartner.orderQueue.pull(orderId);
+//         deliveryPartner.deliveryHistory.push(orderId);
+//         await deliveryPartner.save();
 
-        // Remove from restaurant's order queue and push to order history
-        const restaurant = order.restaurant;
-        restaurant.orderQueue.pull(orderId);
-        restaurant.orderHistory.push(orderId);
-        await restaurant.save();
+//         // Remove from restaurant's order queue and push to order history
+//         const restaurant = order.restaurant;
+//         restaurant.orderQueue.pull(orderId);
+//         restaurant.orderHistory.push(orderId);
+//         await restaurant.save();
 
-        // Create a transaction for 10% of the order amount
-        const transactionAmount = order.amount * 0.1; // 10% of the order amount
-        deliveryPartner.wallet.balance += transactionAmount;
-        await deliveryPartner.save();
+//         // Create a transaction for 10% of the order amount
+//         const transactionAmount = order.amount * 0.1; // 10% of the order amount
+//         deliveryPartner.wallet.balance += transactionAmount;
+//         await deliveryPartner.save();
 
-        await Transaction.create({
-            amount: transactionAmount,
-            from: { type: 'Customer', id: order.customer._id },
-            to: { type: 'DeliveryPartner', id: deliveryPartner._id },
-            isRefund: false
-        });
+//         await Transaction.create({
+//             amount: transactionAmount,
+//             from: { type: 'Customer', id: order.customer._id },
+//             to: { type: 'DeliveryPartner', id: deliveryPartner._id },
+//             isRefund: false
+//         });
 
-        await order.save(); // Save the updated order
+//         await order.save(); // Save the updated order
 
-        res.status(200).json({
-            message: "Order completed successfully.",
-            order
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("Error completing the order.");
-    }
-};
+//         res.status(200).json({
+//             message: "Order completed successfully.",
+//             order
+//         });
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).send("Error completing the order.");
+//     }
+// };
 
 
 // controllers/deliveryPartnerController.js

@@ -26,6 +26,69 @@ class CRUD{
             throw new Error(err)
         }
     }
+
+    getDailyAndWeeklyAnalytics = async function(req, res) {
+        try {
+            const restaurantId = req.userId; // Assuming req.userId is the restaurant's ID
+            const restaurant = await restaurant.findById(restaurantId);
+    
+            if (!restaurant) {
+                return res.status(404).send("Restaurant not found.");
+            }
+    
+            const today = new Date();
+            const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+            const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+    
+            // Calculate the start of the week (assuming week starts from Sunday)
+            const startOfWeek = new Date(today);
+            startOfWeek.setDate(today.getDate() - today.getDay()); // Moves to the start of the week (Sunday)
+            const endOfWeek = new Date(startOfWeek);
+            endOfWeek.setDate(startOfWeek.getDate() + 7); // End of the week (next Sunday)
+    
+            // Get daily orders
+            const dailyOrders = await Order.find({
+                restaurant: restaurantId,
+                createdAt: { $gte: startOfDay, $lt: endOfDay }
+            });
+    
+            // Calculate daily total balance from orders
+            const dailyBalance = dailyOrders.reduce((total, order) => total + order.totalAmount, 0);
+    
+            // Calculate the maximum profit from a single order for today
+            const maxDailyProfit = dailyOrders.length > 0 ? Math.max(...dailyOrders.map(order => order.totalAmount)) : 0;
+    
+            // Get weekly orders
+            const weeklyOrders = await Order.find({
+                restaurant: restaurantId,
+                createdAt: { $gte: startOfWeek, $lt: endOfWeek }
+            });
+    
+            // Calculate weekly total balance from orders
+            const weeklyBalance = weeklyOrders.reduce((total, order) => total + order.totalAmount, 0);
+    
+            // Constructing the analytics data
+            const analytics = {
+                dailyBalance: dailyBalance,
+                dailyOrders: dailyOrders.length,
+                maxDailyProfit: maxDailyProfit, // Maximum profit from a single order today
+                weeklyBalance: weeklyBalance,
+                weeklyOrders: weeklyOrders.length,
+                restaurantDetails: {
+                    image: restaurant.photos[0] || '',
+                    name: restaurant.hotelName || 'N/A',
+                    address: restaurant.address.fullAddress || 'N/A'
+                }
+            };
+    
+            res.status(200).json(analytics);
+        } catch (err) {
+            console.error(err);
+            res.status(500).send("Error fetching daily and weekly analytics.");
+        }
+    };
+
+
     getDeliveryPartner = async function(req, res){
         try{
             const users = await deliveryPartner.find({role: "deliveryPartner"})

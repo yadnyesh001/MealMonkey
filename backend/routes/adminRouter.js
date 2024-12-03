@@ -9,6 +9,8 @@ router.get("/", isLoggedIn, (req, res) => {
 
 router.get("/getCustomers", isLoggedIn, Auth.authorizeAdmin, CRUD.getCustomers)
 router.get("/getRestaurants", isLoggedIn, Auth.authorizeAdmin, CRUD.getRestaurants)
+router.get("/${restaurantId}/analytics", isLoggedIn, Auth.authorizeAdmin, CRUD.getRestaurants)
+
 router.post("/getUser", isLoggedIn, Auth.authorizeAdmin, CRUD.getUser)
 router.post("/deleteUser", isLoggedIn, Auth.authorizeAdmin, CRUD.deleteUser)
 router.post("/changeUserRole", isLoggedIn, Auth.authorizeAdmin, CRUD.changeUserRole)

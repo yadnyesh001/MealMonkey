@@ -13,6 +13,7 @@ import AddMenuItemForm from './Components/AddMenuItemForm';
 import AdminDashboard from './Components/AdminDashboard';
 import GetCustomer from './Components/getCustomers';
 import GetRestaurant from './Components/getRestaurants';
+import RestaurantDetails from './Components/RestaurantDetails';
 import GetUser from './Components/GetUser'
 import DeleteUser from './Components/DeleteUser';
 import ChangeUserRole from './Components/ChangeUserRole';
@@ -34,13 +35,15 @@ import CustomerOrderList from './Components/CustomerOrderList'
 import RestaurantOrders from './Components/RestaurantOrders';
 import DeliveryPartnerCard from './Components/DeliveryPartner/DeliveryPartnerCard';
 import DeliveryPartnerDashboard from './Components/DeliveryPartner/DeliveryPartnerDashboard';
+import ActiveOrders from './Components/DeliveryPartner/activeOrders';
+import OrdersDelivered from './Components/DeliveryPartner/OrdersDelivered';
 import Checkout from "./Components/Checkout";
 const App = () => {
   return (
     <UserProvider>
       <div className="App">
         <Header />
-        <div className="content-container">
+        <div style={{minHeight: "60vh"}} className="content-container">
           <Routes>
             <Route path="/" element={<><Categories /><PopularRestaurants /></>} />
             <Route path="/register" element={<SignUp />} />
@@ -52,7 +55,7 @@ const App = () => {
             <Route path="/customer/cart" element={<Cart/>}/>
             <Route path="/customer/orders" element={<CustomerOrderList/>}/>
             <Route path="/customer/menu/:restaurantId" element={<RestaurantMenu />} />
-            <Route path="/restaurant/" element={<RestaurantDashboard />} />
+            <Route path="/restaurant" element={<RestaurantDashboard />} />
             <Route path="/restaurant/profileDetails" element={<RestaurantForm />} />
             <Route path="/restaurant/menu/item" element={<AddMenuItemForm />} />
             <Route path="/restaurant/menu" element={<Menu />} />
@@ -62,6 +65,7 @@ const App = () => {
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/getCustomers" element={<GetCustomer />} />
             <Route path="/admin/getRestaurants" element={<GetRestaurant />} />
+            <Route path="/admin/restaurantDetails/:restaurantId" element={<RestaurantDetails/>} />
             <Route path="/admin/getUser" element={<GetUser />} />
             <Route path="/admin/deleteUser" element={<DeleteUser />} />
             <Route path="/admin/changeUserRole" element={<ChangeUserRole />} />
@@ -69,7 +73,9 @@ const App = () => {
             <Route path="/admin/addCustomer" element={<AddCustomer />} />
             <Route path="/admin/addRestaurant" element={<AddRestaurant />} />
             <Route path="/deliveryPartner/profile" element={<DeliveryPartnerCard/>} />
-            <Route path="/deliveryPartner/" element={<DeliveryPartnerDashboard/>} />
+            <Route path="/deliveryPartner" element={<DeliveryPartnerDashboard/>} />
+            <Route path="/deliveryPartner/activeOrders" element={<ActiveOrders/>} />
+            <Route path="/deliveryPartner/ordersDelivered" element={<OrdersDelivered/>} />
 
             
           </Routes>
