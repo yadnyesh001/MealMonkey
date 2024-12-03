@@ -18,8 +18,7 @@ const reviewSchema = new Schema({
     // Review Type: general review categories (service, delivery, food quality, etc.)
     reviewType: {
         type: String,
-        enum: ['Service', 'Delivery', 'Food Quality', 'Administration', 'Other'],
-        required: true
+      
     },
     rating: {
         type: Number,

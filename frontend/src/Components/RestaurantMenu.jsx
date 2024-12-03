@@ -9,6 +9,7 @@ const RestaurantMenu = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [restaurantDetails, setRestaurantDetails] = useState({});
   const [cart, setCart] = useState([]);
+  const [reviews, setReviews] = useState([]);
   const dummyReviews = [
     {
       reviewType: "Food Quality",
@@ -44,6 +45,8 @@ const RestaurantMenu = () => {
       },
     },
   ];
+
+
  useEffect(() => {
     const fetchMenu = async () => {
       try {
@@ -62,10 +65,22 @@ const RestaurantMenu = () => {
         console.error("Error fetching restaurant details:", error);
       }
     };
+    const fetchReviews = async () => {
+        try {
+          const reviewsResponse = await axiosInstance.post("/customer/restaurantReview", {
+            targetId: restaurantId, // Passing restaurantId as targetId
+          });
+          setReviews(reviewsResponse.data); // Store fetched reviews in state
+        } catch (error) {
+          console.error("Error fetching reviews:", error);
+        }
+      };
 
     fetchMenu();
     fetchRestaurantDetails();
+    fetchReviews();
   }, [restaurantId]);
+  
 
   const addToCart = async (menuItem) => {
     // Update static cart
@@ -132,7 +147,7 @@ const RestaurantMenu = () => {
   const subtotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
 
   const total = subtotal;
-
+  
   const renderContent = () => {
     switch (activeSection) {
         case "Order Online":
@@ -338,7 +353,7 @@ const RestaurantMenu = () => {
       default:
         return null;
         case "Write a Review":
-            return (<ReviewForm className="shadow-lg p-6"/>);
+            return (<ReviewForm restaurantId={restaurantId} className="shadow-lg p-6"/>);
           
     }
   };
