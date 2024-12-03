@@ -66,8 +66,10 @@ exports.getTodaysPendingOrders = async (req, res) => {
 
             return {
                 ...order.toObject(),
+                customerName: customer.username,
                 customerContact: customer.contact,
-                restaurantName: restaurant.name
+                restaurantName: restaurant.hotelName,
+
             };
         }));
 
