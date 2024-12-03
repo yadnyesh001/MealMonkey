@@ -165,7 +165,7 @@ const RestaurantMenu = () => {
           {menuItem.name}
         </h3>
         <p className="text-md text-gray-600 mt-2">Food Type: {menuItem.foodType}</p>
-        <p className="text-md text-gray-600 mt-2">${menuItem.price}</p>
+        <p className="text-md text-gray-600 mt-2">₹{menuItem.price}</p>
         <div className="flex items-center justify-between mt-6">
           <button
             onClick={() => addToCart(menuItem)}
@@ -404,11 +404,11 @@ const RestaurantMenu = () => {
         <div className="mt-6">
           <div className="flex justify-between text-lg">
             <span className="text-gray-700">Sub Total</span>
-            <span className="text-gray-800 font-medium">${subtotal}</span>
+            <span className="text-gray-800 font-medium">₹{subtotal}</span>
           </div>
           <div className="flex justify-between font-bold text-xl mt-4">
             <span className="text-gray-800">To Pay</span>
-            <span className="text-yellow-500">${total.toFixed(2)}</span>
+            <span className="text-yellow-500">₹{total.toFixed(2)}</span>
           </div>
           <button className="w-full mt-6 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white py-3 rounded-lg text-lg hover:opacity-90 shadow-lg">
             Proceed to Payment
