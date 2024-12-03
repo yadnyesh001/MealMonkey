@@ -33,6 +33,7 @@ import RestaurantsList from './Components/RestaurantList';
 import Cart from './Components/Cart'
 import CustomerOrderList from './Components/CustomerOrderList'
 import RestaurantOrders from './Components/RestaurantOrders';
+import Checkout from "./Components/Checkout";
 const App = () => {
   return (
     <UserProvider>
@@ -54,6 +55,7 @@ const App = () => {
             <Route path="/restaurant/profileDetails" element={<RestaurantForm />} />
             <Route path="/restaurant/menu/item" element={<AddMenuItemForm />} />
             <Route path="/restaurant/menu" element={<Menu />} />
+            <Route path="/restaurant/menu/checkout" element={<Checkout />} />
             <Route path="/restaurant/updateItem/:id" element={<UpdateMenuItemForm/>} />
             <Route path="/restaurant/orders" element={<RestaurantOrders/>}/>
             <Route path="/admin" element={<AdminDashboard />} />

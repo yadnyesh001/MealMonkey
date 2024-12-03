@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Menu = () => {
   const [activeSection, setActiveSection] = useState('Order Online'); // State to track active section
@@ -30,7 +31,7 @@ const Menu = () => {
         return [...prevCart, { ...menuItem }];
       }
     });
-  };
+  };  
 
   const updateQuantity = (id, amount) => {
     setCart((prevCart) => {
@@ -42,10 +43,41 @@ const Menu = () => {
       return updatedCart.filter((item) => item.quantity > 0);
     });
   };
+  
+
+  const reviews = [
+    {
+      id: 1,
+      name: 'Gunjan Puri',
+      date: '1 month ago',
+      image: 'https://via.placeholder.com/50',
+      content: `Serve a healthy and good food. Having a parking facility and there are also waiting area available. 
+                This place is perfect for celebration of birthday. Serve a healthy and good food. 
+                Having a parking facility and there are also waiting area available.`,
+    },
+    {
+      id: 2,
+      name: 'Aarav Mehta',
+      date: '2 weeks ago',
+      image: 'https://via.placeholder.com/50',
+      content: `Amazing experience! The food was delicious, and the staff was very attentive. 
+                Highly recommend the BBQ Chicken Pizza.`,
+    },
+    {
+      id: 3,
+      name: 'Sara Khan',
+      date: '3 days ago',
+      image: 'https://via.placeholder.com/50',
+      content: `Great ambiance and wonderful service. Perfect spot for a family dinner.`,
+    },
+  ];
+  
+  const navigate = useNavigate();
 
   const subtotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
   const discount = subtotal * 0.1;
   const total = subtotal - discount;
+
 
   const renderContent = () => {
     switch (activeSection) {
@@ -77,12 +109,96 @@ const Menu = () => {
             </div>
           </div>
         ));
-      case 'Overview':
-        return <p className="text-lg text-gray-600">This is the overview of the restaurant.</p>;
-      case 'Photos':
-        return <p className="text-lg text-gray-600">Photo gallery coming soon!</p>;
-      case 'Reviews':
-        return <p className="text-lg text-gray-600">Read reviews from our customers.</p>;
+        case 'Overview':
+          return (
+            <div className="text-gray-800 bg-white p-6 rounded-lg shadow-lg">
+              <h2 className="text-3xl font-semibold mb-6 text-gray-800 border-b pb-2">Overview</h2>
+    
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                {/* Left Section */}
+                <div>
+                  <h3 className="text-xl font-semibold mb-2 text-gray-700">Phone Number</h3>
+                  <p className="text-lg text-gray-600 mb-6">+1 (692) 52 - 95555</p>
+    
+                  <h3 className="text-xl font-semibold mb-2 text-gray-700">Cuisines</h3>
+                  <ul className="list-disc list-inside text-lg text-gray-600 mb-6">
+                    <li>Mexican</li>
+                    <li>Italian</li>
+                    <li>Chinese</li>
+                    <li>Panjabi</li>
+                    <li>Street Food</li>
+                  </ul>
+    
+                  <h3 className="text-xl font-semibold mb-2 text-gray-700">Average Cost</h3>
+                  <ul className="list-disc list-inside text-lg text-gray-600">
+                    <li>$300 for two people (approx.)</li>
+                    <li>Cash and Cards accepted</li>
+                    <li>Digital payments accepted</li>
+                  </ul>
+                </div>
+    
+                {/* Right Section */}
+                <div>
+                  <h3 className="text-xl font-semibold mb-2 text-gray-700">Address</h3>
+                  <ul className="list-disc list-inside text-lg text-gray-600 mb-6">
+                    <li>+874 Trans-Canada Hwy, Peterborough, ON K9J 6X8, Canada</li>
+                    <li>8970 Trans-Canada Hwy, Emo, ON P0W 1E0, Canada</li>
+                  </ul>
+    
+                  <h3 className="text-xl font-semibold mb-2 text-gray-700">More Info</h3>
+                  <ul className="list-disc list-inside text-lg text-gray-600 mb-6">
+                    <li>Breakfast</li>
+                    <li>Takeaway</li>
+                    <li>Home Delivery</li>
+                    <li>Valet Parking</li>
+                    <li>Luxury Dining</li>
+                    <li>Table Booking</li>
+                    <li>Brunch</li>
+                    <li>Buffet</li>
+                    <li>Indoor Seating</li>
+                    <li>Outdoor Seating</li>
+                    <li>4/5 Star</li>
+                  </ul>
+    
+                  <h3 className="text-xl font-semibold mb-2 text-gray-700">Known For</h3>
+                  <p className="text-lg text-gray-600">
+                    Calming Atmosphere, Weekend Brunch, Elaborate Menu, Staff, Fresh Food, Good Quality
+                  </p>
+                </div>
+              </div>
+            </div>
+          );
+
+          case 'Reviews':
+            return (
+              <div className="bg-white p-6 rounded-lg shadow-lg">
+                <h2 className="text-3xl font-semibold mb-6 text-gray-800 border-b pb-2">Reviews</h2>
+                {reviews.map((review, index) => (
+                  <div key={review.id} className="mb-6">
+                    <div className="flex items-center mb-4">
+                      <img
+                        src={review.image}
+                        alt={review.name}
+                        className="w-12 h-12 rounded-full object-cover"
+                      />
+                      <div className="ml-4">
+                        <h3 className="text-lg font-bold text-gray-800">{review.name}</h3>
+                        <p className="text-gray-500 text-sm">{review.date}</p>
+                      </div>
+                    </div>
+                    <p className="text-lg text-gray-600">{review.content}</p>
+          
+                    {/* Add separation between reviews */}
+                    {index < reviews.length - 1 && (
+                      <hr className="border-t border-gray-300 my-6" />
+                    )}
+                  </div>
+                ))}
+              </div>
+            );
+
+
+          
       default:
         return null;
     }
@@ -94,7 +210,7 @@ const Menu = () => {
       <div className="absolute top-[-30px] w-full bg-[#232220] text-white py-4 flex flex-col items-center h-[200px]">
         <h1 className="text-4xl font-bold text-center mt-6">Restaurant Name</h1>
         <div className="flex mt-16 space-x-40 text-lg">
-          {['Order Online', 'Overview', 'Photos', 'Reviews'].map((section) => (
+          {['Order Online', 'Overview', 'Reviews'].map((section) => (
             <span
               key={section}
               onClick={() => setActiveSection(section)}
@@ -158,7 +274,10 @@ const Menu = () => {
             <span className="text-gray-800">To Pay</span>
             <span className="text-yellow-500">${total.toFixed(2)}</span>
           </div>
-          <button className="w-full mt-6 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white py-3 rounded-lg text-lg hover:opacity-90 shadow-lg">
+          <button
+            onClick={() => navigate("/restaurant/menu/checkout")}
+            className="w-full mt-6 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white py-3 rounded-lg text-lg hover:opacity-90 shadow-lg"
+          >
             Proceed to Payment
           </button>
         </div>
