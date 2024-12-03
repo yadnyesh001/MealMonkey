@@ -7,6 +7,10 @@ router.post("/updateProfile", isLoggedIn, deliveryPartnerController.updateProfil
 //Get wallet
 router.get("/wallet", isLoggedIn, deliveryPartnerController.getWallet);
 
+//get todays orders
+router.get('/ordersToday', isLoggedIn, deliveryPartnerController.getTodaysPendingOrders);
+router.put('/orders/:id/status', isLoggedIn, deliveryPartnerController.updateOrderStatus);
+
 //add money to wallet
 router.post("/wallet/addMoney", isLoggedIn, deliveryPartnerController.addMoney);
 

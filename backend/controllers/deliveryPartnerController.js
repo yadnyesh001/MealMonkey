@@ -12,9 +12,9 @@ module.exports.updateProfile = async function(req, res) {
         const { license, vehicleNumber, isFree } = req.body;
 
         // Validate input
-        if (!license || !vehicleNumber) {
-            return res.status(400).send("Please provide all necessary fields.");
-        }
+        // if (!license || !vehicleNumber) {
+        //     return res.status(400).send("Please provide all necessary fields.");
+        // }
 
         // Find the baseUser
         let user = await DeliveryPartner.findById(req.userId);
@@ -29,9 +29,12 @@ module.exports.updateProfile = async function(req, res) {
         }
 
         // Add Delivery Partner-specific fields
-        user.license = license;
-        user.vehicleNumber = vehicleNumber;
-        user.isFree = isFree !== undefined ? isFree : user.isFree; // Retain current status if not provided
+        // user.license = license;
+        // user.vehicleNumber = vehicleNumber;
+        // user.isFree = isFree !== undefined ? isFree : user.isFree; // Retain current status if not provided
+        user.license = license || user.license;
+        user.vehicleNumber = vehicleNumber || user.vehicleNumber;
+        user.isFree = isFree !== undefined ? isFree : user.isFree;
 
         // Save the updated user as a Delivery Partner
         await user.save();
@@ -40,6 +43,53 @@ module.exports.updateProfile = async function(req, res) {
     } catch (err) {
         console.error(err);
         res.status(500).send("Error updating delivery partner profile.");
+    }
+};
+
+//get todays pending orders
+exports.getTodaysPendingOrders = async (req, res) => {
+    try {
+        const startOfDay = new Date();
+        startOfDay.setHours(0, 0, 0, 0);
+
+        const endOfDay = new Date();
+        endOfDay.setHours(23, 59, 59, 999);
+
+        const orders = await Order.find({
+            createdAt: { $gte: startOfDay, $lt: endOfDay },
+            status: 'pending'
+        }).populate('customer').populate('restaurant').populate('items.product');
+
+        const detailedOrders = await Promise.all(orders.map(async order => {
+            const customer = await Customer.findById(order.customer);
+            const restaurant = await Restaurant.findById(order.restaurant);
+
+            return {
+                ...order.toObject(),
+                customerContact: customer.contact,
+                restaurantName: restaurant.name
+            };
+        }));
+
+        res.status(200).json(detailedOrders);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching today\'s orders', error });
+    }
+};
+
+//update order status
+exports.updateOrderStatus = async (req, res) => {
+    try {
+        const orderId = req.params.id;
+        const updatedOrder = await Order.findByIdAndUpdate(orderId, { status: 'accepted' }, { new: true });
+        
+        if (!updatedOrder) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+
+        res.status(200).json(updatedOrder);
+    } catch (error) {
+        res.status(500).json({ message: 'Error updating order status', error });
     }
 };
 
@@ -409,3 +459,5 @@ module.exports.writeReview = async function(req, res) {
         res.status(500).send("Error writing review.");
     }
 };
+
+
