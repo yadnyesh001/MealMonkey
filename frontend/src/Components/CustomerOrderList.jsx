@@ -1,7 +1,5 @@
-// src/components/OrdersList.jsx
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../utils/axiosInstance';
-import CustomerOrderCard from './CustomerOrderCard';
 
 const OrdersList = () => {
     const [orders, setOrders] = useState([]);
@@ -45,31 +43,80 @@ const OrdersList = () => {
         }
     };
 
-    if (loading) return <p className="text-center">Loading orders...</p>;
+    if (loading) return <p className="text-center text-gray-600">Loading orders...</p>;
 
     return (
-        <div className="flex flex-col items-center">
-            <div className="mb-4">
-                <h2 className="text-lg font-semibold">Wallet Balance: ₹{walletBalance}</h2>
-                <div className="flex items-center mt-2">
+        <div className="flex flex-col items-center bg-gray-50 min-h-screen py-8 px-4">
+            {/* Wallet Section */}
+            <div className="mb-6 bg-gray-200 p-6 rounded-lg shadow-lg w-full max-w-md">
+                <h2 className="text-xl font-medium mb-2">Wallet Balance: ₹{walletBalance}</h2>
+                <div className="flex items-center mt-4 space-x-4">
                     <input
                         type="number"
                         placeholder="Amount to add"
                         value={addAmount}
                         onChange={(e) => setAddAmount(Number(e.target.value))}
-                        className="border border-gray-300 rounded p-2"
+                        className="border-2 border-gray-300 rounded-md p-2 w-32 focus:outline-none focus:border-blue-500"
                     />
-                    <button onClick={handleAddMoney} className="ml-2 bg-blue-500 text-white p-2 rounded">
+                    <button
+                        onClick={handleAddMoney}
+                        className="bg-blue-500 text-white font-medium py-2 px-4 rounded hover:bg-blue-600"
+                    >
                         Add Money
                     </button>
                 </div>
             </div>
+
+            {/* Orders Section */}
             {orders.length === 0 ? (
-                <p>No orders found.</p>
+                <p className="text-lg text-gray-600">No orders found.</p>
             ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
-                    {orders.map(order => (
-                        <CustomerOrderCard key={order.restaurantId} order={order} />
+                <div className="w-full">
+                    {orders.map((order) => (
+                        <div
+                            key={order.restaurantId}
+                            className="flex justify-center mb-6 transition-transform duration-300 transform hover:scale-105"
+                        >
+                            <div className="w-11/12 md:w-7/12 lg:w-7/12 p-4 bg-white shadow-md rounded-lg border border-gray-200">
+                                <div className="space-y-3">
+                                    <p className="text-lg font-medium">
+                                        Order from: <span className="font-normal">{order.restaurantEmail}</span>
+                                    </p>
+                                    <p>
+                                        <strong>Restaurant ID:</strong> {order.restaurantId}
+                                    </p>
+                                    <p>
+                                        <strong>Total Amount:</strong> ₹{order.totalAmount}
+                                    </p>
+                                    <p>
+                                        <strong>Status:</strong>{' '}
+                                        <span
+                                            className={`px-2 py-1 rounded-md ${
+                                                order.status === 'pending'
+                                                    ? 'bg-yellow-200 text-yellow-800'
+                                                    : 'bg-green-200 text-green-800'
+                                            }`}
+                                        >
+                                            {order.status}
+                                        </span>
+                                    </p>
+                                    <p>
+                                        <strong>Created At:</strong>{' '}
+                                        {new Date(order.createdAt).toLocaleString()}
+                                    </p>
+                                    <div>
+                                        <strong>Items:</strong>
+                                        <ul className="mt-2 pl-4 list-disc">
+                                            {order.items.map((item, idx) => (
+                                                <li key={idx}>
+                                                    {item.name} <span>(Quantity: {item.quantity})</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     ))}
                 </div>
             )}
