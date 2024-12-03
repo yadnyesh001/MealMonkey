@@ -64,6 +64,25 @@ module.exports.getTopRestaurant = async function(req, res){
         return res.status(500).json({ message: 'Server Error' });
     }
 }
+module.exports.getRestaurant = async function(req, res) {
+    try {
+        const restaurantId = req.params.restaurantId;  
+
+        
+        const restaurant = await Restaurant.findById(restaurantId);
+        
+        if (!restaurant) {
+            return res.status(404).send("Restaurant not found.");
+        }
+
+        // Return the populated menu
+        res.status(200).json(restaurant);
+    } catch (err) {
+        console.log(err);
+        res.status(500).send("Error fetching restaurant.");
+    }
+};
+
 
 
 module.exports.listMenu = async function(req, res) {

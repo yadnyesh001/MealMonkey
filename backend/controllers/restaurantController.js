@@ -99,7 +99,19 @@ module.exports.updateProfile = async function(req, res) {
         res.status(500).send("Error updating restaurant profile");
     }
 };
-
+//Send restaurant
+module.exports.getRestaurant = async function(req, res) {
+    try {
+        const restaurant = await Restaurant.findById(req.userId);
+        if (!restaurant) {
+            return res.status(404).send("Restaurant not found.");
+        }
+        res.status(200).json(restaurant);
+    } catch (err) {
+        console.log(err);
+        res.status(500).send("Error fetching menu.");
+    }
+};
 // 1. List All Food Items
 module.exports.listMenu = async function(req, res) {
     try {
