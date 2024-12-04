@@ -11,9 +11,11 @@ const OrdersDelivered = () => {
     if (!user) return;
     const fetchCompletedOrders = async () => {
       try {
-        const response = await axiosInstance.get('/deliveryPartner/deliveriesDone', { params: { deliveryPartnerId: user._id } });
+        const response = await axiosInstance.get('/deliveryPartner/deliveriesDone');
         setCompletedOrders(response.data.orders);
         setRevenue(response.data.revenue);
+        console.log('Completed Orders:', response.data.orders); // Add this line
+        console.log('Revenue:', response.data.revenue); // Add this line
       } catch (error) {
         console.error('Error fetching completed deliveries:', error);
       }
@@ -21,6 +23,7 @@ const OrdersDelivered = () => {
     fetchCompletedOrders();
   }, [user]);
 
+ 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold text-gray-800 mb-4">Completed Deliveries</h1>

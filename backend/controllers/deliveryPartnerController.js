@@ -95,10 +95,12 @@ exports.getTodaysPendingOrders = async (req, res) => {
 //     }
 // };
 exports.updateOrderStatus = async (req, res) => {
-    const { orderId } = req.params;
+    const { id: orderId } = req.params;
     const { deliveryPartnerId } = req.body;
   
     try {
+        console.log(orderId);
+        console.log(deliveryPartnerId);
       const order = await Order.findByIdAndUpdate(orderId, { status: 'accepted', deliveryPartner: deliveryPartnerId }, { new: true });
       res.status(200).json(order);
     } catch (error) {
@@ -106,15 +108,29 @@ exports.updateOrderStatus = async (req, res) => {
     }
   };
   
-exports.getAcceptedOrders = async (req, res) => {
-    try {
-      const orders = await Order.find({ status: 'accepted' }).populate('items');
-      res.status(200).json(orders);
-    } catch (error) {
-      res.status(500).json({ message: 'Error fetching accepted orders', error });
-    }
-  };
+// exports.getAcceptedOrders = async (req, res) => {
+//     const { deliveryPartnerId } = req.body;
+//     try {
+//       const orders = await Order.find({ status: 'accepted', deliveryPartner: deliveryPartnerId }).populate('customer').populate('restaurant').populate('items');
+//       res.status(200).json(orders);
+//     } catch (error) {
+//       res.status(500).json({ message: 'Error fetching accepted orders', error });
+//     }
+//   };
   
+exports.getAcceptedOrders = async (req, res) => {
+    const deliveryPartnerId  = req.userId;
+    try {
+        const orders = await Order.find({ status: 'accepted', deliveryPartner: deliveryPartnerId })
+                                  .populate('customer')
+                                  .populate('restaurant')
+                                  .populate('items.product');
+        res.status(200).json(orders);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching accepted orders', error });
+    }
+};
+
   exports.completeOrder = async (req, res) => {
     const { orderId } = req.params;
   
@@ -128,10 +144,9 @@ exports.getAcceptedOrders = async (req, res) => {
   };
   
   exports.getDeliveriesDone = async (req, res) => {
-    const { deliveryPartnerId } = req.query;
+    const deliveryPartnerId = req.userId;
   
     try {
-        console.log(deliveryPartnerId);
       const orders = await Order.find({ status: 'completed', deliveryPartner: deliveryPartnerId });
       const revenue = orders.reduce((total, order) => total + (order.totalAmount * 0.1), 0);
       res.status(200).json({ orders, revenue });

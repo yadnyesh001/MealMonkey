@@ -530,7 +530,7 @@ const DeliveryPartnerDashboard = () => {
   const calculateAnalytics = (orders) => {
     const completedOrders = orders.filter(order => order.status === 'completed').length;
     const totalRevenue = orders.reduce((total, order) => total + order.totalAmount, 0);
-    const pendingOrdersCount = orders.filter(order => order.status === 'pending').length;
+    const pendingOrdersCount = orders.filter(order => order.status === 'accepted').length;
     const monthlyRevenue = orders.reduce((total, order) => {
       const orderDate = new Date(order.createdAt);
       const currentMonth = new Date().getMonth();
@@ -678,3 +678,5 @@ const OrderCard = ({ customerName, customerContact, restaurantName, orderPrice, 
 );
 
 export default DeliveryPartnerDashboard;
+
+
