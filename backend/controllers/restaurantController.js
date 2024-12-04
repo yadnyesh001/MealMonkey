@@ -507,7 +507,7 @@ module.exports.getAllReviews = async function(req, res) {
 
 module.exports.getReviewsByTargetId = async (req, res) => {
     const restaurantId  = req.userId;
-console.log(restaurantId)
+
     // Validate targetId
     if (!restaurantId) {
     return res.status(400).json({ message: 'targetId is required.' });
@@ -519,7 +519,7 @@ console.log(restaurantId)
         path: 'source.customer',
         select: 'username' // Only get the username field
     });
-    console.log(reviews)
+
     // If no reviews are found
     if (!reviews || reviews.length === 0) {
         return res.status(404).json({ message: 'No reviews found for the given targetId.' });
