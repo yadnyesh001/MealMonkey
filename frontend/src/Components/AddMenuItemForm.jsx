@@ -12,23 +12,19 @@ const AddMenuItemForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Prepare form data
     const formData = new FormData();
     formData.append('name', name);
     formData.append('price', price);
     formData.append('foodType', foodType);
     formData.append('discount', discount);
-    formData.append('image', image); // Append the selected image
+    formData.append('image', image);
 
     try {
       const res = await axios.post(
         'http://localhost:3000/restaurant/menu/item',
         formData,
         {
-          headers: {
-            'Content-Type': 'multipart/form-data', // Set the correct content type
-          },
+          headers: { 'Content-Type': 'multipart/form-data' },
           withCredentials: true,
         }
       );
@@ -41,89 +37,80 @@ const AddMenuItemForm = () => {
   };
 
   return (
-    <div className="min-h-screen  flex items-center justify-center pt-12 -mt-8"> {/* Adjust the margin-top here */}
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-12 rounded-2xl shadow-2xl w-full max-w-lg animate-fadeIn"
-      >
-        <h2 className="text-3xl font-extrabold text-center mb-8 text-gray-700">
-          Add New Menu Item
-        </h2>
+    <div className="min-h-screen bg- flex items-center justify-center p-6">
+      <form onSubmit={handleSubmit} className="w-full max-w-5xl bg-white rounded-xl shadow-lg p-8">
+        <h2 className="text-2xl font-bold mb-6 text-gray-800">Add New Menu Item</h2>
 
-        <div className="mb-6">
-          <label className="block text-gray-700 font-semibold mb-2">
-            Dish Name:
-          </label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full p-4 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 placeholder-gray-400"
-            placeholder="Enter dish name"
-            required
-          />
+        <div className="grid grid-cols-2 gap-6">
+          <div className="space-y-6">
+            <div>
+              <label className="block text-gray-700 font-medium mb-2">Dish Name:</label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                placeholder="Enter dish name"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-gray-700 font-medium mb-2">Price:</label>
+              <input
+                type="number"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                placeholder="Enter price"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-gray-700 font-medium mb-2">Food Type:</label>
+              <input
+                type="text"
+                value={foodType}
+                onChange={(e) => setFoodType(e.target.value)}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                placeholder="Enter food type (e.g., Vegan, Non-Veg)"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <div>
+              <label className="block text-gray-700 font-medium mb-2">Discount:</label>
+              <input
+                type="number"
+                value={discount}
+                onChange={(e) => setDiscount(e.target.value)}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                placeholder="Enter discount (optional)"
+              />
+            </div>
+
+            <div>
+              <label className="block text-gray-700 font-medium mb-2">Image:</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setImage(e.target.files[0])}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="w-full mt-6 py-4 bg-gradient-to-r from-yellow-400 to-red-500 text-white rounded-lg font-semibold text-lg hover:opacity-90 transition-opacity"
+            >
+              Add Menu Item
+            </button>
+          </div>
         </div>
-
-        <div className="mb-6">
-          <label className="block text-gray-700 font-semibold mb-2">
-            Price:
-          </label>
-          <input
-            type="number"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            className="w-full p-4 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 placeholder-gray-400"
-            placeholder="Enter price"
-            required
-          />
-        </div>
-
-        <div className="mb-6">
-          <label className="block text-gray-700 font-semibold mb-2">
-            Food Type:
-          </label>
-          <input
-            type="text"
-            value={foodType}
-            onChange={(e) => setFoodType(e.target.value)}
-            className="w-full p-4 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 placeholder-gray-400"
-            placeholder="Enter food type (e.g., Vegan, Non-Veg)"
-            required
-          />
-        </div>
-
-        <div className="mb-6">
-          <label className="block text-gray-700 font-semibold mb-2">
-            Discount:
-          </label>
-          <input
-            type="number"
-            value={discount}
-            onChange={(e) => setDiscount(e.target.value)}
-            className="w-full p-4 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 placeholder-gray-400"
-            placeholder="Enter discount (optional)"
-          />
-        </div>
-
-        <div className="mb-8">
-          <label className="block text-gray-700 font-semibold mb-2">
-            Image:
-          </label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => setImage(e.target.files[0])}
-            className="w-full p-4 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
-            required
-          />
-        </div>
-
-        <button
-          type="submit"
-          className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-4 rounded-xl font-semibold hover:bg-indigo-600 focus:outline-none focus:ring-4 focus:ring-purple-300 transition-transform transform hover:scale-105"
-        >
-          Add Menu Item
-        </button>
       </form>
     </div>
   );
