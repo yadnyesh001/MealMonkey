@@ -72,6 +72,9 @@ const Header = () => {
           </>
         )}
         {!loggedIn && <Link to='/'>Home</Link>}
+        {!loggedIn && <Link to='/about'>About</Link>}
+        {!loggedIn && <Link to='/contact'>Contact</Link>}
+        {!loggedIn && <Link to='/FAQ'>FAQs</Link>}
         
       </nav>
 
