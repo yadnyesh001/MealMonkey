@@ -62,7 +62,7 @@ const RestaurantOrders = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-gray-50">
+        <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-gray-50 -mt-8">
             <div className="max-w-8xl mx-auto p-8">
                 <div className="flex justify-between items-center mb-12">
                     <h1 className="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-red-600">
