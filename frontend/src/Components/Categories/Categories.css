@@ -132,14 +132,13 @@
     background-color: #ffb400;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
-
 .scooter-img {
     position: absolute;
     top: -250px;
     left: 0;
     width: 130px;
-    z-index: 1000;
-    animation: bikeRide 10s linear infinite;
+    z-index: 1;
+    animation: bikeRide 15s linear infinite;
     pointer-events: none;
 }
 
