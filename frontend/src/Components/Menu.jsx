@@ -1,23 +1,49 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { useUser } from '../contexts/UserProvider';
+import { useEffect } from 'react';
+import axiosInstance from "../utils/axiosInstance";
+import ReviewCard from './Review';
 const Menu = () => {
-  const [activeSection, setActiveSection] = useState('Order Online'); // State to track active section
-  const [menuItems] = useState([
-    { id: 1, name: 'Ultimate Loaded Nacho Fiesta', price: 20, description: 'Hot Nacho Chips', quantity: 1 },
-    { id: 2, name: 'Smoked Salmon Bagel', price: 40, description: 'Smoked Biscuit', quantity: 1 },
-    { id: 3, name: 'Cranberry Club Sandwich', price: 50, description: 'Vegetables', quantity: 1 },
-    { id: 4, name: 'BBQ Chicken Pizza', price: 60, description: 'Topped with BBQ Chicken', quantity: 1 },
-    { id: 5, name: 'Classic Cheeseburger', price: 30, description: 'Beef patty, cheese, and lettuce', quantity: 1 },
-    { id: 6, name: 'Vegan Buddha Bowl', price: 25, description: 'Quinoa, chickpeas, and veggies', quantity: 1 },
-    { id: 7, name: 'Garlic Butter Shrimp Pasta', price: 55, description: 'Pasta with shrimp and garlic sauce', quantity: 1 },
-    { id: 8, name: 'Chicken Caesar Salad', price: 35, description: 'Grilled chicken, romaine, and croutons', quantity: 1 },
-    { id: 9, name: 'Mango Smoothie', price: 15, description: 'Fresh mango blended with yogurt', quantity: 1 },
-    { id: 10, name: 'Chocolate Lava Cake', price: 45, description: 'Warm chocolate cake with molten center', quantity: 1 },
-    { id: 11, name: 'Tandoori Chicken', price: 50, description: 'Spiced grilled chicken', quantity: 1 },
-    { id: 12, name: 'Spaghetti Bolognese', price: 40, description: 'Traditional Italian pasta with meat sauce', quantity: 1 },
-  ]);
+  
+  const [activeSection, setActiveSection] = useState('Menu'); // State to track active section
+  const [menuItems,setMenuItems] = useState([]);
+  const [restaurantDetails,setRestaurantDetails]=useState([]);
+  const [reviews, setReviews] = useState([]);
+  useEffect(() => {
+    const fetchReviews=async () =>{
+      try{
+        const reviewResponse=await axiosInstance.get('/restaurant/readReviews');
+        console.log(reviewResponse)
+        setReviews(reviewResponse.data);
+      }catch(error){
+       console.error("Error fetching restaurants")
+      }
+    }
+    const fetchRestaurantDetails=async ()=>{
+      try {
+        const detailResponse=await axiosInstance.get('/restaurant/restaurantObject');
+        setRestaurantDetails(detailResponse.data);
+      }catch (error) {
+        console.error("Error fetching Restaurant details");
+      }
 
+      }
+    
+    const fetchMenu = async () => {
+      try {
+        const menuResponse = await axiosInstance.get(`/restaurant/menu`);
+        setMenuItems(menuResponse.data);
+      } catch (error) {
+        console.error("Error fetching menu:", error);
+      }
+    };
+    fetchReviews()
+    fetchMenu();
+    fetchRestaurantDetails();
+  
+  }, []);
+  
   const [cart, setCart] = useState([]);
 
   const addToCart = (menuItem) => {
@@ -45,32 +71,7 @@ const Menu = () => {
   };
   
 
-  const reviews = [
-    {
-      id: 1,
-      name: 'Gunjan Puri',
-      date: '1 month ago',
-      image: 'https://via.placeholder.com/50',
-      content: `Serve a healthy and good food. Having a parking facility and there are also waiting area available. 
-                This place is perfect for celebration of birthday. Serve a healthy and good food. 
-                Having a parking facility and there are also waiting area available.`,
-    },
-    {
-      id: 2,
-      name: 'Aarav Mehta',
-      date: '2 weeks ago',
-      image: 'https://via.placeholder.com/50',
-      content: `Amazing experience! The food was delicious, and the staff was very attentive. 
-                Highly recommend the BBQ Chicken Pizza.`,
-    },
-    {
-      id: 3,
-      name: 'Sara Khan',
-      date: '3 days ago',
-      image: 'https://via.placeholder.com/50',
-      content: `Great ambiance and wonderful service. Perfect spot for a family dinner.`,
-    },
-  ];
+ 
   
   const navigate = useNavigate();
 
@@ -81,24 +82,38 @@ const Menu = () => {
 
   const renderContent = () => {
     switch (activeSection) {
-      case 'Order Online':
+      case "Menu":
         return menuItems.map((menuItem) => (
           <div
-            key={menuItem.id}
+            key={menuItem._id}
             className="w-full bg-white border border-gray-200 rounded-lg shadow-lg p-6 flex items-center mb-6"
           >
             <div className="relative">
               <img
-                src="https://via.placeholder.com/150"
+                src={menuItem.image ? `http://localhost:3000${menuItem.image}` : "/public/Images/1727358391236.jpeg"}
                 alt={menuItem.name}
                 className="w-36 h-36 object-cover rounded-md"
               />
             </div>
             <div className="flex flex-col justify-between flex-1 ml-6">
-              <h3 className="text-2xl font-semibold text-gray-800">{menuItem.name}</h3>
-              <p className="text-md text-gray-600 mt-2">{menuItem.description}</p>
+              <h3 className="text-2xl font-semibold text-gray-800 flex items-center">
+                {/* Render square box with circle inside */}
+                <span
+                  className={`inline-block w-6 h-6 border-2 ${
+                    menuItem.foodType === "Non-Veg" ? "border-red-500" : "border-green-500"
+                  } flex items-center justify-center mr-2`}
+                >
+                  <span
+                    className={`w-3 h-3 rounded-full ${
+                      menuItem.foodType === "Non-Veg" ? "bg-red-500" : "bg-green-500"
+                    }`}
+                  ></span>
+                </span>
+                {menuItem.name}
+              </h3>
+              <p className="text-md text-gray-600 mt-2">Food Type: {menuItem.foodType}</p>
+              <p className="text-md text-gray-600 mt-2">₹{menuItem.price}</p>
               <div className="flex items-center justify-between mt-6">
-                <span className="text-2xl font-semibold text-yellow-500">${menuItem.price}</span>
                 <button
                   onClick={() => addToCart(menuItem)}
                   className="bg-yellow-500 text-white text-lg font-semibold px-6 py-3 rounded-lg hover:bg-yellow-600"
@@ -109,98 +124,145 @@ const Menu = () => {
             </div>
           </div>
         ));
-        case 'Overview':
+        case "Overview":
           return (
-            <div className="text-gray-800 bg-white p-6 rounded-lg shadow-lg">
-              <h2 className="text-3xl font-semibold mb-6 text-gray-800 border-b pb-2">Overview</h2>
-    
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {/* Left Section */}
+            <div className="p-8 bg-white shadow-xl rounded-lg">
+              {/* Header */}
+              <h3 className="text-4xl font-bold text-gray-800 mb-6 border-b-2 border-gray-200 pb-2">
+                {restaurantDetails.hotelName || "Restaurant Name"}
+              </h3>
+              
+              {/* Grid Layout */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-lg text-gray-700">
+                {/* Type */}
                 <div>
-                  <h3 className="text-xl font-semibold mb-2 text-gray-700">Phone Number</h3>
-                  <p className="text-lg text-gray-600 mb-6">+1 (692) 52 - 95555</p>
-    
-                  <h3 className="text-xl font-semibold mb-2 text-gray-700">Cuisines</h3>
-                  <ul className="list-disc list-inside text-lg text-gray-600 mb-6">
-                    <li>Mexican</li>
-                    <li>Italian</li>
-                    <li>Chinese</li>
-                    <li>Panjabi</li>
-                    <li>Street Food</li>
-                  </ul>
-    
-                  <h3 className="text-xl font-semibold mb-2 text-gray-700">Average Cost</h3>
-                  <ul className="list-disc list-inside text-lg text-gray-600">
-                    <li>$300 for two people (approx.)</li>
-                    <li>Cash and Cards accepted</li>
-                    <li>Digital payments accepted</li>
-                  </ul>
+                  <span className="font-semibold text-gray-900">Type: </span>
+                  {restaurantDetails.type || "N/A"}
                 </div>
-    
-                {/* Right Section */}
+        
+                {/* Rating */}
+                <div className="flex items-center">
+                  <span className="font-semibold text-gray-900">Rating: </span>
+                  <span className="ml-2 flex items-center">
+                    {restaurantDetails.rating || 0}
+                    <svg
+                      className="w-5 h-5 text-yellow-400 ml-1"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.287 3.985a1 1 0 00.95.69h4.184c.969 0 1.372 1.24.588 1.81l-3.39 2.46a1 1 0 00-.364 1.118l1.287 3.985c.3.921-.755 1.688-1.54 1.118L10 13.477l-3.39 2.46c-.785.57-1.84-.197-1.54-1.118l1.287-3.985a1 1 0 00-.364-1.118L2.603 8.412c-.785-.57-.381-1.81.588-1.81h4.184a1 1 0 00.95-.69l1.287-3.985z" />
+                    </svg>
+                  </span>
+                </div>
+        
+                {/* Address */}
                 <div>
-                  <h3 className="text-xl font-semibold mb-2 text-gray-700">Address</h3>
-                  <ul className="list-disc list-inside text-lg text-gray-600 mb-6">
-                    <li>+874 Trans-Canada Hwy, Peterborough, ON K9J 6X8, Canada</li>
-                    <li>8970 Trans-Canada Hwy, Emo, ON P0W 1E0, Canada</li>
-                  </ul>
-    
-                  <h3 className="text-xl font-semibold mb-2 text-gray-700">More Info</h3>
-                  <ul className="list-disc list-inside text-lg text-gray-600 mb-6">
-                    <li>Breakfast</li>
-                    <li>Takeaway</li>
-                    <li>Home Delivery</li>
-                    <li>Valet Parking</li>
-                    <li>Luxury Dining</li>
-                    <li>Table Booking</li>
-                    <li>Brunch</li>
-                    <li>Buffet</li>
-                    <li>Indoor Seating</li>
-                    <li>Outdoor Seating</li>
-                    <li>4/5 Star</li>
-                  </ul>
-    
-                  <h3 className="text-xl font-semibold mb-2 text-gray-700">Known For</h3>
-                  <p className="text-lg text-gray-600">
-                    Calming Atmosphere, Weekend Brunch, Elaborate Menu, Staff, Fresh Food, Good Quality
-                  </p>
+                  <span className="font-semibold text-gray-900">Address: </span>
+                  {restaurantDetails.address?.fullAddress || "N/A"}
+                  {restaurantDetails.address?.pincode && `, Pincode: ${restaurantDetails.address.pincode}`}
+                </div>
+        
+                {/* Contact */}
+                <div>
+                  <span className="font-semibold text-gray-900">Contact: </span>
+                  {restaurantDetails.contact || "N/A"}
+                </div>
+        
+                {/* Known For */}
+                <div>
+                  <span className="font-semibold text-gray-900">Known For: </span>
+                  {restaurantDetails.knownFor?.length > 0 ? (
+                    <span className="inline-block bg-blue-100 text-blue-800 text-sm font-medium px-2.5 py-0.5 rounded">
+                      {restaurantDetails.knownFor.join(", ")}
+                    </span>
+                  ) : (
+                    "N/A"
+                  )}
+                </div>
+        
+                {/* Average Cost */}
+                <div>
+                  <span className="font-semibold text-gray-900">Average Cost: </span>
+                  {restaurantDetails.averageCost ? `₹${restaurantDetails.averageCost}` : "N/A"}
+                </div>
+        
+                {/* Payment Methods */}
+                <div>
+                  <span className="font-semibold text-gray-900">Payment Methods: </span>
+                  {restaurantDetails.paymentMethods?.cash && (
+                    <span className="inline-block bg-green-100 text-green-800 text-sm font-medium px-2.5 py-0.5 rounded mr-2">
+                      Cash
+                    </span>
+                  )}
+                  {restaurantDetails.paymentMethods?.cards && (
+                    <span className="inline-block bg-green-100 text-green-800 text-sm font-medium px-2.5 py-0.5 rounded mr-2">
+                      Cards
+                    </span>
+                  )}
+                  {restaurantDetails.paymentMethods?.digitalPayments && (
+                    <span className="inline-block bg-green-100 text-green-800 text-sm font-medium px-2.5 py-0.5 rounded">
+                      Digital Payments
+                    </span>
+                  )}
+                </div>
+        
+                {/* Operating Hours */}
+                <div>
+                  <span className="font-semibold text-gray-900">Operating Hours: </span>
+                  {restaurantDetails.timingFrom || "N/A"} - {restaurantDetails.timingTo || "N/A"}
+                </div>
+        
+                {/* Currently Open */}
+                <div>
+                  <span className="font-semibold text-gray-900">Currently Open: </span>
+                  <span
+                    className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
+                      restaurantDetails.isOpen
+                        ? "bg-green-100 text-green-800"
+                        : "bg-red-100 text-red-800"
+                    }`}
+                  >
+                    {restaurantDetails.isOpen ? "Yes" : "No"}
+                  </span>
+                </div>
+        
+                {/* Services */}
+                <div className="col-span-1 md:col-span-2">
+                  <span className="font-semibold text-gray-900">Services: </span>
+                  {Object.entries(restaurantDetails.moreInfo || {})
+                    .filter(([key, value]) => value)
+                    .map(([key]) => (
+                      <span
+                        key={key}
+                        className="inline-block bg-purple-100 text-purple-800 text-sm font-medium px-2.5 py-0.5 rounded mr-2"
+                      >
+                        {key.charAt(0).toUpperCase() +
+                          key.slice(1).replace(/([A-Z])/g, " $1")}
+                      </span>
+                    )) || "N/A"}
                 </div>
               </div>
             </div>
           );
 
-          case 'Reviews':
+          case "Reviews":
+            console.log("Current reviews state during render:", reviews);
             return (
-              <div className="bg-white p-6 rounded-lg shadow-lg">
-                <h2 className="text-3xl font-semibold mb-6 text-gray-800 border-b pb-2">Reviews</h2>
-                {reviews.map((review, index) => (
-                  <div key={review.id} className="mb-6">
-                    <div className="flex items-center mb-4">
-                      <img
-                        src={review.image}
-                        alt={review.name}
-                        className="w-12 h-12 rounded-full object-cover"
-                      />
-                      <div className="ml-4">
-                        <h3 className="text-lg font-bold text-gray-800">{review.name}</h3>
-                        <p className="text-gray-500 text-sm">{review.date}</p>
-                      </div>
-                    </div>
-                    <p className="text-lg text-gray-600">{review.content}</p>
-          
-                    {/* Add separation between reviews */}
-                    {index < reviews.length - 1 && (
-                      <hr className="border-t border-gray-300 my-6" />
-                    )}
+              <div className="mt-6">
+                {reviews && reviews.length > 0 ? (
+                  <div className="max-h-[400px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
+                    {reviews.map((review, index) => {
+                      console.log("Rendering review:", review);  // Add this to see each review
+                      return <ReviewCard key={index} review={review} />;
+                    })}
                   </div>
-                ))}
+                ) : (
+                  <p className="text-gray-500 italic">No reviews available for this restaurant.</p>
+                )}
               </div>
             );
-
-
-          
-      default:
-        return null;
+              default:
+                return null;
     }
   };
 
@@ -208,9 +270,9 @@ const Menu = () => {
     <div className="relative w-screen min-h-[135vh] bg-gray-100 flex justify-center">
       {/* Restaurant Header Section */}
       <div className="absolute top-[-30px] w-full bg-[#232220] text-white py-4 flex flex-col items-center h-[200px]">
-        <h1 className="text-4xl font-bold text-center mt-6">Restaurant Name</h1>
+        <h1 className="text-4xl font-bold text-center mt-6">{restaurantDetails.hotelName}</h1>
         <div className="flex mt-16 space-x-40 text-lg">
-          {['Order Online', 'Overview', 'Reviews'].map((section) => (
+          {['Menu', 'Overview', 'Reviews'].map((section) => (
             <span
               key={section}
               onClick={() => setActiveSection(section)}
