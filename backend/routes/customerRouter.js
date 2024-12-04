@@ -43,6 +43,6 @@ router.post('/checkout', isLoggedIn, customerController.checkout); // Checkout
 router.get('/wallet', isLoggedIn, customerController.getWalletBalance); // Update cart item quantity
 router.post('/addMoney', isLoggedIn, customerController.addMoneyToWallet); // Checkout
 router.get('/orders', isLoggedIn, Auth.authorizeCustomer, customerController.getOrders);
-
-
+router.post('/review',isLoggedIn,Auth.authorizeCustomer, customerController.writeReview);
+router.get('restaurantReview',isLoggedIn,Auth.authorizeCustomer, customerController.getReviewsByTargetId)
 module.exports = router;

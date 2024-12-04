@@ -1,6 +1,7 @@
 const customer = require("../models/customerModel");
 const Restaurant = require("../models/restaurantModel")
 const Product = require('../models/productModel');
+const Review=require("../models/reviewModel")
 module.exports.profileDetailsCustomer = async function(req, res) {
     try {
         const user = await customer.findById(req.userId).select("-password");
@@ -445,3 +446,140 @@ module.exports.addMoneyToWallet = async (req, res) => {
         res.status(500).send("Error adding money to wallet.");
     }
 };
+
+
+module.exports.writeReview = async (req, res) => {
+    try {
+        const {
+            targetType,
+            targetId,
+            reviewType,
+            rating,
+            comment
+        } = req.body;
+
+        // Validate required fields
+        if (!targetType || !reviewType || !targetId || !rating || !comment) {
+            
+            return res.status(400).json({
+                success: false,
+                message: 'Missing required fields'
+            });
+        }
+
+        // Validate rating range
+        if (rating < 1 || rating > 5) {
+            return res.status(400).json({
+                success: false,
+                message: 'Rating must be between 1 and 5'
+            });
+        }
+
+        // Verify target exists
+        let targetEntity;
+        if (targetType === 'restaurant') {
+            targetEntity = await Restaurant.findById(targetId);
+        } else if (targetType === 'deliveryPartner') {
+            targetEntity = await DeliveryPartner.findById(targetId);
+        } else {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid target type'
+            });
+        }
+
+        if (!targetEntity) {
+            return res.status(404).json({
+                success: false,
+                message: `${targetType} not found`
+            });
+        }
+
+        // Create the review object
+        const review = new Review({
+            source: {
+                customer: req.userId
+            },
+            target: {
+                [targetType]: targetId
+            },
+            reviewType,
+            rating,
+            comment
+        });
+
+        // Save the review
+        await review.save();
+
+        // Calculate new average rating
+        const allReviews = await Review.find({
+            [`target.${targetType}`]: targetId
+        });
+
+        const totalRating = allReviews.reduce((sum, review) => sum + review.rating, 0);
+        const averageRating = totalRating / allReviews.length;
+
+        // Update target entity with new average rating
+        if (targetType === 'restaurant') {
+            await Restaurant.findByIdAndUpdate(targetId, {
+                rating: averageRating.toFixed(1),
+                totalReviews: allReviews.length+1
+            });
+        } else if (targetType === 'deliveryPartner') {
+            await DeliveryPartner.findByIdAndUpdate(targetId, {
+                rating: averageRating.toFixed(1),
+                totalReviews: allReviews.length+1
+            });
+        }
+
+        return res.status(201).json({
+            success: true,
+            message: 'Review submitted successfully',
+            data: {
+                review,
+                targetStats: {
+                    averageRating: averageRating.toFixed(1),
+                    totalReviews: allReviews.length
+                }
+            }
+        });
+
+    } catch (error) {
+        console.error('Error in writeReview:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+            error: error.message
+        });
+    }
+};
+
+module.exports.getReviewsByTargetId = async (req, res) => {
+    const { targetId } = req.body;
+  
+    // Validate targetId
+    if (!targetId) {
+      return res.status(400).json({ message: 'targetId is required.' });
+    }
+  
+    try {
+      // Fetch reviews from the database
+      const reviews = await Review.find({ targetId });
+  
+      // If no reviews are found
+      if (!reviews || reviews.length === 0) {
+        return res.status(404).json({ message: 'No reviews found for the given targetId.' });
+      }
+       console.log(reviews)
+      // Return reviews
+      return res.status(200).json({
+        message: 'Reviews fetched successfully.',
+        data: reviews,
+      });
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
+      return res.status(500).json({ message: 'Internal server error.' });
+    }
+  };
+  
+ 

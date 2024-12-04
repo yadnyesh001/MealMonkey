@@ -6,23 +6,27 @@ const CheckoutCart = () => {
     const navigate = useNavigate();
     const [cart, setCart] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
+    const [walletBalance, setWalletBalance] = useState(0); // Add wallet balance state
 
     useEffect(() => {
-        const fetchCart = async () => {
+        const fetchCartAndWallet = async () => {
             try {
-                const response = await axiosInstance.get('/customer/cart');
-                setCart(response.data);
-                calculateTotalPrice(response.data);
+                const cartResponse = await axiosInstance.get('/customer/cart');
+                setCart(cartResponse.data);
+                calculateTotalPrice(cartResponse.data);
+
+                const walletResponse = await axiosInstance.get('/customer/wallet'); // Fetch wallet balance
+                setWalletBalance(walletResponse.data.balance); // Assuming API returns `{ balance: number }`
             } catch (error) {
-                console.error('Error fetching cart:', error);
+                console.error('Error fetching data:', error);
             }
         };
 
-        fetchCart();
+        fetchCartAndWallet();
     }, []);
 
     const calculateTotalPrice = (cartItems) => {
-        const total = cartItems.reduce((acc, item) => 
+        const total = cartItems.reduce((acc, item) =>
             acc + (item.product.price * item.quantity), 0);
         setTotalPrice(total);
     };
@@ -31,7 +35,7 @@ const CheckoutCart = () => {
         if (newQuantity < 1) return;
         try {
             await axiosInstance.put(`/customer/cart/${itemId}`, { quantity: newQuantity });
-            
+
             // Update only the quantity of the specific item in the cart
             const updatedCart = cart.map(item => {
                 if (item._id === itemId) {
@@ -39,7 +43,7 @@ const CheckoutCart = () => {
                 }
                 return item;
             });
-            
+
             setCart(updatedCart);
             calculateTotalPrice(updatedCart);
         } catch (error) {
@@ -48,6 +52,11 @@ const CheckoutCart = () => {
     };
 
     const handleCheckout = async () => {
+        if (walletBalance < totalPrice) {
+            alert('Insufficient wallet balance!');
+            return;
+        }
+
         try {
             await axiosInstance.post('/customer/checkout', { cart });
             setCart([]);
@@ -90,6 +99,12 @@ const CheckoutCart = () => {
                             </div>
                         </div>
                     ))}
+
+                    {/* Wallet Balance */}
+                    <div className="flex justify-between text-lg mt-4">
+                        <span className="text-gray-700">Wallet Balance</span>
+                        <span className="text-gray-800 font-medium">₹{walletBalance.toFixed(2)}</span>
+                    </div>
 
                     <div className="flex justify-between text-lg">
                         <span className="text-gray-700">Sub Total</span>
