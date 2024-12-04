@@ -61,13 +61,14 @@ const App = () => {
             <Route path="/customer/" element={<><Categories /><PopularRestaurants /></>} />
             <Route path="/customer/restaurants/:foodType" element={<RestaurantsList />} />
             <Route path="/customer/cart" element={<Cart/>}/>
+            <Route path="/customer/checkout" element={<Checkout />} />
             <Route path="/customer/orders" element={<CustomerOrderList/>}/>
             <Route path="/customer/menu/:restaurantId" element={<RestaurantMenu />} />
             <Route path="/restaurant" element={<RestaurantDashboard />} />
             <Route path="/restaurant/profileDetails" element={<RestaurantForm />} />
             <Route path="/restaurant/menu/item" element={<AddMenuItemForm />} />
             <Route path="/restaurant/menu" element={<Menu />} />
-            <Route path="/restaurant/menu/checkout" element={<Checkout />} />
+            
             <Route path="/restaurant/updateItem/:id" element={<UpdateMenuItemForm/>} />
             <Route path="/restaurant/orders" element={<RestaurantOrders/>}/>
             <Route path="/admin" element={<AdminDashboard />} />

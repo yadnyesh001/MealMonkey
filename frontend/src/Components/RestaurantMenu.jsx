@@ -3,7 +3,9 @@ import { useParams } from "react-router-dom";
 import axiosInstance from "../utils/axiosInstance";
 import ReviewCard from "./Review";
 import ReviewForm from "./ReviewForm"
+import {useNavigate} from 'react-router-dom'
 const RestaurantMenu = () => {
+  const navigate = useNavigate();
   const { restaurantId } = useParams();
   const [activeSection, setActiveSection] = useState("Order Online");
   const [menuItems, setMenuItems] = useState([]);
@@ -82,7 +84,10 @@ const RestaurantMenu = () => {
     fetchReviews();
   }, [restaurantId]);
   
+  const handleProceed = async () => {
+    navigate('/customer/cart');
 
+};
   const addToCart = async (menuItem) => {
     // Update static cart
     setCart((prevCart) => {
@@ -428,7 +433,7 @@ const RestaurantMenu = () => {
             <span className="text-gray-800">To Pay</span>
             <span className="text-yellow-500">₹{total.toFixed(2)}</span>
           </div>
-          <button className="w-full mt-6 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white py-3 rounded-lg text-lg hover:opacity-90 shadow-lg">
+          <button onClick={handleProceed} className="w-full mt-6 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white py-3 rounded-lg text-lg hover:opacity-90 shadow-lg">
             Proceed to Payment
           </button>
         </div>
