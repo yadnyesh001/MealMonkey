@@ -1,17 +1,39 @@
-// ReviewCard.js
 import React from 'react';
 
 const ReviewCard = ({ review }) => {
+  const username = review.source.customer?.username || 'Anonymous User';
+  const firstLetter = username.charAt(0).toUpperCase();
+  
+  // Generate a random but consistent color based on username
+  const getProfileColor = (username) => {
+    const colors = [
+      'bg-blue-500', 'bg-red-500', 'bg-green-500', 
+      'bg-purple-500', 'bg-pink-500', 'bg-indigo-500'
+    ];
+    const index = username.length % colors.length;
+    return colors[index];
+  };
+
   return (
     <div className="bg-white shadow-lg rounded-lg p-6 mb-4 border border-gray-200">
       <div className="flex items-center mb-4">
-        <span className="font-semibold text-lg text-gray-800">
-          {review.source.customer.name}
-        </span>
-        <span className="ml-2 text-sm text-gray-500">
-          {new Date(review.createdAt).toLocaleDateString()}
-        </span>
+        {/* Profile Circle */}
+        <div className={`w-10 h-10 rounded-full ${getProfileColor(username)} flex items-center justify-center mr-3`}>
+          <span className="text-white font-semibold text-lg">
+            {firstLetter}
+          </span>
+        </div>
+        
+        <div className="flex flex-col">
+          <span className="font-semibold text-lg text-gray-800">
+            {username}
+          </span>
+          <span className="text-sm text-gray-500">
+            {new Date(review.createdAt).toLocaleDateString()}
+          </span>
+        </div>
       </div>
+      
       <div className="flex items-center mb-4">
         <span className="font-semibold text-gray-700">{review.reviewType}</span>
         <div className="flex ml-2">
@@ -29,6 +51,7 @@ const ReviewCard = ({ review }) => {
           ))}
         </div>
       </div>
+      
       <p className="text-gray-700">{review.comment}</p>
     </div>
   );
