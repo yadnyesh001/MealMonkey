@@ -56,7 +56,7 @@ module.exports.getTopRestaurant = async function(req, res){
         const restaurants = await Restaurant.find({})
         .sort({ rating: -1 }) // Sort by rating (descending)
         .limit(8)
-        .select('hotelName rating photos address.fullAddress knownFor'); // Only fetch necessary fields
+        .select('hotelName rating photos contact address.fullAddress knownFor'); // Only fetch necessary fields
         
         console.log(restaurants);
         return res.status(200).json(restaurants);
