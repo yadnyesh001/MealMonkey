@@ -118,7 +118,7 @@ import donuts from '../../assets/images/donuts.png';
 const categories = [
   { name: 'Coffee', img: coffee },
   { name: 'Fries', img: fries },
-  { name: 'Chicken', img: chicken },
+  { name: 'NonVeg', img: chicken },
   { name: 'Pizza', img: pizza },
   { name: 'Paneer', img: paneer },
   { name: 'Burger', img: burger },
