@@ -97,14 +97,12 @@
 
 // export default Categories;
 
-
-
 import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../SearchBox/SearchBox.css';
 import './Categories.css';
-import topLeftImage from '../../assets/images/parachute-1.png'; // Top left image import
-import topRightImage from '../../assets/images/parachute-2.png'; // Top right image import
+import topLeftImage from '../../assets/images/parachute-1.png';
+import topRightImage from '../../assets/images/parachute-2.png';
 import deliveryBoy from "../../assets/images/delivery-boy.png";
 import burger from '../../assets/images/burger.png';
 import coffee from '../../assets/images/coffee.png';
@@ -129,42 +127,62 @@ const categories = [
 const Categories = () => {
   const navigate = useNavigate();
   const scrollRef = useRef(null);
-  const [scrollPosition, setScrollPosition] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
-  const cardWidth = window.innerWidth / 5;
-  const visibleCount = 5;
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
 
-  const maxScrollPosition = (categories.length - visibleCount) * cardWidth;
-
-  const scrollLeft = () => {
-    setScrollPosition((prevPos) => {
-      let newPos = prevPos - cardWidth;
-      if (newPos < 0) {
-        newPos = 0; // Reset to the start if already at the beginning
-      }
-      return newPos;
-    });
-  };
-
-  const scrollRight = () => {
-    setScrollPosition((prevPos) => {
-      let newPos = prevPos + cardWidth;
-      if (newPos > maxScrollPosition) {
-        newPos = maxScrollPosition; // Keep within the max scroll position
-      }
-      return newPos;
-    });
+  const updateScrollButtons = () => {
+    if (scrollRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+      setCanScrollLeft(scrollLeft > 0);
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 1);
+    }
   };
 
   useEffect(() => {
-    scrollRef.current.scrollTo({
-      left: scrollPosition,
-      behavior: 'smooth',
-    });
-  }, [scrollPosition]);
+    const scrollContainer = scrollRef.current;
+    if (scrollContainer) {
+      scrollContainer.addEventListener('scroll', updateScrollButtons);
+      // Initial check
+      updateScrollButtons();
+      
+      // Check on window resize
+      window.addEventListener('resize', updateScrollButtons);
+    }
+
+    return () => {
+      if (scrollContainer) {
+        scrollContainer.removeEventListener('scroll', updateScrollButtons);
+      }
+      window.removeEventListener('resize', updateScrollButtons);
+    };
+  }, []);
+
+  const scroll = (direction) => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    const cardWidth = container.querySelector('.category-card')?.offsetWidth || 300;
+    const gap = 30; // This should match the gap in your CSS
+    const scrollAmount = cardWidth + gap;
+
+    if (direction === 'left') {
+      container.scrollBy({
+        left: -scrollAmount,
+        behavior: 'smooth'
+      });
+    } else {
+      container.scrollBy({
+        left: scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   const handleSearch = () => {
-    const category = categories.find(cat => cat.name.toLowerCase() === searchTerm.toLowerCase());
+    const category = categories.find(cat => 
+      cat.name.toLowerCase() === searchTerm.toLowerCase()
+    );
     if (category) {
       navigate(`/customer/restaurants/${category.name.toLowerCase()}`);
     } else {
@@ -196,14 +214,12 @@ const Categories = () => {
           <button className="search-button" onClick={handleSearch}>SEARCH</button>
         </div>
 
-        {/* Floating food icons */}
         <div className="floating-icons">
           <div className="food-item food1"></div>
           <div className="food-item food2"></div>
           <div className="food-item food3"></div>
         </div>
 
-        {/* Add top left and top right floating images */}
         <img src={topLeftImage} alt="Top Left" className="floating-image top-left-img" />
         <img src={topRightImage} alt="Top Right" className="floating-image top-right-img" />
       </div>
@@ -212,10 +228,18 @@ const Categories = () => {
         <div className="categories-header">
           <h2 className="categories-title">Categories</h2>
           <div className="scroll-btn-container">
-            <button className="scroll-btn left-btn" onClick={scrollLeft}>
+            <button 
+              className={`scroll-btn left-btn ${!canScrollLeft ? 'disabled' : ''}`}
+              onClick={() => scroll('left')}
+              disabled={!canScrollLeft}
+            >
               &lt;
             </button>
-            <button className="scroll-btn right-btn" onClick={scrollRight}>
+            <button 
+              className={`scroll-btn right-btn ${!canScrollRight ? 'disabled' : ''}`}
+              onClick={() => scroll('right')}
+              disabled={!canScrollRight}
+            >
               &gt;
             </button>
           </div>
