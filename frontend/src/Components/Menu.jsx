@@ -4,7 +4,21 @@ import { useUser } from '../contexts/UserProvider';
 import { useEffect } from 'react';
 import axiosInstance from "../utils/axiosInstance";
 import ReviewCard from './Review';
+import { Star, StarHalf } from 'lucide-react';
 const Menu = () => {
+
+    const RatingStars = ({ rating }) => {
+      const fullStars = Math.floor(rating);
+      const hasHalfStar = rating % 1 >= 0.5;
+      return (
+        <div className="flex items-center">
+          {[...Array(fullStars)].map((_, i) => (
+            <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+          ))}
+          {hasHalfStar && <StarHalf className="w-5 h-5 text-yellow-400" />}
+        </div>
+      );
+    };
   
   const [activeSection, setActiveSection] = useState('Menu'); // State to track active section
   const [menuItems,setMenuItems] = useState([]);
@@ -258,7 +272,40 @@ const Menu = () => {
       </div>
   
       {/* Checkout Section */}
-
+      <div className="absolute right-[8%] top-[200px] w-[30%] bg-white border border-gray-200 rounded-lg shadow-lg p-6">
+        {restaurantDetails.photos && restaurantDetails.photos.length > 0 ? (
+          <div className="space-y-6">
+            <div className="w-full h-[400px] overflow-hidden rounded-lg">
+              <img
+                src={`http://localhost:3000${restaurantDetails.photos[0]}`}
+                alt="Restaurant Featured Photo"
+                className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+              />
+            </div>
+            <div className="space-y-4 pt-4">
+              <h3 className="text-2xl font-semibold text-gray-800">
+                {restaurantDetails.hotelName}
+              </h3>
+              <div className="flex items-center gap-2">
+                <RatingStars rating={restaurantDetails.rating || 0} />
+                <span className="text-gray-600">({restaurantDetails.rating})</span>
+              </div>
+              <div className="space-y-2 text-gray-600">
+                <p className="flex items-center gap-2">
+                  <span className="font-medium">Address:</span>
+                  {restaurantDetails.address?.fullAddress}
+                </p>
+                <p className="flex items-center gap-2">
+                  <span className="font-medium">Contact:</span>
+                  {restaurantDetails.contact}
+                </p>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <p className="text-gray-500 italic">No photos available for this restaurant.</p>
+        )}
+      </div>
     </div>
   );
   
