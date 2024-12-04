@@ -728,7 +728,7 @@ module.exports.getMenuItemDetails = async function(req, res) {
 module.exports.updateMenuItem = async function(req, res) {
     try {
         const { id } = req.params; // Get the item ID from the request parameters
-        const { name, price, foodType, discount } = req.body;
+        const { name, price, foodType} = req.body;
         // Validate input
         if (!name || !price || !foodType) {
             return res.status(400).send("Please provide all necessary fields.");
@@ -744,13 +744,6 @@ module.exports.updateMenuItem = async function(req, res) {
         item.name = name;
         item.price = price;
         item.foodType = foodType;
-        item.discount = discount || item.discount; // Only update if a new value is provided
-
-        // Handle image upload (if provided) let imagePath;
-        if (req.file) {
-            imagePath = `/public/Images/${req.file.filename}`; 
-        }
-         item.image=imagePath
         await item.save();
         res.status(200).json(item);
     } catch (err) {
