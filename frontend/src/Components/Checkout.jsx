@@ -10,7 +10,7 @@ const Checkout = () => {
       <div className="bg-gray-900 text-white p-6 flex items-center justify-center sticky top-0 z-50">
         <div className="text-lg font-semibold">Checkout</div>
         <div className="absolute right-4">
-          <Link to="/restaurant/menu" className="text-white hover:text-gray-400">
+          <Link to="/customer/" className="text-white hover:text-gray-400">
             <button className="bg-red-600 p-2 rounded-md">Back to Menu</button>
           </Link>
         </div>

@@ -86,7 +86,7 @@ const App = () => {
             <Route path="/deliveryPartner/activeOrders" element={<ActiveOrders/>} />
             <Route path="/deliveryPartner/orderDetails/:orderId" element={<OrderDetails/>} />
             <Route path="/deliveryPartner/ordersDelivered" element={<OrdersDelivered/>} />
-
+            
             
           </Routes>
         </div>

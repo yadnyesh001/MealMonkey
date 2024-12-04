@@ -4,7 +4,7 @@ import { useUser } from '../contexts/UserProvider';
 import { useEffect } from 'react';
 import axiosInstance from "../utils/axiosInstance";
 import ReviewCard from './Review';
-import { Star, StarHalf } from 'lucide-react';
+import { Star, StarHalf,Pencil} from 'lucide-react';
 const Menu = () => {
 
     const RatingStars = ({ rating }) => {
@@ -99,7 +99,13 @@ const Menu = () => {
               <p className="text-md text-gray-600 mt-2">Food Type: {menuItem.foodType}</p>
               <p className="text-md text-gray-600 mt-2">₹{menuItem.price}</p>
               <div className="flex items-center justify-between mt-6">
-                
+              <button
+                  onClick={() => navigate(`/restaurant/updateItem/${menuItem._id}`)}
+                  className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors"
+                >
+                  <Pencil size={16} />
+                  Edit
+                </button>
               </div>
             </div>
           </div>
