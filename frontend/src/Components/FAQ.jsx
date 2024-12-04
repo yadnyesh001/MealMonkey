@@ -1,435 +1,137 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 
-const WEB = () => {
-  return (
-    <div>
-      <h1>Welcome to My Website</h1>
+const FAQ = () => {
+  const [openQuestion, setOpenQuestion] = useState(null);
+  const [activeDropdown, setActiveDropdown] = useState(null);
 
-      {/* Add the image */}
-      <img src="https://iconscout.com/illustrations/faq" alt="Description of Image" />
-    </div>
-  );
-}
+  const navItems = {
+    home: ["Classic", "Elegance", "Compact", "Minimal", "Modern"],
+    order: [
+      "Menu Listing",
+      "Menu Grid",
+      "Address",
+      "Checkout",
+      "Confirm Order",
+      "Offer",
+      "Order Tracking",
+      "Payment",
+      "Restaurant Listing",
+    ],
+    blog: [
+      "Grid Left Sidebar",
+      "Grid Right Sidebar",
+      "Blog Listening",
+      "Blog Details",
+    ],
+    pages: [
+      "404",
+      "Coming Soon",
+      "Contact",
+      "Empty Cart",
+      "FAQ",
+      "OTP",
+      "Sign In",
+      "Signup",
+      "Testimonial",
+      "Wishlist",
+    ],
+  };
 
-const App = () => {
-  const [activeIndex, setActiveIndex] = useState(null);
-  const [dropdown, setDropdown] = useState(null);
-
-  const faqs = [
+  const faqData = [
     {
-      question: 'I want to track my order',
+      id: 1,
+      question: "I want to track my order",
       answer:
-        'To track your order, you will need to have the tracking number or order ID provided by the seller or shipping carrier. Once you have this information, you can usually track your order online by visiting the carrier’s website and entering the tracking number or order ID in the designated tracking field.',
+        "To track your order, you will need to have the tracking number or order ID provided by the seller or shipping carrier. Once you have this information, you can usually track your order online by visiting the carrier's website and entering the tracking number or order ID in the designated tracking field.",
     },
     {
-      question: 'I want to manage my order',
+      id: 2,
+      question: "I want to manage my order",
       answer:
-        'Check your order confirmation email or account: This should contain information about your order, including the expected delivery date, tracking number (if applicable), and contact information for the seller. Contact the seller: If you have any questions about your order or need to make changes, the best way to do so is to contact the seller directly. You can typically find their contact information on their website or in your order confirmation email. Check the order status: Many online retailers provide a way for you to check the status of your order online. This can give you information about when your order was shipped, when it\'s expected to arrive, and any tracking information. Make changes to your order: Depending on the seller\'s policies, you may be able to make changes to your order, such as adding or removing items, changing the shipping address, or canceling the order altogether. Contact the seller to see if this is possible.',
+        "Check your order confirmation email or account: This should contain information about your order, including the expected delivery date, tracking number (if applicable), and contact information for the seller. Contact the seller: If you have any questions about your order or need to make changes, the best way to do so is to contact the seller directly. You can typically find their contact information on their website or in your order confirmation email. Check the order status: Many online retailers provide a way for you to check the status of your order online. This can give you information about when your order was shipped, when it's expected to arrive, and any tracking information. Make changes to your order: Depending on the seller's policies, you may be able to make changes to your order, such as adding or removing items, changing the shipping address, or canceling the order altogether. Contact the seller to see if this is possible.",
     },
     {
-      question: 'I did not receive Instant Cashback',
+      id: 3,
+      question: "I did not receive Instant Cashback",
       answer:
-        'I\'m sorry to hear that you did not receive an instant cashback. To help you with this issue, I need more information.\n1.What type of purchase did you make?\n2.From which website or store did you make the purchase?\n3.Did you receive any confirmation or receipt for your purchase?\n4.Did you check the terms and conditions of the cashback offer before making the purchase?\n5.What type of purchase did you make?Have you contacted the website or store\'s customer support regarding the issue?',
+        "I'm sorry to hear that you did not receive an instant cashback. To help you with this issue, I need more information.\n1. What type of purchase did you make?\n2. From which website or store did you make the purchase?\n3. Did you receive any confirmation or receipt for your purchase?\n4. Did you check the terms and conditions of the cashback offer before making the purchase?\n5. Have you contacted the website or store's customer support regarding the issue?",
     },
     {
-      question: 'I am unable to pay using wallet',
+      id: 4,
+      question: "I am unable to pay using wallet",
       answer:
-        'I\'m sorry to hear that you did not receive an instant cashback. To help you with this issue, I need more information.\n1.What type of purchase did you make?\n2.From which website or store did you make the purchase?\n3.Did you receive any confirmation or receipt for your purchase?\n4.Did you check the terms and conditions of the cashback offer before making the purchase?\n5.What type of purchase did you make?Have you contacted the website or store\'s customer support regarding the issue?',
+        "I'm sorry to hear that you're having trouble paying with your wallet. Here are some steps to troubleshoot:\n1. Check your wallet balance\n2. Ensure your wallet is properly linked\n3. Verify any daily transaction limits\n4. Check for any system maintenance or outages\n5. Contact customer support for assistance",
     },
     {
-      question: 'I want help with returns & refunds',
+      id: 5,
+      question: "I want help with returns & refunds",
       answer:
-        'I\'m sorry to hear that you did not receive an instant cashback. To help you with this issue, I need more information.\n1.What type of purchase did you make?\n2.From which website or store did you make the purchase?\n3.Did you receive any confirmation or receipt for your purchase?\n4.Did you check the terms and conditions of the cashback offer before making the purchase?\n5.What type of purchase did you make?Have you contacted the website or store\'s customer support regarding the issue?',
+        "For returns and refunds, please follow these steps:\n1. Check the return eligibility period\n2. Ensure the item meets return conditions\n3. Initiate return through your account\n4. Pack the item securely with original packaging\n5. Ship using provided return label\n6. Refund will be processed once item is received",
     },
   ];
 
-  const handleToggle = (index) => {
-    setActiveIndex(activeIndex === index ? null : index);
-  };
-
-  const handleDropdownToggle = (menu) => {
-    setDropdown(dropdown === menu ? null : menu);
+  const toggleQuestion = (id) => {
+    setOpenQuestion(openQuestion === id ? null : id);
   };
 
   return (
-    <div style={{ fontFamily: 'Arial, sans-serif', backgroundColor: '#f4f4f4', minHeight: '100vh' }}>
-      {/* Navbar */}
-      <nav
-        style={{
-          backgroundColor: '#1a1a1a',
-          padding: '10px 20px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          color: '#fff',
-          transition: 'background-color 0.3s ease',
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <h1
-            style={{
-              margin: 0,
-              color: '#ff5e00',
-              fontSize: '24px',
-              fontWeight: 'bold',
-              transition: 'transform 0.3s ease',
-            }}
-          >
-            ZOMO.
+    <div className="min-h-screen bg-gray-100">
+      
+
+      {/* FAQ Section */}
+      <div className="container mx-auto px-4 py-12">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-gray-800">
+            Frequently Asked Questions
           </h1>
-          <button
-            style={{
-              marginLeft: '20px',
-              backgroundColor: '#ff5e00',
-              color: '#fff',
-              border: 'none',
-              padding: '5px 15px',
-              borderRadius: '20px',
-              cursor: 'pointer',
-              transition: 'background-color 0.3s ease',
-            }}
-            onMouseEnter={(e) => (e.target.style.backgroundColor = '#e55d00')}
-            onMouseLeave={(e) => (e.target.style.backgroundColor = '#ff5e00')}
-          >
-            Location
-          </button>
         </div>
-        <ul style={{ display: 'flex', listStyle: 'none', margin: 0, padding: 0, gap: '20px', position: 'relative' }}></ul>
-          {['Home', 'Order', 'Blog', 'Pages'].map((item, index) => (
-            <ul key={index} style={{ position: 'relative' }}>
-              <a
-                href="#"
-                style={{
-                  color: '#fff',
-                  textDecoration: 'none',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  position: 'relative',
-                  padding: '10px 15px',
-                  borderRadius: '5px',
-                  transition: 'all 0.3s ease',
-                  transform: dropdown === item ? 'scale(1.1)' : 'scale(1)',
-                }}
-                onClick={() => handleDropdownToggle(item)}
-              >
-                {item}
-                <span style={{ marginLeft: '5px' }}>{dropdown === item ? '▲' : '▼'}</span>
-              </a>
-              {dropdown === item && (
-                <ul
-                  style={{
-                    position: 'absolute',
-                    top: '30px',
-                    left: 0,
-                    backgroundColor: '#333',
-                    padding: '10px',
-                    borderRadius: '5px',
-                    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                    listStyle: 'none',
-                    transition: 'opacity 0.3s ease',
-                    opacity: dropdown === item ? 1 : 0,
-                  }}
-                >
-                 <ul>
-  {item === 'Order' && (
-    <>
-      <li style={{ margin: '5px 0' }}>
-        <a 
-          href="#" 
-          style={{ color: '#ff5e00', textDecoration: 'none' }}
-          onMouseEnter={(e) => e.target.style.color = '#ff9500'}
-          onMouseLeave={(e) => e.target.style.color = '#ff5e00'}
-        >
-          Menu Listing
-        </a>
-      </li>
-      <li style={{ margin: '5px 0' }}>
-        <a 
-          href="#" 
-          style={{ color: '#ff5e00', textDecoration: 'none' }}
-          onMouseEnter={(e) => e.target.style.color = '#ff9500'}
-          onMouseLeave={(e) => e.target.style.color = '#ff5e00'}
-        >
-          Menu Grid
-        </a>
-      </li>
-      <li style={{ margin: '5px 0' }}>
-        <a 
-          href="#" 
-          style={{ color: '#ff5e00', textDecoration: 'none' }}
-          onMouseEnter={(e) => e.target.style.color = '#ff9500'}
-          onMouseLeave={(e) => e.target.style.color = '#ff5e00'}
-        >
-          Address
-        </a>
-      </li>
-      <li style={{ margin: '5px 0' }}>
-        <a 
-          href="#" 
-          style={{ color: '#ff5e00', textDecoration: 'none' }}
-          onMouseEnter={(e) => e.target.style.color = '#ff9500'}
-          onMouseLeave={(e) => e.target.style.color = '#ff5e00'}
-        >
-          Checkout
-        </a>
-      </li>
-      <li style={{ margin: '5px 0' }}>
-        <a 
-          href="#" 
-          style={{ color: '#ff5e00', textDecoration: 'none' }}
-          onMouseEnter={(e) => e.target.style.color = '#ff9500'}
-          onMouseLeave={(e) => e.target.style.color = '#ff5e00'}
-        >
-          Confirm Order
-        </a>
-      </li>
-      <li style={{ margin: '5px 0' }}>
-        <a 
-          href="#" 
-          style={{ color: '#ff5e00', textDecoration: 'none' }}
-          onMouseEnter={(e) => e.target.style.color = '#ff9500'}
-          onMouseLeave={(e) => e.target.style.color = '#ff5e00'}
-        >
-          Offer
-        </a>
-      </li>
-      <li style={{ margin: '5px 0' }}>
-        <a 
-          href="#" 
-          style={{ color: '#ff5e00', textDecoration: 'none' }}
-          onMouseEnter={(e) => e.target.style.color = '#ff9500'}
-          onMouseLeave={(e) => e.target.style.color = '#ff5e00'}
-        >
-          Order Tracking
-        </a>
-      </li>
-      <li style={{ margin: '5px 0' }}>
-        <a 
-          href="#" 
-          style={{ color: '#ff5e00', textDecoration: 'none' }}
-          onMouseEnter={(e) => e.target.style.color = '#ff9500'}
-          onMouseLeave={(e) => e.target.style.color = '#ff5e00'}
-        >
-          Payment
-        </a>
-      </li>
-      <li style={{ margin: '5px 0' }}>
-        <a 
-          href="#" 
-          style={{ color: '#ff5e00', textDecoration: 'none' }}
-          onMouseEnter={(e) => e.target.style.color = '#ff9500'}
-          onMouseLeave={(e) => e.target.style.color = '#ff5e00'}
-        >
-          Restaurant Listing
-        </a>
-      </li>
-    </>
-  )}
 
-  {item === 'Home' && (
-    <>
-      <li style={{ margin: '5px 0' }}>
-        <a 
-          href="#" 
-          style={{ color: '#ff5e00', textDecoration: 'none' }}
-          onMouseEnter={(e) => e.target.style.color = '#ff9500'}
-          onMouseLeave={(e) => e.target.style.color = '#ff5e00'}
-        >
-          Classic
-        </a>
-      </li>
-      <li style={{ margin: '5px 0' }}>
-        <a 
-          href="#" 
-          style={{ color: '#ff5e00', textDecoration: 'none' }}
-          onMouseEnter={(e) => e.target.style.color = '#ff9500'}
-          onMouseLeave={(e) => e.target.style.color = '#ff5e00'}
-        >
-          Elegance
-        </a>
-      </li>
-      <li style={{ margin: '5px 0' }}>
-        <a 
-          href="#" 
-          style={{ color: '#ff5e00', textDecoration: 'none' }}
-          onMouseEnter={(e) => e.target.style.color = '#ff9500'}
-          onMouseLeave={(e) => e.target.style.color = '#ff5e00'}
-        >
-          Compact
-        </a>
-      </li>
-      <li style={{ margin: '5px 0' }}>
-        <a 
-          href="#" 
-          style={{ color: '#ff5e00', textDecoration: 'none' }}
-          onMouseEnter={(e) => e.target.style.color = '#ff9500'}
-          onMouseLeave={(e) => e.target.style.color = '#ff5e00'}
-        >
-          Minimal
-        </a>
-      </li>
-      <li style={{ margin: '5px 0' }}>
-        <a 
-          href="#" 
-          style={{ color: '#ff5e00', textDecoration: 'none' }}
-          onMouseEnter={(e) => e.target.style.color = '#ff9500'}
-          onMouseLeave={(e) => e.target.style.color = '#ff5e00'}
-        >
-          Modern
-        </a>
-      </li>
-    </>
-  )}
-
-  {item === 'Blog' && (
-    <>
-      <li style={{ margin: '5px 0' }}>
-        <a 
-          href="#" 
-          style={{ color: '#ff5e00', textDecoration: 'none' }}
-          onMouseEnter={(e) => e.target.style.color = '#ff9500'}
-          onMouseLeave={(e) => e.target.style.color = '#ff5e00'}
-        >
-          Grid Left Sidebar
-        </a>
-      </li>
-      <li style={{ margin: '5px 0' }}>
-        <a 
-          href="#" 
-          style={{ color: '#ff5e00', textDecoration: 'none' }}
-          onMouseEnter={(e) => e.target.style.color = '#ff9500'}
-          onMouseLeave={(e) => e.target.style.color = '#ff5e00'}
-        >
-          Grid Right Sidebar
-        </a>
-      </li>
-      <li style={{ margin: '5px 0' }}>
-        <a 
-          href="#" 
-          style={{ color: '#ff5e00', textDecoration: 'none' }}
-          onMouseEnter={(e) => e.target.style.color = '#ff9500'}
-          onMouseLeave={(e) => e.target.style.color = '#ff5e00'}
-        >
-          Blog Listing
-        </a>
-      </li>
-      <li style={{ margin: '5px 0' }}>
-        <a 
-          href="#" 
-          style={{ color: '#ff5e00', textDecoration: 'none' }}
-          onMouseEnter={(e) => e.target.style.color = '#ff9500'}
-          onMouseLeave={(e) => e.target.style.color = '#ff5e00'}
-        >
-          Blog Details
-        </a>
-      </li>
-    </>
-  )}
-
-  {item === 'Pages' && (
-    <>
-      <li style={{ margin: '5px 0' }}>
-        <a 
-          href="#" 
-          style={{ color: '#ff5e00', textDecoration: 'none' }}
-          onMouseEnter={(e) => e.target.style.color = '#ff9500'}
-          onMouseLeave={(e) => e.target.style.color = '#ff5e00'}
-        >
-          404
-        </a>
-      </li>
-      <li style={{ margin: '5px 0' }}>
-        <a 
-          href="#" 
-          style={{ color: '#ff5e00', textDecoration: 'none' }}
-          onMouseEnter={(e) => e.target.style.color = '#ff9500'}
-          onMouseLeave={(e) => e.target.style.color = '#ff5e00'}
-        >
-          Coming Soon
-        </a>
-      </li>
-      <li style={{ margin: '5px 0' }}>
-        <a 
-          href="#" 
-          style={{ color: '#ff5e00', textDecoration: 'none' }}
-          onMouseEnter={(e) => e.target.style.color = '#ff9500'}
-          onMouseLeave={(e) => e.target.style.color = '#ff5e00'}
-        >
-          Contact
-        </a>
-      </li>
-      <li style={{ margin: '5px 0' }}>
-      <a 
-          href="#" 
-          style={{ color: '#ff5e00', textDecoration: 'none' }}
-          onMouseEnter={(e) => e.target.style.color = '#ff9500'}
-          onMouseLeave={(e) => e.target.style.color = '#ff5e00'}
-        >
-          Minimal
-        </a>
-      </li>
-    </>
-  )}
-
-  {item === 'Blog' && (
-    <li style={{ margin: '5px 0' }}>
-      <a
-        href="#"
-        style={{ color: '#ff5e00', textDecoration: 'none' }}
-        onMouseEnter={(e) => e.target.style.color = '#ff9500'}
-        onMouseLeave={(e) => e.target.style.color = '#ff5e00'}
-      >
-        Latest Posts
-      </a>
-    </li>
-  )}
-</ul>
-              )}
-            </ul>
-          ))}
-        </ul>
-      </nav>
-
-      {/* FAQ Accordion Section */}
-      <div style={{ padding: '20px' }}>
-        <h2 style={{ color: '#333', marginBottom: '20px' }}>FAQs</h2>
-        {faqs.map((faq, index) => (
-          <div key={index} style={{ marginBottom: '15px' }}>
-            <div
-              onClick={() => handleToggle(index)}
-              style={{
-                padding: '15px',
-                backgroundColor: '#fff',
-                border: '1px solid #ddd',
-                borderRadius: '5px',
-                cursor: 'pointer',
-                fontWeight: 'bold',
-                color: '#333',
-                boxShadow: activeIndex === index ? '0 4px 8px rgba(0, 0, 0, 0.1)' : 'none',
-              }}
-            >
-              {faq.question}
-            </div>
-            {activeIndex === index && (
-              <div
-                style={{
-                  padding: '15px',
-                  backgroundColor: '#f9f9f9',
-                  border: '1px solid #ddd',
-                  borderTop: 'none',
-                  borderRadius: '5px',
-                  marginTop: '5px',
-                }}
-              >
-                <p style={{ color: '#555' }}>{faq.answer}</p>
-              </div>
-            )}
+        <div className="grid grid-cols-2 gap-8">
+          <div className="flex items-center justify-center">
+            <img
+              src="https://cdni.iconscout.com/illustration/premium/thumb/faq-illustration-download-in-svg-png-gif-file-formats--customer-questions-interrogation-point-and-answers-helpful-information-q-a-whoooa-solid-1-pack-people-illustrations-3779152.png"
+              alt="FAQ illustration"
+              className="max-w-md"
+            />
           </div>
-        ))}
+
+          <div className="space-y-4">
+            {faqData.map((faq) => (
+              <div
+                key={faq.id}
+                className="border rounded-lg bg-white overflow-hidden transition-all duration-300"
+              >
+                <button
+                  className="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50"
+                  onClick={() => toggleQuestion(faq.id)}
+                >
+                  <span>{faq.question}</span>
+                  <ChevronDown
+                    className={`transform transition-transform duration-300 ${
+                      openQuestion === faq.id ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+                <div
+                  className={`px-6 transition-all duration-300 ease-in-out ${
+                    openQuestion === faq.id
+                      ? "max-h-96 py-4"
+                      : "max-h-0 overflow-hidden"
+                  }`}
+                >
+                  <p className="text-gray-600 whitespace-pre-line">
+                    {faq.answer}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
+
     </div>
   );
 };
 
-export default App;
+export default FAQ;
