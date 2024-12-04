@@ -62,7 +62,7 @@ const CheckoutCart = () => {
             setCart([]);
             setTotalPrice(0);
             alert('Checkout successful!');
-            navigate('/customer/');
+            navigate('/customer/checkout');
         } catch (error) {
             console.error('Error during checkout:', error);
         }

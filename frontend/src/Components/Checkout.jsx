@@ -87,7 +87,7 @@ const Checkout = () => {
               Sit and relax while your order is being worked on. It'll take 5
               min before you get it.
             </p>
-            <Link to="/restaurant/menu" className="text-blue-500 hover:underline mt-4">
+            <Link to="/customer/" className="text-blue-500 hover:underline mt-4">
               Back to Menu
             </Link>
           </div>
