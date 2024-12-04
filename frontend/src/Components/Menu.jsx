@@ -44,40 +44,11 @@ const Menu = () => {
   
   }, []);
   
-  const [cart, setCart] = useState([]);
-
-  const addToCart = (menuItem) => {
-    setCart((prevCart) => {
-      const itemExists = prevCart.find((item) => item.id === menuItem.id);
-      if (itemExists) {
-        return prevCart.map((item) =>
-          item.id === menuItem.id ? { ...item, quantity: item.quantity + 1 } : item
-        );
-      } else {
-        return [...prevCart, { ...menuItem }];
-      }
-    });
-  };  
-
-  const updateQuantity = (id, amount) => {
-    setCart((prevCart) => {
-      const updatedCart = prevCart.map((item) =>
-        item.id === id
-          ? { ...item, quantity: item.quantity + amount > 0 ? item.quantity + amount : 0 }
-          : item
-      );
-      return updatedCart.filter((item) => item.quantity > 0);
-    });
-  };
-  
 
  
   
   const navigate = useNavigate();
 
-  const subtotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
-  const discount = subtotal * 0.1;
-  const total = subtotal - discount;
 
 
   const renderContent = () => {
@@ -114,12 +85,7 @@ const Menu = () => {
               <p className="text-md text-gray-600 mt-2">Food Type: {menuItem.foodType}</p>
               <p className="text-md text-gray-600 mt-2">₹{menuItem.price}</p>
               <div className="flex items-center justify-between mt-6">
-                <button
-                  onClick={() => addToCart(menuItem)}
-                  className="bg-yellow-500 text-white text-lg font-semibold px-6 py-3 rounded-lg hover:bg-yellow-600"
-                >
-                  +Add
-                </button>
+                
               </div>
             </div>
           </div>
@@ -292,58 +258,7 @@ const Menu = () => {
       </div>
   
       {/* Checkout Section */}
-      <div className="absolute right-[8%] top-[200px] w-[30%] bg-white border border-gray-200 rounded-lg shadow-lg p-6 max-h-[100vh] overflow-y-auto">
-        <h2 className="text-2xl font-bold mb-4 text-gray-800">Cart Items</h2>
-        {cart.length > 0 ? (
-          cart.map((item) => (
-            <div key={item.id} className="flex justify-between items-center mb-4">
-              <div>
-                <h3 className="text-lg font-semibold text-gray-700">{item.name}</h3>
-                <p className="text-sm text-gray-500">
-                  <span className="text-yellow-500 font-medium">${item.price}</span> x {item.quantity}
-                </p>
-              </div>
-              <div className="flex items-center">
-                <button
-                  onClick={() => updateQuantity(item.id, -1)}
-                  className="w-8 h-8 flex items-center justify-center rounded-full bg-red-100 text-red-500 hover:bg-red-200 font-bold shadow-md"
-                >
-                  −
-                </button>
-                <span className="mx-3 text-lg text-gray-700">{item.quantity}</span>
-                <button
-                  onClick={() => updateQuantity(item.id, 1)}
-                  className="w-8 h-8 flex items-center justify-center rounded-full bg-green-100 text-green-500 hover:bg-green-200 font-bold shadow-md"
-                >
-                  +
-                </button>
-              </div>
-            </div>
-          ))
-        ) : (
-          <p className="text-gray-500 text-center">Your cart is empty.</p>
-        )}
-        <div className="mt-6">
-          <div className="flex justify-between text-lg">
-            <span className="text-gray-700">Sub Total</span>
-            <span className="text-gray-800 font-medium">${subtotal}</span>
-          </div>
-          <div className="flex justify-between text-lg">
-            <span className="text-gray-700">Discount (10%)</span>
-            <span className="text-green-600 font-medium">-${discount.toFixed(2)}</span>
-          </div>
-          <div className="flex justify-between font-bold text-xl mt-4">
-            <span className="text-gray-800">To Pay</span>
-            <span className="text-yellow-500">${total.toFixed(2)}</span>
-          </div>
-          <button
-            onClick={() => navigate("/restaurant/menu/checkout")}
-            className="w-full mt-6 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 text-white py-3 rounded-lg text-lg hover:opacity-90 shadow-lg"
-          >
-            Proceed to Payment
-          </button>
-        </div>
-      </div>
+
     </div>
   );
   
