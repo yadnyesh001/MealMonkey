@@ -38,6 +38,7 @@ import RestaurantOrders from './Components/RestaurantOrders';
 import DeliveryPartnerCard from './Components/DeliveryPartner/DeliveryPartnerCard';
 import DeliveryPartnerDashboard from './Components/DeliveryPartner/DeliveryPartnerDashboard';
 import ActiveOrders from './Components/DeliveryPartner/activeOrders';
+import OrderDetails from './Components/DeliveryPartner/OrderDetails';
 import OrdersDelivered from './Components/DeliveryPartner/OrdersDelivered';
 import Checkout from "./Components/Checkout";
 import FAQ from './Components/FAQ';
@@ -82,6 +83,7 @@ const App = () => {
             <Route path="/deliveryPartner/profile" element={<DeliveryPartnerCard/>} />
             <Route path="/deliveryPartner" element={<DeliveryPartnerDashboard/>} />
             <Route path="/deliveryPartner/activeOrders" element={<ActiveOrders/>} />
+            <Route path="/deliveryPartner/orderDetails/:orderId" element={<OrderDetails/>} />
             <Route path="/deliveryPartner/ordersDelivered" element={<OrdersDelivered/>} />
 
             

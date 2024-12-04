@@ -10,13 +10,13 @@ const AboutUs = () => {
 
           <div className="mt-10 grid grid-cols-2 gap-4">
             <div>
-              <img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.wallpaperflare.com%2Fchef-cooking-food-job-magic-woman-work-wallpaper-ufwzr&psig=AOvVaw0VtbWqHIjT9RJa7xTsHn5k&ust=1727374211942000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCKj2xsXY3ogDFQAAAAAdAAAAABAE" alt="Chefs" className="rounded-lg shadow-lg" />
+              <img src="https://img.freepik.com/premium-photo/chef-preparing-food-kitchen-restaurant_777271-3996.jpg" alt="Chefs" className="rounded-lg shadow-lg" />
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.flaticon.com%2Ffree-icon%2Fshopping-list_7662293&psig=AOvVaw1YEYN2OTLo5S0fssu-XMwQ&ust=1727374254325000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCICE49zY3ogDFQAAAAAdAAAAABAE" alt="Shopping App" className="rounded-lg shadow-lg" />
-              <img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.vecteezy.com%2Ffree-videos%2Fproduct-delivery&psig=AOvVaw1Jenlxje1D_r9rdhdHaCHa&ust=1727374298236000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCPiOye3Y3ogDFQAAAAAdAAAAABAE" alt="Delivery" className="rounded-lg shadow-lg" />
-              <img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.freepik.com%2Ffree-photos-vectors%2Fcooking&psig=AOvVaw3SRN18XYXhOUi6pxRIC9Yq&ust=1727374326426000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCMix6fzY3ogDFQAAAAAdAAAAABAE" alt="Cooking" className="rounded-lg shadow-lg" />
-              <img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pexels.com%2Fsearch%2Fgifts%2F&psig=AOvVaw3yLlRQI1ucnIpiOgKDOe38&ust=1727374353594000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCIDm5YjZ3ogDFQAAAAAdAAAAABAE" alt="Gifts" className="rounded-lg shadow-lg" />
+              <img src="https://media.istockphoto.com/id/1287186696/photo/food-delivery-app-order-with-phone-online-mobile-service-for-take-away-burger-and-pizza.jpg?s=612x612&w=0&k=20&c=s0g33OOVOT9nZiFat2wvo7HhRvmM5kx0CJBp1OSfbRE=" alt="Shopping App" className="rounded-lg shadow-lg" />
+              <img src="https://media.istockphoto.com/id/1137764161/photo/close-up-of-delivery-man-handing-a-slack-of-foam-lunch-box.jpg?s=612x612&w=0&k=20&c=KzKxQSkLMlyEnAVrPxIjpBVAh-swM6-fZyszzYTpId0=" alt="Delivery" className="rounded-lg shadow-lg" />
+              <img src="https://images.pexels.com/photos/175753/pexels-photo-175753.jpeg?cs=srgb&dl=pexels-conojeghuo-175753.jpg&fm=jpg" alt="Cooking" className="rounded-lg shadow-lg" />
+              <img src="https://www.foodandwine.com/thmb/RDbEUfRZxbXq0gl_Hle_MqOxu-E=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/faw-primary-gift-baskets-dburreson-001-2a514142001d484d8cf7da9255e0d320.jpg" alt="Gifts" className="rounded-lg shadow-lg" />
             </div>
           </div>
         </div>
@@ -54,9 +54,9 @@ const AboutUs = () => {
 
           <div className="grid grid-cols-5 gap-6">
             <div className="text-center p-4 bg-white shadow-lg hover:bg-orange-500 transition rounded-lg">
-              <img src="" alt="Harriet Watson" className="rounded-full w-32 h-32 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold">Harriet Watson</h3>
-              <p className="text-gray-600">Co-Founder</p>
+              <img src="https://static.vecteezy.com/system/resources/thumbnails/028/287/529/small_2x/indian-man-with-crossed-arms-wearing-a-formal-shirt-ai-generated-photo.jpg" alt="Harriet Watson" className="rounded-full w-32 h-32 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold">Hrishikesh Dongre</h3>
+              <p className="text-gray-600">S20220010083</p>
               <div className="flex justify-center space-x-2 mt-2">
                 <i className="fab fa-twitter"></i>
                 <i className="fab fa-facebook"></i>
@@ -65,9 +65,9 @@ const AboutUs = () => {
             </div>
 
             <div className="text-center p-4 bg-white shadow-lg hover:bg-orange-500 transition rounded-lg">
-              <img src="jenifer-peters.jpg" alt="Jenifer Peters" className="rounded-full w-32 h-32 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold">Jenifer Peters</h3>
-              <p className="text-gray-600">Founder</p>
+              <img src="https://www.shutterstock.com/image-photo/young-bearded-confident-successful-man-600nw-1926860225.jpg" alt="Jenifer Peters" className="rounded-full w-32 h-32 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold">Sahil Suresh Kasare</h3>
+              <p className="text-gray-600">S20220010191</p>
               <div className="flex justify-center space-x-2 mt-2">
                 <i className="fab fa-twitter"></i>
                 <i className="fab fa-facebook"></i>
@@ -76,9 +76,9 @@ const AboutUs = () => {
             </div>
 
             <div className="text-center p-4 bg-white shadow-lg hover:bg-orange-500 transition rounded-lg">
-              <img src="rock-smith.jpg" alt="Rock Smith" className="rounded-full w-32 h-32 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold">Rock Smith</h3>
-              <p className="text-gray-600">Manager</p>
+              <img src="https://cdn.growtha.dev/656b574d4c3db5a4d0ef52fa/66c6145b59b86daec15b47c4_adinaaba%20(5).jpg" alt="Rock Smith" className="rounded-full w-32 h-32 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold">Yadnyesh Badgujar</h3>
+              <p className="text-gray-600">S20220010247</p>
               <div className="flex justify-center space-x-2 mt-2">
                 <i className="fab fa-twitter"></i>
                 <i className="fab fa-facebook"></i>
@@ -87,9 +87,9 @@ const AboutUs = () => {
             </div>
 
             <div className="text-center p-4 bg-white shadow-lg hover:bg-orange-500 transition rounded-lg">
-              <img src="johnson-clarke.jpg" alt="Johnson Clarke" className="rounded-full w-32 h-32 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold">Johnson Clarke</h3>
-              <p className="text-gray-600">Marketing Manager</p>
+              <img src="https://img.freepik.com/premium-photo/successful-entrepreneur-ai-portrait_236854-41599.jpg" alt="Johnson Clarke" className="rounded-full w-32 h-32 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold">Padmanabham Nithin Sai</h3>
+              <p className="text-gray-600">S20220010158</p>
               <div className="flex justify-center space-x-2 mt-2">
                 <i className="fab fa-twitter"></i>
                 <i className="fab fa-facebook"></i>
@@ -98,9 +98,9 @@ const AboutUs = () => {
             </div>
 
             <div className="text-center p-4 bg-white shadow-lg hover:bg-orange-500 transition rounded-lg">
-              <img src="christina-jones.jpg" alt="Christina Jones" className="rounded-full w-32 h-32 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold">Christina Jones</h3>
-              <p className="text-gray-600">HR</p>
+              <img src="https://i.pinimg.com/736x/f4/ad/e0/f4ade01b3f193f937e92db33dfa5d3be.jpg" alt="Christina Jones" className="rounded-full w-32 h-32 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold">N.Dheeraj sathvik</h3>
+              <p className="text-gray-600">S20220010148</p>
               <div className="flex justify-center space-x-2 mt-2">
                 <i className="fab fa-twitter"></i>
                 <i className="fab fa-facebook"></i>
