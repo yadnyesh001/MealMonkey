@@ -12,6 +12,7 @@ router.get('/ordersToday', isLoggedIn, deliveryPartnerController.getTodaysPendin
 router.put('/orders/:id/status', isLoggedIn, deliveryPartnerController.updateOrderStatus);
 // Fetch accepted orders with complete items and quantity
 router.get('/acceptedOrders', isLoggedIn, deliveryPartnerController.getAcceptedOrders);
+router.get('/OrderDetails/:orderId', isLoggedIn, deliveryPartnerController.getOrderDetails);
 
 // Complete an order
 router.put('/orders/:orderId/complete', isLoggedIn, deliveryPartnerController.completeOrder);

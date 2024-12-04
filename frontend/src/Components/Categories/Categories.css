@@ -132,22 +132,39 @@
     background-color: #ffb400;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
-
 .scooter-img {
     position: absolute;
-    top: calc(-200px + -163 * (100vw - 320px) / 1600);
-    z-index: 12;
-    left: 20px;
-    width: 10%;
-    animation: 1.1s linear infinite alternate bike;
+    top: -250px;
+    left: 0;
+    width: 130px;
     z-index: 1;
+    animation: bikeRide 10s linear infinite;
+    pointer-events: none;
 }
 
-@keyframes bike {
-    from {
-        transform: translateY(0);
+@keyframes bikeRide {
+    0% {
+        left: 0%;
+        transform: scaleX(1);
     }
-    to {
-        transform: translateY(12px);
+    45% {
+        left: 90%;
+        transform: scaleX(1);
     }
+    50% {
+        left: 90%;
+        transform: scaleX(-1);
+    }
+    95% {
+        left: 0%;
+        transform: scaleX(-1);
+    }
+    100% {
+        left: 0%;
+        transform: scaleX(1);
+    }
+}
+
+html {
+    scroll-behavior: smooth;
 }
