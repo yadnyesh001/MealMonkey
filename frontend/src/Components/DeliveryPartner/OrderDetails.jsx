@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 const OrderDetails = () => {
   const { orderId } = useParams();
   const [order, setOrder] = useState(null);
-  const [mapUrl, setMapUrl] = useState('');
+  const [position, setPosition] = useState([19.0760, 72.8777]); // Default to Mumbai coordinates
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
@@ -18,9 +18,16 @@ const OrderDetails = () => {
       }
     };
 
-    const fetchMap = (pincode) => {
-      const mapApiUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${pincode}&zoom=15&size=400x400&key=YOUR_GOOGLE_MAPS_API_KEY`;
-      setMapUrl(mapApiUrl);
+    const fetchCoordinates = async (pincode) => {
+      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${pincode}`);
+      const data = await response.json();
+      if (data.length > 0) {
+        const { lat, lon } = data[0];
+        setPosition([parseFloat(lat), parseFloat(lon)]);
+      } else {
+        // Fallback to Mumbai coordinates if no data is returned
+        setPosition([19.0760, 72.8777]);
+      }
     };
 
     fetchOrderDetails();
