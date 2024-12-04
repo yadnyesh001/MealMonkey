@@ -131,6 +131,24 @@ exports.getAcceptedOrders = async (req, res) => {
     }
 };
 
+exports.getOrderDetails = async (req, res) => {
+    const orderId = req.params.orderId;
+    try {
+        const order = await Order.findById(orderId)
+                                 .populate('customer')
+                                 .populate('restaurant')
+                                 .populate('items.product');
+
+        if (!order) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+
+        res.status(200).json(order);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching order details', error });
+    }
+};
+
   exports.completeOrder = async (req, res) => {
     const { orderId } = req.params;
   

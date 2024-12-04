@@ -30,6 +30,24 @@ module.exports.getRestaurantDetails = async function(req, res) {
     }
 };
 
+module.exports.getRestaurant = async function(req, res) {
+    try {
+        // Find the restaurant by the user's ID
+        const restaurant = await Restaurant.findById(req.userId)
+             // Exclude sensitive fields like 'password'
+
+        if (!restaurant) {
+            return res.status(404).send("Restaurant not found.");
+        }
+
+        // Return the restaurant's details
+        res.status(200).json(restaurant);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error fetching restaurant details.");
+    }
+};
+
 // Update and transform baseUser to Restaurant
 module.exports.updateProfile = async function(req, res) {
     try {
@@ -479,7 +497,7 @@ module.exports.getAllReviews = async function(req, res) {
             'target.restaurant': restaurantId
         }).populate('source.user', 'name') // Optionally populate the user details
           .select('reviewType rating comment createdAt likes dislikes');
-
+     console.log(reviews)
         res.status(200).json(reviews);
     } catch (err) {
         console.error(err);
@@ -487,7 +505,33 @@ module.exports.getAllReviews = async function(req, res) {
     }
 };
 
+module.exports.getReviewsByTargetId = async (req, res) => {
+    const restaurantId  = req.userId;
 
+    // Validate targetId
+    if (!restaurantId) {
+    return res.status(400).json({ message: 'targetId is required.' });
+    }
+
+    try {
+    // Fetch reviews from the database
+    const reviews = await Review.find({ 'target.restaurant': restaurantId }).populate({
+        path: 'source.customer',
+        select: 'username' // Only get the username field
+    });
+
+    // If no reviews are found
+    if (!reviews || reviews.length === 0) {
+        return res.status(404).json({ message: 'No reviews found for the given targetId.' });
+    }
+    
+    // Return reviews
+    return res.status(200).json(reviews);
+    } catch (error) {
+    console.error('Error fetching reviews:', error);
+    return res.status(500).json({ message: 'Internal server error.' });
+    }
+};
 // module.exports.getDailyAnalytics = async function(req, res) {
 //     try {
 //         const restaurantId = req.userId; // Assuming req.userId is the restaurant's ID
@@ -661,6 +705,7 @@ module.exports.writeReview = async function(req, res) {
 
 
 // controllers/restaurantController.js
+
 
 // Get Menu Item Details
 module.exports.getMenuItemDetails = async function(req, res) {

@@ -8,6 +8,7 @@ const Auth = require("../middlewares/Auth")
 
 //Restaurant dashboard
 router.get("/",isLoggedIn, Auth.authorizeManager, restaurantController.getRestaurantDetails)
+router.get("/restaurantObject",isLoggedIn, Auth.authorizeManager, restaurantController.getRestaurant)
 // Update restaurant profile
 router.post("/profile", isLoggedIn, Auth.authorizeManager,upload.single('photos'), restaurantController.updateProfile);
 
@@ -45,7 +46,7 @@ router.post("/orders/reject/:orderId", isLoggedIn, restaurantController.rejectOr
 router.get("/orders/history", isLoggedIn, restaurantController.getOrderHistory);
 
 // Get all reviews
-router.get("/reviews", isLoggedIn, restaurantController.getAllReviews);
+router.get( "/readReviews", isLoggedIn,Auth.authorizeManager, restaurantController.getReviewsByTargetId);
 
 // Get daily analytics
 router.get("/analytics/daily-weekly", isLoggedIn, restaurantController.getDailyAndWeeklyAnalytics);
