@@ -44,8 +44,11 @@ export default {
         'fade-in-delay': 'fade-in 0.5s ease-in 0.5s',
         'bounce-slow': 'bounce-slow 2s ease-out',
         'pulse-slow': 'pulse-slow 2s infinite',
+        'spin-slow': 'spin 3s linear infinite',
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/forms'),
+  ],
 };
