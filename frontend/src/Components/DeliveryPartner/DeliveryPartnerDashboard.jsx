@@ -539,7 +539,7 @@ const DeliveryPartnerDashboard = () => {
     setAnalyticsData([
       { title: "Completed Orders", value: completedOrders, icon: <Award className="text-emerald-500" /> },
       { title: "Today's Revenue", value: `₹${totalRevenue.toFixed(2)}`, icon: <CreditCard className="text-indigo-500" /> },
-      { title: "Pending Orders", value: pendingOrdersCount, icon: <Truck className="text-amber-500" /> },
+      { title: "Active Orders", value: pendingOrdersCount, icon: <Truck className="text-amber-500" /> },
       { title: "Monthly Revenue", value: `₹${monthlyRevenue.toFixed(2)}`, icon: <CreditCard className="text-violet-500" /> },
     ]);
   };
