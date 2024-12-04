@@ -38,6 +38,7 @@ import DeliveryPartnerDashboard from './Components/DeliveryPartner/DeliveryPartn
 import ActiveOrders from './Components/DeliveryPartner/activeOrders';
 import OrdersDelivered from './Components/DeliveryPartner/OrdersDelivered';
 import Checkout from "./Components/Checkout";
+import FAQ from './Components/FAQ';
 const App = () => {
   return (
     <UserProvider>
@@ -46,10 +47,13 @@ const App = () => {
         <div style={{minHeight: "60vh"}} className="content-container">
           <Routes>
             <Route path="/" element={<><Categories /><PopularRestaurants /></>} />
+
             <Route path="/register" element={<SignUp />} />
             <Route path="/login" element={<Login />} />
             <Route path='/about' element={<AboutUs />} />
             <Route path='/contact' element={<Contact />} />
+            <Route path='/FAQ' element={<FAQ />} />
+
             <Route path="/customer/" element={<><Categories /><PopularRestaurants /></>} />
             <Route path="/customer/restaurants/:foodType" element={<RestaurantsList />} />
             <Route path="/customer/cart" element={<Cart/>}/>

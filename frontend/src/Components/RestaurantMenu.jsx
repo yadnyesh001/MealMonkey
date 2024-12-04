@@ -67,10 +67,11 @@ const RestaurantMenu = () => {
     };
     const fetchReviews = async () => {
         try {
-          const reviewsResponse = await axiosInstance.post("/customer/restaurantReview", {
-            targetId: restaurantId, // Passing restaurantId as targetId
-          });
-          setReviews(reviewsResponse.data); // Store fetched reviews in state
+          const reviewsResponse = await axiosInstance.get(`/customer/restaurantReview/${restaurantId}`);
+          
+          setReviews(reviewsResponse.data); 
+          
+          console.log(reviews)
         } catch (error) {
           console.error("Error fetching reviews:", error);
         }
@@ -337,19 +338,21 @@ const RestaurantMenu = () => {
     );
   
     case "Reviews":
-        return (
-          <div className="mt-6">
-            {dummyReviews && dummyReviews.length > 0 ? (
-              <div className="max-h-[400px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
-                {dummyReviews.map((review, index) => (
-                  <ReviewCard key={index} review={review} />
-                ))}
-              </div>
-            ) : (
-              <p className="text-gray-500 italic">No reviews available for this restaurant.</p>
-            )}
+    console.log("Current reviews state during render:", reviews);
+    return (
+      <div className="mt-6">
+        {reviews && reviews.length > 0 ? (
+          <div className="max-h-[400px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
+            {reviews.map((review, index) => {
+              console.log("Rendering review:", review);  // Add this to see each review
+              return <ReviewCard key={index} review={review} />;
+            })}
           </div>
-        );
+        ) : (
+          <p className="text-gray-500 italic">No reviews available for this restaurant.</p>
+        )}
+      </div>
+    );
       default:
         return null;
         case "Write a Review":
