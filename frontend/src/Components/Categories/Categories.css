@@ -138,7 +138,7 @@
     left: 0;
     width: 130px;
     z-index: 1;
-    animation: bikeRide 15s linear infinite;
+    animation: bikeRide 10s linear infinite;
     pointer-events: none;
 }
 

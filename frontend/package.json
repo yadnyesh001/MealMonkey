@@ -11,8 +11,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.0",
     "@reduxjs/toolkit": "^2.4.0",
+    "@tailwindcss/forms": "^0.5.9",
     "axios": "^1.7.7",
+    "date-fns": "^4.1.0",
     "framer-motion": "^11.13.1",
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.464.0",

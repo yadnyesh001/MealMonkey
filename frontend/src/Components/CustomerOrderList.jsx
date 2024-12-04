@@ -1,129 +1,236 @@
 import React, { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { format } from 'date-fns';
 import axiosInstance from '../utils/axiosInstance';
+import { 
+    FaWallet, 
+    FaClock, 
+    FaShoppingBag, 
+    FaStore, 
+    FaMoneyBillWave,
+    FaSpinner
+} from 'react-icons/fa';
 
-const OrdersList = () => {
-    const [orders, setOrders] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [walletBalance, setWalletBalance] = useState(0); // State for wallet balance
-    const [addAmount, setAddAmount] = useState(0); // State for the amount to add
-
-    useEffect(() => {
-        const fetchOrders = async () => {
-            try {
-                const response = await axiosInstance.get('/customer/orders'); // Adjust the URL if needed
-                setOrders(response.data);
-            } catch (error) {
-                console.error('Error fetching orders:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        const fetchWalletBalance = async () => {
-            try {
-                const response = await axiosInstance.get('/customer/wallet'); // Adjust the URL if needed
-                setWalletBalance(response.data.balance); // Assuming response contains { balance: amount }
-            } catch (error) {
-                console.error('Error fetching wallet balance:', error);
-            }
-        };
-
-        fetchOrders();
-        fetchWalletBalance(); // Fetch wallet balance on component mount
-    }, []);
-
-    const handleAddMoney = async () => {
-        try {
-            await axiosInstance.post('/customer/addMoney', { amount: addAmount });
-            setAddAmount(0); // Reset amount after adding
-            const response = await axiosInstance.get('/customer/wallet'); // Refresh wallet balance
-            setWalletBalance(response.data.balance);
-        } catch (error) {
-            console.error('Error adding money to wallet:', error);
-        }
+const StatusBadge = ({ status }) => {
+    const statusStyles = {
+        pending: 'bg-amber-100 text-amber-700 border-amber-200',
+        accepted: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+        completed: 'bg-blue-100 text-blue-700 border-blue-200',
+        cancelled: 'bg-red-100 text-red-700 border-red-200'
     };
 
-    if (loading) return <p className="text-center text-gray-600">Loading orders...</p>;
+    return (
+        <span className={`px-3 py-1 rounded-full text-sm font-medium border ${statusStyles[status] || 'bg-gray-100 text-gray-700'}`}>
+            {status.charAt(0).toUpperCase() + status.slice(1)}
+        </span>
+    );
+};
+
+const OrderCard = ({ order, index }) => {
+    const [isExpanded, setIsExpanded] = useState(false);
 
     return (
-        <div className="flex flex-col items-center bg-gray-50 min-h-screen py-8 px-4">
-            {/* Wallet Section */}
-            <div className="mb-6 bg-gray-200 p-6 rounded-lg shadow-lg w-full max-w-md">
-                <h2 className="text-xl font-medium mb-2">Wallet Balance: ₹{walletBalance}</h2>
-                <div className="flex items-center mt-4 space-x-4">
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
+            className="w-full"
+        >
+            <div 
+                className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
+                onClick={() => setIsExpanded(!isExpanded)}
+            >
+                <div className="p-6">
+                    <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center space-x-3">
+                            <FaStore className="text-blue-500 text-xl" />
+                            <h3 className="text-lg font-semibold text-gray-800">
+                                {order.restaurantEmail}
+                            </h3>
+                        </div>
+                        <StatusBadge status={order.status} />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4 mb-4">
+                        <div className="flex items-center space-x-2">
+                            <FaShoppingBag className="text-gray-400" />
+                            <span className="text-gray-600">Order ID:</span>
+                            <span className="font-medium">{order.restaurantId}</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                            <FaMoneyBillWave className="text-gray-400" />
+                            <span className="text-gray-600">Total:</span>
+                            <span className="font-bold text-green-600">₹{order.totalAmount}</span>
+                        </div>
+                    </div>
+
+                    <div className="flex items-center space-x-2 text-sm text-gray-500">
+                        <FaClock />
+                        <span>{format(new Date(order.createdAt), 'PPp')}</span>
+                    </div>
+
+                    <AnimatePresence>
+                        {isExpanded && (
+                            <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: 'auto' }}
+                                exit={{ opacity: 0, height: 0 }}
+                                className="mt-4"
+                            >
+                                <div className="border-t pt-4">
+                                    <h4 className="text-md font-medium mb-3">Order Items</h4>
+                                    <div className="space-y-2">
+                                        {order.items.map((item, idx) => (
+                                            <div 
+                                                key={idx} 
+                                                className="flex justify-between items-center p-2 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
+                                            >
+                                                <span className="text-gray-700">{item.product.name}</span>
+                                                <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">
+                                                    Qty: {item.quantity}
+                                                </span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
+            </div>
+        </motion.div>
+    );
+};
+
+const WalletSection = ({ balance, addAmount, setAddAmount, handleAddMoney }) => {
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="w-full max-w-md mx-auto mb-8"
+        >
+            <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-100">
+                <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center space-x-3">
+                        <FaWallet className="text-2xl text-blue-500" />
+                        <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                            Wallet Balance
+                        </h2>
+                    </div>
+                    <div className="text-2xl font-bold text-gray-800">₹{balance}</div>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-4">
                     <input
                         type="number"
                         placeholder="Amount to add"
                         value={addAmount}
                         onChange={(e) => setAddAmount(Number(e.target.value))}
-                        className="border-2 border-gray-300 rounded-md p-2 w-32 focus:outline-none focus:border-blue-500"
+                        className="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none"
+                        min="0"
                     />
-                    <button
+                    <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
                         onClick={handleAddMoney}
-                        className="bg-blue-500 text-white font-medium py-2 px-4 rounded hover:bg-blue-600"
+                        disabled={addAmount <= 0}
+                        className={`px-6 py-3 rounded-xl font-medium shadow-lg transition-all duration-200 
+                            ${addAmount <= 0 
+                                ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+                                : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:shadow-xl'
+                            }`}
                     >
                         Add Money
-                    </button>
+                    </motion.button>
                 </div>
             </div>
+        </motion.div>
+    );
+};
 
-            {/* Orders Section */}
-            {orders.length === 0 ? (
-                <p className="text-lg text-gray-600">No orders found.</p>
-            ) : (
-                <div className="w-full">
-                    {orders.map((order) => (
-                        <div
-                            key={order.restaurantId}
-                            className="flex justify-center mb-6 transition-transform duration-300 transform hover:scale-105"
-                        >
-                            <div className="w-11/12 md:w-7/12 lg:w-7/12 p-4 bg-white shadow-md rounded-lg border border-gray-200">
-                                <div className="space-y-3">
-                                    <p className="text-lg font-medium">
-                                        Order from: <span className="font-normal">{order.restaurantEmail}</span>
-                                    </p>
-                                    <p>
-                                        <strong>Restaurant ID:</strong> {order.restaurantId}
-                                    </p>
-                                    <p>
-                                        <strong>Total Amount:</strong> ₹{order.totalAmount}
-                                    </p>
-                                    <p>
-                                        <strong>Status:</strong>{' '}
-                                        <span
-                                            className={`px-2 py-1 rounded-md ${
-                                                order.status === 'pending'
-                                                    ? 'bg-yellow-200 text-yellow-800'
-                                                    : order.status === 'accepted'
-                                                    ? 'bg-green-200 text-green-800'
-                                                    : order.status === 'completed'
-                                                    ? 'bg-blue-200 text-blue-800'
-                                                    : ''
-                                            }`}
-                                        >
-                                            {order.status}
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <strong>Created At:</strong>{' '}
-                                        {new Date(order.createdAt).toLocaleString()}
-                                    </p>
-                                    <div>
-                                        <strong>Items:</strong>
-                                        <ul className="mt-2 pl-4 list-disc">
-                                            {order.items.map((item, idx) => (
-                                                <li key={idx}>
-                                                    {item.product.name} <span>(Quantity: {item.quantity})</span>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
+const OrdersList = () => {
+    const [orders, setOrders] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [walletBalance, setWalletBalance] = useState(0);
+    const [addAmount, setAddAmount] = useState(0);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const [ordersResponse, walletResponse] = await Promise.all([
+                    axiosInstance.get('/customer/orders'),
+                    axiosInstance.get('/customer/wallet')
+                ]);
+                
+                setOrders(ordersResponse.data);
+                setWalletBalance(walletResponse.data.balance);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    const handleAddMoney = async () => {
+        if (addAmount <= 0) return;
+
+        try {
+            await axiosInstance.post('/customer/addMoney', { amount: addAmount });
+            const response = await axiosInstance.get('/customer/wallet');
+            setWalletBalance(response.data.balance);
+            setAddAmount(0);
+        } catch (error) {
+            console.error('Error adding money to wallet:', error);
+        }
+    };
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-screen bg-gray-50">
+                <div className="text-center">
+                    <FaSpinner className="animate-spin text-4xl text-blue-500 mx-auto mb-4" />
+                    <p className="text-gray-600">Loading your orders...</p>
                 </div>
-            )}
+            </div>
+        );
+    }
+
+    return (
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 py-8 px-4 -mt-7">
+            <div className="max-w-5xl mx-auto">
+                <WalletSection 
+                    balance={walletBalance}
+                    addAmount={addAmount}
+                    setAddAmount={setAddAmount}
+                    handleAddMoney={handleAddMoney}
+                />
+
+                <div className="space-y-6">
+                    {orders.length === 0 ? (
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            className="text-center py-12"
+                        >
+                            <div className="text-gray-500 text-xl">
+                                No orders found. Start ordering to see your history here!
+                            </div>
+                        </motion.div>
+                    ) : (
+                        <div className="grid gap-6">
+                            {orders.map((order, index) => (
+                                <OrderCard 
+                                    key={order.restaurantId} 
+                                    order={order} 
+                                    index={index}
+                                />
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </div>
         </div>
     );
 };
