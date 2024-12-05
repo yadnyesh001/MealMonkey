@@ -48,6 +48,7 @@ module.exports.updateProfile = async function(req, res) {
 
 //get todays pending orders
 exports.getTodaysPendingOrders = async (req, res) => {
+    const deliveryPartnerId = req.userId;
     try {
         const startOfDay = new Date();
         startOfDay.setHours(0, 0, 0, 0);
@@ -69,13 +70,98 @@ exports.getTodaysPendingOrders = async (req, res) => {
                 customerName: customer.username,
                 customerContact: customer.contact,
                 restaurantName: restaurant.hotelName,
-
             };
         }));
 
-        res.status(200).json(detailedOrders);
+        // Fetch analytics data for the delivery partner
+        const completedOrdersCount = await Order.countDocuments({
+            deliveryPartner: deliveryPartnerId,
+            status: 'completed'
+        });
+
+        const completedOrdersToday = await Order.find({
+            deliveryPartner: deliveryPartnerId,
+            status: 'completed',
+            createdAt: { $gte: startOfDay, $lt: endOfDay }
+        });
+
+        const todaysRevenue = completedOrdersToday.reduce((total, order) => total + (order.totalAmount * 0.1), 0);
+
+        const activeOrdersCount = await Order.countDocuments({
+            deliveryPartner: deliveryPartnerId,
+            status: 'accepted'
+        });
+
+        const startOfMonth = new Date();
+        startOfMonth.setDate(1);
+        startOfMonth.setHours(0, 0, 0, 0);
+
+        const completedOrdersThisMonth = await Order.find({
+            deliveryPartner: deliveryPartnerId,
+            status: 'completed',
+            createdAt: { $gte: startOfMonth, $lt: new Date() }
+        });
+
+        const monthlyRevenue = completedOrdersThisMonth.reduce((total, order) => total + (order.totalAmount * 0.1), 0);
+
+        res.status(200).json({
+            detailedOrders,
+            analytics: {
+                completedOrders: completedOrdersCount,
+                todaysRevenue: todaysRevenue,
+                activeOrders: activeOrdersCount,
+                monthlyRevenue: monthlyRevenue
+            }
+        });
     } catch (error) {
+        console.error("Error fetching today's orders:", error);
         res.status(500).json({ message: 'Error fetching today\'s orders', error });
+    }
+};
+
+//charts and graphs
+exports.getDeliveryPartnerStats = async (req, res) => {
+    const deliveryPartnerId = req.userId;
+    try {
+        const startOfMonth = new Date();
+        startOfMonth.setDate(1);
+        startOfMonth.setHours(0, 0, 0, 0);
+
+        const endOfMonth = new Date();
+        endOfMonth.setMonth(endOfMonth.getMonth() + 1);
+        endOfMonth.setDate(0);
+        endOfMonth.setHours(23, 59, 59, 999);
+
+        const orders = await Order.find({
+            deliveryPartner: deliveryPartnerId,
+            createdAt: { $gte: startOfMonth, $lt: endOfMonth }
+        });
+
+        const stats = {
+            dailyOrders: [],
+            dailyRevenue: [],
+            statusDistribution: {
+                pending: 0,
+                accepted: 0,
+                rejected: 0,
+                completed: 0,
+                delivery_rejected: 0
+            }
+        };
+
+        orders.forEach(order => {
+            const day = order.createdAt.getDate();
+            if (!stats.dailyOrders[day]) stats.dailyOrders[day] = 0;
+            if (!stats.dailyRevenue[day]) stats.dailyRevenue[day] = 0;
+
+            stats.dailyOrders[day]++;
+            stats.dailyRevenue[day] += order.totalAmount * 0.1;
+            stats.statusDistribution[order.status]++;
+        });
+
+        res.status(200).json(stats);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching delivery partner stats', error });
     }
 };
 

@@ -51,6 +51,7 @@ const Header = () => {
         {loggedIn && role === 'deliveryPartner' && (
           <>
             <Link to='/deliveryPartner/'>Home</Link>
+            <Link to='/deliveryPartner/stats'>Analytics</Link>
             <Link to='/deliveryPartner/activeOrders'>Active Orders</Link>
             <Link to='/deliveryPartner/ordersDelivered'>Orders Delivered</Link>
             <Link to='/deliveryPartner/profile'>Profile</Link>

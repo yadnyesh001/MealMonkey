@@ -10,6 +10,7 @@ router.get("/wallet", isLoggedIn, deliveryPartnerController.getWallet);
 //get todays orders
 router.get('/ordersToday', isLoggedIn, deliveryPartnerController.getTodaysPendingOrders);
 router.put('/orders/:id/status', isLoggedIn, deliveryPartnerController.updateOrderStatus);
+router.get('/stats', isLoggedIn, deliveryPartnerController.getDeliveryPartnerStats);
 // Fetch accepted orders with complete items and quantity
 router.get('/acceptedOrders', isLoggedIn, deliveryPartnerController.getAcceptedOrders);
 router.get('/OrderDetails/:orderId', isLoggedIn, deliveryPartnerController.getOrderDetails);
