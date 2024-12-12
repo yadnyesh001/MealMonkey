@@ -58,7 +58,6 @@ module.exports.getTopRestaurant = async function(req, res){
         .limit(8)
         .select('hotelName rating photos contact address.fullAddress knownFor'); // Only fetch necessary fields
         
-        console.log(restaurants);
         return res.status(200).json(restaurants);
     } catch (error) {
         console.error("Error fetching restaurants:", error);

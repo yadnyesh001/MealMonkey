@@ -6,7 +6,8 @@ const jwt = require("jsonwebtoken");
 const SECRET_KEY = process.env.JWT_SECRET_KEY;
 const validator = require('validator');
 const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*()]).{6,}$/;
-const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
+// const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
+const emailRegex = /^[\w-.]+@gmail\.com$/;
 function generateToken(user) {
     return jwt.sign({ id: user._id, email: user.email }, SECRET_KEY, { expiresIn: '1h' });
 }
