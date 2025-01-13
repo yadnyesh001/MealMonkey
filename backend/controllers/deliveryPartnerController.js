@@ -3,7 +3,6 @@ const ADMIN_ID = 'yourAdminIdHere';
 const Restaurant = require('../models/restaurantModel');
 const Transaction=require('../models/transactionModel')
 const Order=require('../models/orderModel')
-const Admin=require('../models/adminModel')
 const Customer=require('../models/customerModel')
 const Review = require('../models/reviewModel');
 const DeliveryPartner=require('../models/deliveryPartnerModel')
