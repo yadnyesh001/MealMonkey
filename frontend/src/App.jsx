@@ -38,7 +38,7 @@ import RestaurantOrders from './Components/RestaurantOrders';
 import DeliveryPartnerCard from './Components/DeliveryPartner/DeliveryPartnerCard';
 import DeliveryPartnerDashboard from './Components/DeliveryPartner/DeliveryPartnerDashboard';
 import DeliveryPartnerStats from './Components/DeliveryPartner/DeliveryPartnerStats ';
-import ActiveOrders from './Components/DeliveryPartner/activeOrders';
+import ActiveOrders from './Components/DeliveryPartner/ActiveOrders';
 import OrderDetails from './Components/DeliveryPartner/OrderDetails';
 import OrdersDelivered from './Components/DeliveryPartner/OrdersDelivered';
 import Checkout from "./Components/Checkout";
