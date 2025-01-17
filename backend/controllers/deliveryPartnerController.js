@@ -27,10 +27,6 @@ module.exports.updateProfile = async function(req, res) {
             user.role = 'deliveryPartner';
         }
 
-        // Add Delivery Partner-specific fields
-        // user.license = license;
-        // user.vehicleNumber = vehicleNumber;
-        // user.isFree = isFree !== undefined ? isFree : user.isFree; // Retain current status if not provided
         user.license = license || user.license;
         user.vehicleNumber = vehicleNumber || user.vehicleNumber;
         user.isFree = isFree !== undefined ? isFree : user.isFree;

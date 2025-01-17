@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "https://mealmonkey.onrender.com",  // Assuming your backend is running on localhost:5000/api
+  baseURL: "http://localhost:3000/",  // Assuming your backend is running on localhost:5000/api
   headers: {
     "Content-Type": "application/json",
   },
@@ -13,3 +13,5 @@ export default axiosInstance;
 
 // http://localhost:3000
 // https://mealmonkey.onrender.com/
+// http://localhost:5173
+// https://mealmonkey-food.vercel.app

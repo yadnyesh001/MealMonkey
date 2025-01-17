@@ -13,7 +13,7 @@ require("./config/mongoose_config.js");
 const app = express();
 dotenv.config();
 app.use(cors({
-    origin: 'https://mealmonkey-food.vercel.app', // Your frontend URL
+    origin: ['http://localhost:5173', 'https://mealmonkey-food.vercel.app'], // Your frontend URL
     credentials: true // This allows cookies to be included in cross-origin requests
 }));
 app.use(cookieParser());
