@@ -138,6 +138,7 @@ module.exports.register = async function(req, res) {
     }
 };
 
+
 module.exports.login = async function(req, res) {
     try {
         let { email, password } = req.body;

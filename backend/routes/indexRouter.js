@@ -9,10 +9,92 @@ router.get("/", function(req, res){
     res.send("Home Page");
 });
 // Register Route
+/**
+ * @openapi
+ * /register:
+ *  post:
+ *      tags: 
+ *          - Authentication
+ *      summary: Register a user
+ *      description: Auth user and get token
+ *      requestBody:
+ *          description: Register credentials
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          username:  
+ *                              type: string    
+ *                          email:
+ *                              type: string
+ *                          password:
+ *                              type: string
+ *                          role:
+ *                              type: string
+ *                              enum: ['customer', 'restaurant', 'deliveryPartner'] 
+ *                          isAdmin:
+ *                              type: boolean
+ *                              default: false
+ *                          contact:
+ *                              type: string
+ *                          fullAddress:
+ *                              type: string
+ *                          pincode:
+ *                              type: string
+ *      responses:
+ *          201:
+ *              description: Registered successfully
+ *          400:
+ *              description: Bad Request
+ */
 router.post("/register", indexController.register);
 
 // Login & Logout Routes
+/**
+ * @openapi
+ * /login:
+ *  post:
+ *      tags: 
+ *          - Authentication
+ *      summary: Log in a user
+ *      description: Auth user and get token
+ *      requestBody:
+ *          description: Login credentials
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      properties:
+ *                          email:  
+ *                              type: string    
+ *                          password:
+ *                              type: string
+ *      responses:
+ *          200:
+ *              description: Login  
+ *          400:
+ *              description: Bad Request
+ */
 router.post("/login", indexController.login);
+
+/**
+ * @openapi
+ * /logout:
+ *  get:
+ *      tags: 
+ *          - Authentication
+ *      summary: Logs out a user
+ *      description: Logs out the user
+ *      responses:
+ *          200:
+ *              description: Logged out  
+ *          400:
+ *              description: Bad Request
+ *
+ */
 router.get("/logout", indexController.logout);
 
 // GET routes for profile details
@@ -24,6 +106,7 @@ router.get("/logout", indexController.logout);
 
 // router.post("/restaurant/profileDetails", indexController.updateDetailsRestaurant);
 // router.post("/deliveryPartner/profileDetails", indexController.updateDetailsDeliveryPartner);
+
 
 router.get("/admin/dashboard", isLoggedIn, (req, res) => {
     res.send("Admin Dashboard");

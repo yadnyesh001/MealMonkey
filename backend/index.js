@@ -6,6 +6,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const PORT = process.env.PORT || 3000;
 require("./config/mongoose_config.js");
+const { swaggerDocs } = require("./utils/swagger.js");
 // Load environment variables
 
 
@@ -50,4 +51,5 @@ app.use("/admin", adminRouter);
 // Start server
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
+    swaggerDocs(app, PORT);
 });
